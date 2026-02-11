@@ -1,6 +1,5 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { Ionicons } from "@expo/vector-icons"; // Expo има вграден пакет за иконки
-
+import { Ionicons } from "@expo/vector-icons";
 import HomeScreen from "../screens/main/HomeScreen";
 import DestinationsScreen from "../screens/main/DestinationsScreen";
 import ProfileScreen from "../screens/main/ProfileScreen";
