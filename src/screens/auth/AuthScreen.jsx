@@ -8,7 +8,7 @@ export default function AuthScreen({ navigation }) {
       style={styles.background}
     >
       <View style={styles.overlay}>
-        <Text style={styles.title}>Welcome to Travel Feever</Text>
+        <Text style={styles.title}>Welcome to Travel Fever</Text>
         <TouchableOpacity 
           style={styles.button} 
           onPress={() => navigation.navigate('Login')}

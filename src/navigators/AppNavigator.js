@@ -1,13 +1,12 @@
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import StartScreen from "../screens/startApp/StartScreen";
+import React, { useState } from "react";
 import AuthNavigator from "./AuthNavigator";
+import MainNavigator from "./MainNavigator";
+import { NavigationContainer } from "@react-navigation/native";
 
 export default function AppNavigator() {
-    const Stack  = createNativeStackNavigator();
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+
     return (
-        <Stack.Navigator screenOptions={{headerShown: false}}>
-            <Stack.Screen name="Welcome" component={StartScreen} />
-            <Stack.Screen name="AuthNav" component={AuthNavigator} />
-        </Stack.Navigator>
-    )
+        isLoggedIn ? <MainNavigator  setIsLoggedIn={setIsLoggedIn} /> : <AuthNavigator setIsLoggedIn={setIsLoggedIn} />
+    );
 }

@@ -11,7 +11,7 @@ export default function StartScreen({ navigation }) {
         <Text style={styles.title}>Travel Fever</Text>
         <TouchableOpacity 
           style={styles.button} 
-          onPress={() => navigation.navigate('AuthNav')}
+          onPress={() => navigation.navigate('Auth')}
         >
           <Text style={styles.buttonText}>Start Your Journey</Text>
         </TouchableOpacity>

@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ImageBackground } from 'react-native';
 
-export default function RegisterScreen() {
+export default function RegisterScreen({ navigation, setIsLoggedIn }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [repeatPassword, setRepeatPassword] = useState('');
+
+  const registerHandler = () => {
+    setIsLoggedIn(true);
+  }
 
   return (
     <ImageBackground
@@ -36,8 +40,12 @@ export default function RegisterScreen() {
           value={repeatPassword}
           onChangeText={setRepeatPassword}
         />
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity style={styles.button} onPress={registerHandler}>
           <Text style={styles.buttonText}>Register</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+          <Text style={styles.link}>Already have an account?!</Text>
         </TouchableOpacity>
       </View>
     </ImageBackground>
@@ -51,4 +59,5 @@ const styles = StyleSheet.create({
   input: { backgroundColor: '#fff', borderRadius: 8, padding: 12, marginVertical: 8 },
   button: { backgroundColor: '#FF6B6B', padding: 15, borderRadius: 8, marginTop: 20, alignItems: 'center' },
   buttonText: { color: '#fff', fontSize: 16, fontWeight: '600' },
+  link: { color: '#fff', marginTop: 20, textAlign: 'center', textDecorationLine: 'underline' },
 });
