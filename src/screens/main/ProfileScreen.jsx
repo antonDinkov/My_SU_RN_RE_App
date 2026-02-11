@@ -21,7 +21,7 @@ const following = [
 export default function ProfileScreen() {
   return (
     <ImageBackground
-      source={{ uri: 'https://images.unsplash.com/photo-1500048993957-0fa4a2c9b5b2' }}
+      source={{ uri: 'https://images.unsplash.com/photo-1503264116251-35a269479413' }}
       style={styles.background}
     >
       <View style={styles.overlay}>
