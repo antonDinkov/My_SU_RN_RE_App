@@ -20,7 +20,7 @@ export default function HomeScreen({ setIsLoggedIn }) {
 
     return (
         <ImageBackground
-            source={{ uri: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e' }}
+            source={{ uri: 'https://images.unsplash.com/photo-1502082553048-f009c37129b9' }}
             style={styles.background}
         >
             <View style={styles.overlay}>
