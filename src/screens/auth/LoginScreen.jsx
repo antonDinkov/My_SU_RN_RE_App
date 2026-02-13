@@ -11,7 +11,7 @@ export default function LoginScreen({ navigation, setIsLoggedIn }) {
 
   return (
     <ImageBackground
-      source={{ uri: 'https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1' }} // city background
+      source={{ uri: 'https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1' }}
       style={styles.background}
     >
       <View style={styles.overlay}>

@@ -14,9 +14,28 @@ export default function HomeScreen({ setIsLoggedIn }) {
         </TouchableOpacity>
     );
 
-    const logoutHandler = () => {
-        setIsLoggedIn(false)
+    const logoutHandler = async () => {
+  try {
+    const response = await fetch('https://travelfeverbe.onrender.com/logout', {
+      method: 'GET',
+      credentials: 'include', // важно, за да изпрати cookie-то
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.message || 'Logout failed');
     }
+
+    console.log(data.message); // Logout successful
+    setIsLoggedIn(false);      // актуализира state във фронта
+
+  } catch (err) {
+    console.error('Logout error:', err.message);
+    alert(err.message);
+  }
+};
+
 
     return (
         <ImageBackground
