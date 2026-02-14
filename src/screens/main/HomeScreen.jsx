@@ -1,4 +1,3 @@
-import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, FlatList, ImageBackground } from 'react-native';
 
 const destinations = [
@@ -15,26 +14,26 @@ export default function HomeScreen({ setIsLoggedIn }) {
     );
 
     const logoutHandler = async () => {
-  try {
-    const response = await fetch('https://travelfeverbe.onrender.com/logout', {
-      method: 'GET',
-      credentials: 'include', // важно, за да изпрати cookie-то
-    });
+        try {
+            const response = await fetch('https://travelfeverbe.onrender.com/logout', {
+                method: 'GET',
+                credentials: 'include', // важно, за да изпрати cookie-то
+            });
 
-    const data = await response.json();
+            const data = await response.json();
 
-    if (!response.ok) {
-      throw new Error(data.message || 'Logout failed');
-    }
+            if (!response.ok) {
+                throw new Error(data.message || 'Logout failed');
+            }
 
-    console.log(data.message); // Logout successful
-    setIsLoggedIn(false);      // актуализира state във фронта
+            console.log(data.message); // Logout successful
+            setIsLoggedIn(false);      // актуализира state във фронта
 
-  } catch (err) {
-    console.error('Logout error:', err.message);
-    alert(err.message);
-  }
-};
+        } catch (err) {
+            console.error('Logout error:', err.message);
+            alert(err.message);
+        }
+    };
 
 
     return (

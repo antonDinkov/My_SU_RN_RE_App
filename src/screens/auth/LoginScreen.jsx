@@ -5,8 +5,40 @@ export default function LoginScreen({ navigation, setIsLoggedIn }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const loginHandler = () => {
-    setIsLoggedIn(true);
+  const loginHandler = async (email, password, lat, lng, setIsLoggedIn) => {
+    try {
+            const response = await fetch('https://travelfeverbe.onrender.com/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'x-user-lat': lat?.toString() || '0',
+                    'x-user-lng': lng?.toString() || '0',
+                },
+                body: JSON.stringify({ email, password }),
+                credentials: 'include', // за cookie
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                // Покажи всички backend validation errors
+                throw new Error(data.errors ? data.errors.join(', ') : 'Login failed');
+            }
+
+            console.log('User logged in', data.user);
+
+            // Можеш да съхраниш token (ако го връща backend) в AsyncStorage
+            // await AsyncStorage.setItem('token', data.token);
+
+            // Логваме потребителя в апликацията
+            setIsLoggedIn(true);
+
+            return data.user;
+
+        } catch (err) {
+            console.error(err.message);
+            alert(err.message);
+        }
   }
 
   return (
@@ -31,7 +63,7 @@ export default function LoginScreen({ navigation, setIsLoggedIn }) {
           value={password}
           onChangeText={setPassword}
         />
-        <TouchableOpacity style={styles.button} onPress={loginHandler}>
+        <TouchableOpacity style={styles.button} onPress={() => loginHandler(email, password, 0, 0, setIsLoggedIn)}>
           <Text style={styles.buttonText}>Login</Text>
         </TouchableOpacity>
 
