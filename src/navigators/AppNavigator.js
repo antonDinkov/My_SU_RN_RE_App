@@ -1,10 +1,11 @@
-import { useState } from "react";
 import AuthNavigator from "./AuthNavigator";
 import MainNavigator from "./MainNavigator";
+import { useAuth } from "../context/auth/useAuth";
+
 export default function AppNavigator() {
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const { isAuthenticated } = useAuth();
 
     return (
-        isLoggedIn ? <MainNavigator  setIsLoggedIn={setIsLoggedIn} /> : <AuthNavigator setIsLoggedIn={setIsLoggedIn} />
+        isAuthenticated ? <MainNavigator /> : <AuthNavigator />
     );
 }

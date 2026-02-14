@@ -1,4 +1,5 @@
 import { View, Text, StyleSheet, TouchableOpacity, FlatList, ImageBackground } from 'react-native';
+import { useAuth } from '../../context/auth/useAuth';
 
 const destinations = [
     { id: '1', name: 'Paris' },
@@ -7,6 +8,7 @@ const destinations = [
 ];
 
 export default function HomeScreen({ setIsLoggedIn }) {
+    const { logout } = useAuth();
     const renderItem = ({ item }) => (
         <TouchableOpacity style={styles.card}>
             <Text style={styles.destination}>{item.name}</Text>
@@ -15,20 +17,7 @@ export default function HomeScreen({ setIsLoggedIn }) {
 
     const logoutHandler = async () => {
         try {
-            const response = await fetch('https://travelfeverbe.onrender.com/logout', {
-                method: 'GET',
-                credentials: 'include', // важно, за да изпрати cookie-то
-            });
-
-            const data = await response.json();
-
-            if (!response.ok) {
-                throw new Error(data.message || 'Logout failed');
-            }
-
-            console.log(data.message); // Logout successful
-            setIsLoggedIn(false);      // актуализира state във фронта
-
+            await logout();
         } catch (err) {
             console.error('Logout error:', err.message);
             alert(err.message);
