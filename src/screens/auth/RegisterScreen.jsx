@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ImageBackground } from 'react-native';
+import { useAuth } from '../../context/auth/useAuth';
 
 export default function RegisterScreen({ navigation, setIsLoggedIn }) {
     const [firstName, setFirstName] = useState('');
@@ -7,40 +8,36 @@ export default function RegisterScreen({ navigation, setIsLoggedIn }) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [repeatPassword, setRepeatPassword] = useState('');
+    const [errors, setErrors] = useState({});
+    const { register, clearError } = useAuth();
 
-    const registerHandler = async (email, password, repeatPassword, firstName, lastName, lat, lng, setIsLoggedIn) => {
+    const validate = () => {
+        const newErrors = {};
+
+        if (!email.trim()) {
+            newErrors.email = 'Email is required';
+        } else if (!/\S+@\S+\.\S+/.test(email)) {
+            newErrors.email = 'Please enter a valid email';
+        }
+
+        if (!password) {
+            newErrors.password = 'Password is required';
+        } else if (password.length < 4) {
+            newErrors.password = 'Password must be at least 4 characters';
+        }
+
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
+
+    const registerHandler = async (firstName, lastName, email, password, repeatPassword) => {
         try {
-            const response = await fetch('https://travelfeverbe.onrender.com/register', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'x-user-lat': lat?.toString() || '0',
-                    'x-user-lng': lng?.toString() || '0',
-                },
-                body: JSON.stringify({ email, password, repass: repeatPassword, firstName, lastName }),
-                credentials: 'include', // за cookie
-            });
+            clearError();
+            if (!validate()) return;
 
-            const data = await response.json();
-
-            if (!response.ok) {
-                // Покажи всички backend validation errors
-                throw new Error(data.errors ? data.errors.join(', ') : 'Registration failed');
-            }
-
-            console.log('User registered', data.user);
-
-            // Можеш да съхраниш token (ако го връща backend) в AsyncStorage
-            // await AsyncStorage.setItem('token', data.token);
-
-            // Логваме потребителя в апликацията
-            setIsLoggedIn(true);
-
-            return data.user;
-
+            await register(firstName, lastName, email, password, repeatPassword);
         } catch (err) {
-            console.error(err.message);
-            alert(err.message);
+            console.log('REGISTER FAILED', err);
         }
     };
 
@@ -88,7 +85,7 @@ export default function RegisterScreen({ navigation, setIsLoggedIn }) {
                     value={repeatPassword}
                     onChangeText={setRepeatPassword}
                 />
-                <TouchableOpacity style={styles.button} onPress={() => registerHandler(email, password, repeatPassword, firstName, lastName, 0, 0, setIsLoggedIn)}>
+                <TouchableOpacity style={styles.button} onPress={() => registerHandler(firstName, lastName, email, password, repeatPassword)}>
                     <Text style={styles.buttonText}>Register</Text>
                 </TouchableOpacity>
 

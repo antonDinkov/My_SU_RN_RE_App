@@ -29,7 +29,7 @@ export function AuthProvider({ children }) {
             const data = await authService.login(email, password, 0, 0);
             const user = data.user;
             const token = data.token;
-            console.log("USER:", data);
+            console.log("USER:", user, "TOKEN:", token);
             setAuth({ user, token });
         } catch (err) {
             setError(err.message || 'An error occurred during login');
@@ -37,10 +37,13 @@ export function AuthProvider({ children }) {
             setIsLoading(false);
         }
     }
-    const register = async (email, password, name) => {
+    const register = async (firstName, lastName, email, password, repass) => {
         try {
             setIsLoading(true);
-            const { user, token } = await authService.register(email, password, name);
+            setAuth({ token: null, user: null });
+            console.log("inside register is context");
+            
+            const { user, token } = await authService.register(firstName, lastName, email, password, repass, 0, 0);
             setAuth({ user, token });
         } catch (err) {
             setError(err.message || 'An error occurred during registration');
