@@ -11,9 +11,6 @@ export const login = async (email, password, lat, lng) => {
             },
         }
     );
-    console.log("inside the service");
-    console.log(response.data.user);
-    console.log(response.data.token);
     
     return {
         user: response.data.user,

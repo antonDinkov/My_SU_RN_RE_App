@@ -54,6 +54,7 @@ export function AuthProvider({ children }) {
         try {
             setIsLoading(true);
             const response = await authService.logout();
+            
             setAuth({
                 token: null,
                 user: null,
