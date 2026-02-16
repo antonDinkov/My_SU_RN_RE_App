@@ -4,6 +4,11 @@
   "version": "1.0.0",
   "scripts": {
     "start": "expo start",
+    "reversePhone": "adb -s dcd9b811 reverse tcp:8081 tcp:8081",
+    "reverse": "adb -s dcd9b811 reverse tcp:3004 tcp:3004",
+    "startLocal": "expo start --localhost -c",
+    "reverseEmulator": "adb -s emulator-5554 reverse tcp:8081 tcp:8081",
+    "openEmulator": "adb -s emulator-5554 shell am start -a android.intent.action.VIEW -d \"exp://127.0.0.1:8081\"",
     "reset-project": "node ./scripts/reset-project.js",
     "android": "expo start --android",
     "ios": "expo start --ios",

@@ -29,7 +29,6 @@ export function AuthProvider({ children }) {
             const data = await authService.login(email, password, 0, 0);
             const user = data.user;
             const token = data.token;
-            console.log("USER:", user, "TOKEN:", token);
             setAuth({ user, token });
         } catch (err) {
             setError(err.message || 'An error occurred during login');
