@@ -26,6 +26,7 @@ export function AuthProvider({ children }) {
     const login = async (email, password) => {
         try {
             setIsLoading(true);
+            setAuth({ token: null, user: null });
             const data = await authService.login(email, password, 0, 0);
             const user = data.user;
             const token = data.token;
@@ -40,7 +41,6 @@ export function AuthProvider({ children }) {
         try {
             setIsLoading(true);
             setAuth({ token: null, user: null });
-            console.log("inside register is context");
             
             const { user, token } = await authService.register(firstName, lastName, email, password, repass, 0, 0);
             setAuth({ user, token });
