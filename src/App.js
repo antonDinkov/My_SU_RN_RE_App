@@ -1,9 +1,10 @@
-import { StatusBar, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
 import AppNavigator from "./navigators/AppNavigator";
 import { NavigationContainer } from "@react-navigation/native";
 import { AuthProvider } from "./context/auth/AuthProvider";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useEffect } from "react";
+import { StatusBar } from "expo-status-bar";
 
 
 export default function App() {
@@ -13,7 +14,7 @@ export default function App() {
     return (
         <AuthProvider>
             <NavigationContainer>
-                <StatusBar style="auto" />
+                <StatusBar style="light" backgroundColor="#000" />
                 <AppNavigator />
             </NavigationContainer>
         </AuthProvider>

@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ImageBackground } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ImageBackground, KeyboardAvoidingView, Platform } from 'react-native';
 import { useAuth } from '../../context/auth/useAuth';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function LoginScreen({ navigation, setIsLoggedIn }) {
     const [email, setEmail] = useState('');
@@ -29,13 +30,13 @@ export default function LoginScreen({ navigation, setIsLoggedIn }) {
 
     const loginHandler = async () => {
         try {
-        clearError();
-        if (!validate()) return;
+            clearError();
+            if (!validate()) return;
 
-        await login(email, password);
-    } catch (err) {
-        console.log('LOGIN FAILED', err);
-    }
+            await login(email, password);
+        } catch (err) {
+            console.log('LOGIN FAILED', err);
+        }
     };
 
     /* const loginHandler = async (email, password, lat, lng, setIsLoggedIn) => {
@@ -75,36 +76,41 @@ export default function LoginScreen({ navigation, setIsLoggedIn }) {
     } */
 
     return (
-        <ImageBackground
-            source={{ uri: 'https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1' }}
-            style={styles.background}
-        >
-            <View style={styles.overlay}>
-                <Text style={styles.title}>Login</Text>
-                <TextInput
-                    style={styles.input}
-                    placeholder="Email"
-                    placeholderTextColor="#ccc"
-                    value={email}
-                    onChangeText={setEmail}
-                />
-                <TextInput
-                    style={styles.input}
-                    placeholder="Password"
-                    placeholderTextColor="#ccc"
-                    secureTextEntry
-                    value={password}
-                    onChangeText={setPassword}
-                />
-                <TouchableOpacity style={styles.button} onPress={() => loginHandler()}>
-                    <Text style={styles.buttonText}>Login</Text>
-                </TouchableOpacity>
+        <SafeAreaView style={{ flex: 1 }} edges={['left', 'right', 'bottom']}>
+            <KeyboardAvoidingView style={{flex: 1}} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+                <ImageBackground
+                    source={{ uri: 'https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1' }}
+                    style={styles.background}
+                >
+                    <View style={styles.overlay}>
+                        <Text style={styles.title}>Login</Text>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Email"
+                            placeholderTextColor="#ccc"
+                            value={email}
+                            onChangeText={setEmail}
+                        />
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Password"
+                            placeholderTextColor="#ccc"
+                            secureTextEntry
+                            value={password}
+                            onChangeText={setPassword}
+                        />
+                        <TouchableOpacity style={styles.button} onPress={() => loginHandler()}>
+                            <Text style={styles.buttonText}>Login</Text>
+                        </TouchableOpacity>
 
-                <TouchableOpacity onPress={() => navigation.navigate('Register')}>
-                    <Text style={styles.link}>Not registered yet?!</Text>
-                </TouchableOpacity>
-            </View>
-        </ImageBackground>
+                        <TouchableOpacity onPress={() => navigation.navigate('Register')}>
+                            <Text style={styles.link}>Not registered yet?!</Text>
+                        </TouchableOpacity>
+                    </View>
+                </ImageBackground>
+            </KeyboardAvoidingView>
+        </SafeAreaView>
+
     );
 }
 

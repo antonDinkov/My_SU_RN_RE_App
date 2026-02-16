@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ImageBackground } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ImageBackground, KeyboardAvoidingView, Platform } from 'react-native';
 import { useAuth } from '../../context/auth/useAuth';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function RegisterScreen({ navigation, setIsLoggedIn }) {
     const [firstName, setFirstName] = useState('');
@@ -42,58 +43,63 @@ export default function RegisterScreen({ navigation, setIsLoggedIn }) {
     };
 
     return (
-        <ImageBackground
-            source={{ uri: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee' }}
-            style={styles.background}
-        >
-            <View style={styles.overlay}>
-                <Text style={styles.title}>Register</Text>
-                <TextInput
-                    style={styles.input}
-                    placeholder="First Name"
-                    placeholderTextColor="#ccc"
-                    value={firstName}
-                    onChangeText={setFirstName}
-                />
-                <TextInput
-                    style={styles.input}
-                    placeholder="Last Name"
-                    placeholderTextColor="#ccc"
-                    value={lastName}
-                    onChangeText={setLastName}
-                />
-                <TextInput
-                    style={styles.input}
-                    placeholder="Email"
-                    placeholderTextColor="#ccc"
-                    value={email}
-                    onChangeText={setEmail}
-                />
-                <TextInput
-                    style={styles.input}
-                    placeholder="Password"
-                    placeholderTextColor="#ccc"
-                    secureTextEntry
-                    value={password}
-                    onChangeText={setPassword}
-                />
-                <TextInput
-                    style={styles.input}
-                    placeholder="Repeat Password"
-                    placeholderTextColor="#ccc"
-                    secureTextEntry
-                    value={repeatPassword}
-                    onChangeText={setRepeatPassword}
-                />
-                <TouchableOpacity style={styles.button} onPress={() => registerHandler(firstName, lastName, email, password, repeatPassword)}>
-                    <Text style={styles.buttonText}>Register</Text>
-                </TouchableOpacity>
+        <SafeAreaView style={{ flex: 1 }} edges={['left', 'right', 'bottom']}>
+            <KeyboardAvoidingView style={{flex: 1}} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+                <ImageBackground
+                    source={{ uri: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee' }}
+                    style={styles.background}
+                >
+                    <View style={styles.overlay}>
+                        <Text style={styles.title}>Register</Text>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="First Name"
+                            placeholderTextColor="#ccc"
+                            value={firstName}
+                            onChangeText={setFirstName}
+                        />
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Last Name"
+                            placeholderTextColor="#ccc"
+                            value={lastName}
+                            onChangeText={setLastName}
+                        />
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Email"
+                            placeholderTextColor="#ccc"
+                            value={email}
+                            onChangeText={setEmail}
+                        />
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Password"
+                            placeholderTextColor="#ccc"
+                            secureTextEntry
+                            value={password}
+                            onChangeText={setPassword}
+                        />
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Repeat Password"
+                            placeholderTextColor="#ccc"
+                            secureTextEntry
+                            value={repeatPassword}
+                            onChangeText={setRepeatPassword}
+                        />
+                        <TouchableOpacity style={styles.button} onPress={() => registerHandler(firstName, lastName, email, password, repeatPassword)}>
+                            <Text style={styles.buttonText}>Register</Text>
+                        </TouchableOpacity>
 
-                <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-                    <Text style={styles.link}>Already have an account?!</Text>
-                </TouchableOpacity>
-            </View>
-        </ImageBackground>
+                        <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+                            <Text style={styles.link}>Already have an account?!</Text>
+                        </TouchableOpacity>
+                    </View>
+                </ImageBackground>
+            </KeyboardAvoidingView>
+        </SafeAreaView>
+
     );
 }
 
