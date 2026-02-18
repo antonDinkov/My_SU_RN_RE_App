@@ -81,10 +81,6 @@ export default function HomeScreen({ setIsLoggedIn }) {
                         />
                     </View>
                 </View>
-
-                <TouchableOpacity style={styles.button} onPress={logoutHandler}>
-                    <Text style={styles.buttonText}>Logout</Text>
-                </TouchableOpacity>
             </View>
         </ImageBackground>
     );
@@ -125,6 +121,7 @@ const styles = StyleSheet.create({
 
     searchContainer: {
         marginTop: 25,
+        marginBottom: 15,
         backgroundColor: 'rgba(255,255,255,0.08)',
         padding: 16,
         borderRadius: 16,
