@@ -1,9 +1,10 @@
-import { View, Text, StyleSheet, TouchableOpacity, FlatList, ImageBackground, TextInput } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, FlatList, ImageBackground, TextInput, KeyboardAvoidingView, Platform } from 'react-native';
 import { useAuth } from '../../context/auth/useAuth';
 import { useData } from '../../context/main/useData';
 import { useEffect, useState } from 'react';
 import DestinationCard from '../../components/DestinationCard';
 import { RadioButton } from '../../components/RadioButton';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function HomeScreen({ setIsLoggedIn }) {
     const { logout } = useAuth();
@@ -50,54 +51,59 @@ export default function HomeScreen({ setIsLoggedIn }) {
 
 
     return (
-        <ImageBackground
-            source={{ uri: 'https://images.unsplash.com/photo-1502082553048-f009c37129b9' }}
-            style={styles.background}
-        >
-            <View style={styles.overlay}>
-                <Text style={styles.title}>Welcome to Travel Feever</Text>
-                <Text style={styles.subtitle}>Popular Destinations</Text>
-                <FlatList
-                    data={featuredCountries}
-                    keyExtractor={(item) => item._id}
-                    horizontal
-                    showsHorizontalScrollIndicator={false}
-                    renderItem={({ item }) => <DestinationCard item={item} onPress={(selected) => console.log(selected)} />}
-                    refreshing={refreshing}
-                    onRefresh={onRefresh}
-                />
-                <View style={styles.searchContainer}>
-                    <TextInput
-                        placeholder="Search..."
-                        placeholderTextColor="#ccc"
-                        value={searchQuery}
-                        onChangeText={setSearchQuery}
-                        style={styles.searchInput}
-                    />
+        <SafeAreaView  style={{ flex: 1 }} edges={['left', 'right']}>
+            <KeyboardAvoidingView  style={{flex: 1}} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+                <ImageBackground
+                    source={{ uri: 'https://images.unsplash.com/photo-1502082553048-f009c37129b9' }}
+                    style={styles.background}
+                >
+                    <View style={styles.overlay}>
+                        <Text style={styles.title}>Welcome to Travel Feever</Text>
+                        <Text style={styles.subtitle}>Popular Destinations</Text>
+                        <FlatList
+                            data={featuredCountries}
+                            keyExtractor={(item) => item._id}
+                            horizontal
+                            showsHorizontalScrollIndicator={false}
+                            renderItem={({ item }) => <DestinationCard item={item} onPress={(selected) => console.log(selected)} />}
+                            refreshing={refreshing}
+                            onRefresh={onRefresh}
+                        />
+                        <View style={styles.searchContainer}>
+                            <TextInput
+                                placeholder="Search..."
+                                placeholderTextColor="#ccc"
+                                value={searchQuery}
+                                onChangeText={setSearchQuery}
+                                style={styles.searchInput}
+                            />
 
-                    <View style={styles.radioGroup}>
-                        <RadioButton
-                            label="Country"
-                            value="country"
-                            selected={searchType}
-                            onSelect={setSearchType}
-                        />
-                        <RadioButton
-                            label="City"
-                            value="city"
-                            selected={searchType}
-                            onSelect={setSearchType}
-                        />
-                        <RadioButton
-                            label="POI"
-                            value="poi"
-                            selected={searchType}
-                            onSelect={setSearchType}
-                        />
+                            <View style={styles.radioGroup}>
+                                <RadioButton
+                                    label="Country"
+                                    value="country"
+                                    selected={searchType}
+                                    onSelect={setSearchType}
+                                />
+                                <RadioButton
+                                    label="City"
+                                    value="city"
+                                    selected={searchType}
+                                    onSelect={setSearchType}
+                                />
+                                <RadioButton
+                                    label="POI"
+                                    value="poi"
+                                    selected={searchType}
+                                    onSelect={setSearchType}
+                                />
+                            </View>
+                        </View>
                     </View>
-                </View>
-            </View>
-        </ImageBackground>
+                </ImageBackground>
+            </KeyboardAvoidingView>
+        </SafeAreaView>
+
     );
 }
 
