@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import DestinationCard from '../../components/DestinationCard';
 import { RadioButton } from '../../components/RadioButton';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import Button from '../../components/Button';
 
 export default function HomeScreen({ setIsLoggedIn }) {
     const { logout } = useAuth();
@@ -51,8 +52,8 @@ export default function HomeScreen({ setIsLoggedIn }) {
 
 
     return (
-        <SafeAreaView  style={{ flex: 1 }} edges={['left', 'right']}>
-            <KeyboardAvoidingView  style={{flex: 1}} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+        <SafeAreaView style={{ flex: 1 }} edges={['left', 'right']}>
+            <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
                 <ImageBackground
                     source={{ uri: 'https://images.unsplash.com/photo-1502082553048-f009c37129b9' }}
                     style={styles.background}
@@ -70,13 +71,16 @@ export default function HomeScreen({ setIsLoggedIn }) {
                             onRefresh={onRefresh}
                         />
                         <View style={styles.searchContainer}>
-                            <TextInput
-                                placeholder="Search..."
-                                placeholderTextColor="#ccc"
-                                value={searchQuery}
-                                onChangeText={setSearchQuery}
-                                style={styles.searchInput}
-                            />
+                            <View style={styles.searchRow}>
+                                <TextInput
+                                    placeholder="Search..."
+                                    placeholderTextColor="#ccc"
+                                    value={searchQuery}
+                                    onChangeText={setSearchQuery}
+                                    style={styles.searchInput}
+                                />
+                                <Button onPress={() => console.log("Search button pressed")} name="Search" style={styles.button} />
+                            </View>
 
                             <View style={styles.radioGroup}>
                                 <RadioButton
@@ -148,6 +152,12 @@ const styles = StyleSheet.create({
         borderRadius: 16,
     },
 
+    searchRow: {
+        flexDirection: 'row',
+        alignItems: 'baseline',
+        justifyContent: 'space-between'
+    },
+
     searchInput: {
         backgroundColor: '#fff',
         borderRadius: 12,
@@ -155,6 +165,8 @@ const styles = StyleSheet.create({
         paddingHorizontal: 16,
         fontSize: 16,
         marginBottom: 14,
+        width: '68%',
+        opacity: 0.7,
     },
 
     radioGroup: {
@@ -165,22 +177,9 @@ const styles = StyleSheet.create({
     /* -------- Button -------- */
 
     button: {
-        backgroundColor: '#FF6B6B',
-        paddingVertical: 16,
-        borderRadius: 14,
-        marginTop: 30,
-        alignItems: 'center',
-        shadowColor: '#FF6B6B',
-        shadowOffset: { width: 0, height: 6 },
-        shadowOpacity: 0.4,
-        shadowRadius: 8,
-        elevation: 6,
-    },
-
-    buttonText: {
-        color: '#fff',
-        fontSize: 16,
-        fontWeight: '700',
-        letterSpacing: 0.5,
+        backgroundColor: "lightgreen",
+        width: 80,
+        opacity: 0.7,
+        paddingVertical: 8
     },
 });
