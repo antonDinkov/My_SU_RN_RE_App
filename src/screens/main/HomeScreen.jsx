@@ -1,19 +1,26 @@
 import { View, Text, StyleSheet, TouchableOpacity, FlatList, ImageBackground } from 'react-native';
 import { useAuth } from '../../context/auth/useAuth';
-
-const destinations = [
-    { id: '1', name: 'Paris' },
-    { id: '2', name: 'Rome' },
-    { id: '3', name: 'Tokyo' },
-];
+import { useData } from '../../context/main/useData';
+import { useEffect, useState } from 'react';
+import DestinationCard from '../../components/DestinationCard';
 
 export default function HomeScreen({ setIsLoggedIn }) {
     const { logout } = useAuth();
-    const renderItem = ({ item }) => (
-        <TouchableOpacity style={styles.card}>
-            <Text style={styles.destination}>{item.name}</Text>
-        </TouchableOpacity>
-    );
+    const [featuredCountries, setFeaturedCountries] = useState([]);
+    const {getFeaturedCountries} = useData();
+
+    useEffect(() => {
+        const loadCountries = async () => {
+            try {
+                const countries = await getFeaturedCountries();
+                console.log("LOADED: ", countries);
+                setFeaturedCountries(countries);
+            } catch (err) {
+                console.log("Error getting the coutries");
+            }
+        }
+        loadCountries();
+    }, []);
 
     const logoutHandler = async () => {
         try {
@@ -34,11 +41,11 @@ export default function HomeScreen({ setIsLoggedIn }) {
                 <Text style={styles.title}>Welcome to Travel Feever</Text>
                 <Text style={styles.subtitle}>Popular Destinations</Text>
                 <FlatList
-                    data={destinations}
-                    renderItem={renderItem}
-                    keyExtractor={(item) => item.id}
+                    data={featuredCountries}
+                    keyExtractor={(item) => item._id}
                     horizontal
                     showsHorizontalScrollIndicator={false}
+                    renderItem={({item}) => <DestinationCard item={item} onPress={(selected) => console.log(selected)} />}
                 />
                 <TouchableOpacity style={styles.button}>
                     <Text style={styles.buttonText}>Search Trips</Text>
