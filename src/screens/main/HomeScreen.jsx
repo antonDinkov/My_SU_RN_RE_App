@@ -11,20 +11,33 @@ export default function HomeScreen({ setIsLoggedIn }) {
     const { getFeaturedCountries } = useData();
     const [searchQuery, setSearchQuery] = useState('');
     const [searchType, setSearchType] = useState('country');
+    const [refreshing, setRefreshing] = useState(false);
 
+    const loadCountries = async () => {
+        try {
+            const countries = await getFeaturedCountries();
+            setFeaturedCountries(countries);
+        } catch (err) {
+            console.log("Error getting the coutries");
+        }
+    }
 
     useEffect(() => {
-        const loadCountries = async () => {
-            try {
-                const countries = await getFeaturedCountries();
-                console.log("LOADED: ", countries);
-                setFeaturedCountries(countries);
-            } catch (err) {
-                console.log("Error getting the coutries");
-            }
-        }
         loadCountries();
     }, []);
+
+    const onRefresh = async () => {
+        try {
+            setRefreshing(true);
+            loadCountries();
+            setSearchQuery('');
+        } catch (err) {
+            console.log("Error refreshing countries");
+        } finally {
+            setRefreshing(false);
+        }
+    };
+
 
     const logoutHandler = async () => {
         try {
@@ -50,6 +63,8 @@ export default function HomeScreen({ setIsLoggedIn }) {
                     horizontal
                     showsHorizontalScrollIndicator={false}
                     renderItem={({ item }) => <DestinationCard item={item} onPress={(selected) => console.log(selected)} />}
+                    refreshing={refreshing}
+                    onRefresh={onRefresh}
                 />
                 <View style={styles.searchContainer}>
                     <TextInput
