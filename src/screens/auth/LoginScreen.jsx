@@ -39,42 +39,6 @@ export default function LoginScreen({ navigation, setIsLoggedIn }) {
         }
     };
 
-    /* const loginHandler = async (email, password, lat, lng, setIsLoggedIn) => {
-      try {
-              const response = await fetch('https://travelfeverbe.onrender.com/login', {
-                  method: 'POST',
-                  headers: {
-                      'Content-Type': 'application/json',
-                      'x-user-lat': lat?.toString() || '0',
-                      'x-user-lng': lng?.toString() || '0',
-                  },
-                  body: JSON.stringify({ email, password }),
-                  credentials: 'include', // за cookie
-              });
-  
-              const data = await response.json();
-  
-              if (!response.ok) {
-                  // Покажи всички backend validation errors
-                  throw new Error(data.errors ? data.errors.join(', ') : 'Login failed');
-              }
-  
-              console.log('User logged in', data.user);
-  
-              // Можеш да съхраниш token (ако го връща backend) в AsyncStorage
-              // await AsyncStorage.setItem('token', data.token);
-  
-              // Логваме потребителя в апликацията
-              setIsLoggedIn(true);
-  
-              return data.user;
-  
-          } catch (err) {
-              console.error(err.message);
-              alert(err.message);
-          }
-    } */
-
     return (
         <SafeAreaView style={{ flex: 1 }} edges={['left', 'right', 'bottom']}>
             <KeyboardAvoidingView style={{flex: 1}} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
@@ -115,11 +79,53 @@ export default function LoginScreen({ navigation, setIsLoggedIn }) {
 }
 
 const styles = StyleSheet.create({
-    background: { flex: 1, resizeMode: 'cover' },
-    overlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'center', padding: 20 },
-    title: { fontSize: 28, fontWeight: 'bold', color: '#fff', marginBottom: 20, textAlign: 'center' },
-    input: { backgroundColor: '#fff', borderRadius: 8, padding: 12, marginVertical: 8 },
-    button: { backgroundColor: '#007AFF', padding: 15, borderRadius: 8, marginTop: 20, alignItems: 'center' },
-    buttonText: { color: '#fff', fontSize: 16, fontWeight: '600' },
-    link: { color: '#fff', marginTop: 20, textAlign: 'center', textDecorationLine: 'underline' },
+
+    background: {
+        flex: 1,
+        resizeMode: 'cover',
+    },
+
+    overlay: {
+        flex: 1,
+        backgroundColor: 'rgba(0,0,0,0.5)',
+        justifyContent: 'center',
+        padding: 20,
+    },
+
+    title: {
+        fontSize: 28,
+        fontWeight: 'bold',
+        color: '#fff',
+        marginBottom: 20,
+        textAlign: 'center',
+    },
+
+    input: {
+        backgroundColor: '#fff',
+        borderRadius: 8,
+        padding: 12,
+        marginVertical: 8,
+    },
+
+    button: {
+        backgroundColor: '#007AFF',
+        padding: 15,
+        borderRadius: 8,
+        marginTop: 20,
+        alignItems: 'center',
+    },
+
+    buttonText: {
+        color: '#fff',
+        fontSize: 16,
+        fontWeight: '600',
+    },
+
+    link: {
+        color: '#fff',
+        marginTop: 20,
+        textAlign: 'center',
+        textDecorationLine: 'underline',
+    },
+
 });

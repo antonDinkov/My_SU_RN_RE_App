@@ -1,4 +1,5 @@
 import { View, Text, StyleSheet, TouchableOpacity, ImageBackground } from 'react-native';
+import Button from '../../components/Button';
 
 export default function AuthScreen({ navigation }) {
   return (
@@ -8,18 +9,8 @@ export default function AuthScreen({ navigation }) {
     >
       <View style={styles.overlay}>
         <Text style={styles.title}>Welcome to Travel Fever</Text>
-        <TouchableOpacity 
-          style={styles.button} 
-          onPress={() => navigation.navigate('Login')}
-        >
-          <Text style={styles.buttonText}>Login</Text>
-        </TouchableOpacity>
-        <TouchableOpacity 
-          style={[styles.button, styles.registerButton]} 
-          onPress={() => navigation.navigate('Register')}
-        >
-          <Text style={styles.buttonText}>Register</Text>
-        </TouchableOpacity>
+        <Button name="Login" onPress={() => navigation.navigate('Login')} />
+        <Button name="Register" onPress={() => navigation.navigate('Register')} style={{backgroundColor: '#FF6B6B'}} />
       </View>
     </ImageBackground>
   );
@@ -43,20 +34,5 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#fff',
     marginBottom: 40,
-  },
-  button: {
-    backgroundColor: '#007AFF',
-    paddingVertical: 15,
-    paddingHorizontal: 60,
-    borderRadius: 30,
-    marginVertical: 10,
-  },
-  registerButton: {
-    backgroundColor: '#FF6B6B',
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: '600',
   },
 });
