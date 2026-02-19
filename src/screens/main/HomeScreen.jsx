@@ -40,7 +40,7 @@ export default function HomeScreen({ setIsLoggedIn }) {
     };
 
     const searchHandler = async () => {
-        const results = await getSearchResults("Berlin", "city");
+        const results = await getSearchResults("Paris", "city");
         console.log("This is the results:", results);
     }
 
