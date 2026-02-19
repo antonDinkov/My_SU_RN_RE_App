@@ -6,6 +6,7 @@ import { dataService } from "../../api";
 export const DataContext = createContext({
     isLoading: false,
     getFeaturedCountries: async () => {},
+    getSearchResults: async () => {},
 })
 
 export function DataProvider({ children }) {
@@ -23,8 +24,21 @@ export function DataProvider({ children }) {
         }
     }
 
+    const getSearchResults = async (text, type) => {
+        try {
+            setIsLoading(true);
+            const data = await dataService.getSearchResults(text, type);
+            return data;
+        } catch (err) {
+            console.log("Error loading data: ", err);
+        } finally {
+            setIsLoading(false)
+        }
+    }
+
     const contextValue = {
         getFeaturedCountries,
+        getSearchResults,
     };
 
     return (

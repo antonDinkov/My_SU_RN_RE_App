@@ -8,3 +8,12 @@ export const getFeateredCountries = async () => {
         throw err;
     }
 };
+
+export const getSearchResults = async (text, type) => {
+    try {
+        const response = await api.get('/search', { params: { text, type } });
+        return response.data.data;
+    } catch (err) {
+        throw err
+    }
+}

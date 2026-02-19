@@ -8,9 +8,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import Button from '../../components/Button';
 
 export default function HomeScreen({ setIsLoggedIn }) {
-    const { logout } = useAuth();
     const [featuredCountries, setFeaturedCountries] = useState([]);
-    const { getFeaturedCountries } = useData();
+    const { getFeaturedCountries, getSearchResults } = useData();
     const [searchQuery, setSearchQuery] = useState('');
     const [searchType, setSearchType] = useState('country');
     const [refreshing, setRefreshing] = useState(false);
@@ -40,15 +39,10 @@ export default function HomeScreen({ setIsLoggedIn }) {
         }
     };
 
-
-    const logoutHandler = async () => {
-        try {
-            await logout();
-        } catch (err) {
-            console.error('Logout error:', err.message);
-            alert(err.message);
-        }
-    };
+    const searchHandler = async () => {
+        const results = await getSearchResults("Berlin", "city");
+        console.log("This is the results:", results);
+    }
 
 
     return (
@@ -79,7 +73,7 @@ export default function HomeScreen({ setIsLoggedIn }) {
                                     onChangeText={setSearchQuery}
                                     style={styles.searchInput}
                                 />
-                                <Button onPress={() => console.log("Search button pressed")} name="Search" style={styles.button} />
+                                <Button onPress={searchHandler} name="Search" style={styles.button} />
                             </View>
 
                             <View style={styles.radioGroup}>
@@ -136,13 +130,9 @@ const styles = StyleSheet.create({
         marginBottom: 20,
     },
 
-    /* -------- Featured List -------- */
-
     listContainer: {
         paddingVertical: 10,
     },
-
-    /* -------- Search Section -------- */
 
     searchContainer: {
         marginTop: 25,
@@ -173,8 +163,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
     },
-
-    /* -------- Button -------- */
 
     button: {
         backgroundColor: "lightgreen",
