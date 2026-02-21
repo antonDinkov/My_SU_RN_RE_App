@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TouchableOpacity, FlatList, ImageBackground, TextInput, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, FlatList, ImageBackground, TextInput, KeyboardAvoidingView, Platform, ScrollView, RefreshControl } from 'react-native';
 import { useData } from '../../context/main/useData';
 import { useEffect, useState } from 'react';
 import DestinationCard from '../../components/DestinationCard';
@@ -52,7 +52,7 @@ export default function HomeScreen({ setIsLoggedIn }) {
     return (
         <SafeAreaView style={{ flex: 1 }} edges={['left', 'right']}>
             <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-                <ScrollView contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false}>
+                <ScrollView contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
                     <ImageBackground
                         source={{ uri: 'https://images.unsplash.com/photo-1502082553048-f009c37129b9' }}
                         style={styles.background}

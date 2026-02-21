@@ -7,8 +7,6 @@ import {
 } from 'react-native';
 
 const DestinationCard = ({ item, onPress }) => {
-    console.log(item.image_url);
-    
     return (
         <TouchableOpacity
             style={styles.card}
