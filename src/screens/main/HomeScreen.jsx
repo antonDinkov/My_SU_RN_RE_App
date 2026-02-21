@@ -1,12 +1,10 @@
 import { View, Text, StyleSheet, TouchableOpacity, FlatList, ImageBackground, TextInput, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
-import { useAuth } from '../../context/auth/useAuth';
 import { useData } from '../../context/main/useData';
 import { useEffect, useState } from 'react';
 import DestinationCard from '../../components/DestinationCard';
 import { RadioButton } from '../../components/RadioButton';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Button from '../../components/Button';
-import TestImage from '../../components/TestImage';
 
 export default function HomeScreen({ setIsLoggedIn }) {
     const [featuredCountries, setFeaturedCountries] = useState([]);
@@ -42,7 +40,7 @@ export default function HomeScreen({ setIsLoggedIn }) {
     };
 
     const searchHandler = async () => {
-        const results = await getSearchResults("Colosseum", "poi");
+        const results = await getSearchResults("Grand Canyon National Park", "poi");
         setSearchResults(results);
     }
 
