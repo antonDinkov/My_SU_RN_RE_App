@@ -39,8 +39,8 @@ export default function HomeScreen({ setIsLoggedIn }) {
         }
     };
 
-    const searchHandler = async () => {
-        const results = await getSearchResults("Grand Canyon National Park", "poi");
+    const searchHandler = async (name, type) => {
+        const results = await getSearchResults(name, type);
         setSearchResults(results);
     }
 
@@ -65,7 +65,7 @@ export default function HomeScreen({ setIsLoggedIn }) {
                                 keyExtractor={(item) => item._id}
                                 horizontal
                                 showsHorizontalScrollIndicator={false}
-                                renderItem={({ item }) => <DestinationCard item={item} onPress={(selected) => console.log(selected)} />}
+                                renderItem={({ item }) => <DestinationCard key={item._id} item={item} onPress={(selected) => console.log(selected)} />}
                                 refreshing={refreshing}
                                 onRefresh={onRefresh}
                             />
@@ -78,7 +78,7 @@ export default function HomeScreen({ setIsLoggedIn }) {
                                         onChangeText={setSearchQuery}
                                         style={styles.searchInput}
                                     />
-                                    <Button onPress={searchHandler} name="Search" style={styles.button} />
+                                    <Button onPress={() => searchHandler(searchQuery, searchType)} name="Search" style={styles.button} />
                                 </View>
 
                                 <View style={styles.radioGroup}>
@@ -106,7 +106,7 @@ export default function HomeScreen({ setIsLoggedIn }) {
                                     keyExtractor={(item) => item._id}
                                     horizontal
                                     showsHorizontalScrollIndicator={false}
-                                    renderItem={({ item }) => <DestinationCard item={item} onPress={(selected) => console.log(selected)} />}
+                                    renderItem={({ item }) => <DestinationCard key={item._id} item={item} onPress={(selected) => console.log(selected)} />}
                                     refreshing={refreshing}
                                     onRefresh={onRefresh}
                                 />
