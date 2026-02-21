@@ -2,11 +2,12 @@ import { useState } from 'react';
 import { View, Text, StyleSheet, Switch, ImageBackground, TouchableOpacity } from 'react-native';
 import { useAuth } from '../../context/auth/useAuth';
 import { useTheme } from '../../context/theme/useTheme';
+import Slider from '@react-native-community/slider';
 
 export default function SettingsScreen() {
     const [notifications, setNotifications] = useState(true);
     const { logout } = useAuth();
-    const {isDark, toggleTheme} = useTheme();
+    const { isDark, toggleTheme, darkOpacity, setDarkOpacity } = useTheme();
 
     const logoutHandler = async () => {
         try {
@@ -22,7 +23,7 @@ export default function SettingsScreen() {
             source={{ uri: 'https://images.unsplash.com/photo-1508921912186-1d1a45ebb3c1' }}
             style={styles.background}
         >
-            
+
             <View style={styles.overlay}>
                 <Text style={styles.title}>Settings</Text>
                 <View style={styles.setting}>
@@ -36,6 +37,12 @@ export default function SettingsScreen() {
                 <View style={styles.setting}>
                     <Text style={styles.label}>Language</Text>
                     <Text style={styles.value}>English</Text>
+                </View>
+                <View style={styles.sliderMode}>
+                    {isDark && (<>
+                        <Text style={styles.sliderText}>Dark Intensity: {Math.round(darkOpacity * 100)}%</Text>
+                        <Slider minimumValue={0} maximumValue={1} step={0.05} value={darkOpacity} onValueChange={setDarkOpacity} />
+                    </>)}
                 </View>
                 <TouchableOpacity style={styles.button} onPress={logoutHandler}>
                     <Text style={styles.buttonText}>Logout</Text>
@@ -69,6 +76,16 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.4,
         shadowRadius: 8,
         elevation: 8,
+    },
+
+    sliderMode: {
+        marginTop: 50,
+    },
+
+    sliderText: {
+        color: '#fff',
+        marginBottom:10,
+        alignSelf: 'center'
     },
 
     buttonText: {
