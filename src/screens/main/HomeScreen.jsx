@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TouchableOpacity, FlatList, ImageBackground, TextInput, KeyboardAvoidingView, Platform } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, FlatList, ImageBackground, TextInput, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
 import { useAuth } from '../../context/auth/useAuth';
 import { useData } from '../../context/main/useData';
 import { useEffect, useState } from 'react';
@@ -6,12 +6,14 @@ import DestinationCard from '../../components/DestinationCard';
 import { RadioButton } from '../../components/RadioButton';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Button from '../../components/Button';
+import TestImage from '../../components/TestImage';
 
 export default function HomeScreen({ setIsLoggedIn }) {
     const [featuredCountries, setFeaturedCountries] = useState([]);
     const { getFeaturedCountries, getSearchResults } = useData();
     const [searchQuery, setSearchQuery] = useState('');
     const [searchType, setSearchType] = useState('country');
+    const [searchResults, setSearchResults] = useState([]);
     const [refreshing, setRefreshing] = useState(false);
 
     const loadCountries = async () => {
@@ -40,65 +42,81 @@ export default function HomeScreen({ setIsLoggedIn }) {
     };
 
     const searchHandler = async () => {
-        const results = await getSearchResults("Paris", "city");
-        console.log("This is the results:", results);
+        const results = await getSearchResults("Colosseum", "poi");
+        setSearchResults(results);
+    }
+
+    const cleanSearchResultsHandler = () => {
+        setSearchResults([]);
     }
 
 
     return (
         <SafeAreaView style={{ flex: 1 }} edges={['left', 'right']}>
             <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-                <ImageBackground
-                    source={{ uri: 'https://images.unsplash.com/photo-1502082553048-f009c37129b9' }}
-                    style={styles.background}
-                >
-                    <View style={styles.overlay}>
-                        <Text style={styles.title}>Welcome to Travel Feever</Text>
-                        <Text style={styles.subtitle}>Popular Destinations</Text>
-                        <FlatList
-                            data={featuredCountries}
-                            keyExtractor={(item) => item._id}
-                            horizontal
-                            showsHorizontalScrollIndicator={false}
-                            renderItem={({ item }) => <DestinationCard item={item} onPress={(selected) => console.log(selected)} />}
-                            refreshing={refreshing}
-                            onRefresh={onRefresh}
-                        />
-                        <View style={styles.searchContainer}>
-                            <View style={styles.searchRow}>
-                                <TextInput
-                                    placeholder="Search..."
-                                    placeholderTextColor="#ccc"
-                                    value={searchQuery}
-                                    onChangeText={setSearchQuery}
-                                    style={styles.searchInput}
-                                />
-                                <Button onPress={searchHandler} name="Search" style={styles.button} />
-                            </View>
+                <ScrollView contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false}>
+                    <ImageBackground
+                        source={{ uri: 'https://images.unsplash.com/photo-1502082553048-f009c37129b9' }}
+                        style={styles.background}
+                    >
+                        <View style={styles.overlay}>
+                            <Text style={styles.title}>Welcome to Travel Feever</Text>
+                            <Text style={styles.subtitle}>Popular Destinations</Text>
+                            <FlatList
+                                data={featuredCountries}
+                                keyExtractor={(item) => item._id}
+                                horizontal
+                                showsHorizontalScrollIndicator={false}
+                                renderItem={({ item }) => <DestinationCard item={item} onPress={(selected) => console.log(selected)} />}
+                                refreshing={refreshing}
+                                onRefresh={onRefresh}
+                            />
+                            <View style={styles.searchContainer}>
+                                <View style={styles.searchRow}>
+                                    <TextInput
+                                        placeholder="Search..."
+                                        placeholderTextColor="#ccc"
+                                        value={searchQuery}
+                                        onChangeText={setSearchQuery}
+                                        style={styles.searchInput}
+                                    />
+                                    <Button onPress={searchHandler} name="Search" style={styles.button} />
+                                </View>
 
-                            <View style={styles.radioGroup}>
-                                <RadioButton
-                                    label="Country"
-                                    value="country"
-                                    selected={searchType}
-                                    onSelect={setSearchType}
+                                <View style={styles.radioGroup}>
+                                    <RadioButton
+                                        label="Country"
+                                        value="country"
+                                        selected={searchType}
+                                        onSelect={setSearchType}
+                                    />
+                                    <RadioButton
+                                        label="City"
+                                        value="city"
+                                        selected={searchType}
+                                        onSelect={setSearchType}
+                                    />
+                                    <RadioButton
+                                        label="POI"
+                                        value="poi"
+                                        selected={searchType}
+                                        onSelect={setSearchType}
+                                    />
+                                </View>
+                                <FlatList
+                                    data={searchResults}
+                                    keyExtractor={(item) => item._id}
+                                    horizontal
+                                    showsHorizontalScrollIndicator={false}
+                                    renderItem={({ item }) => <DestinationCard item={item} onPress={(selected) => console.log(selected)} />}
+                                    refreshing={refreshing}
+                                    onRefresh={onRefresh}
                                 />
-                                <RadioButton
-                                    label="City"
-                                    value="city"
-                                    selected={searchType}
-                                    onSelect={setSearchType}
-                                />
-                                <RadioButton
-                                    label="POI"
-                                    value="poi"
-                                    selected={searchType}
-                                    onSelect={setSearchType}
-                                />
+                                <Button onPress={cleanSearchResultsHandler} name="Clean search" style={styles.cleanButton} />
                             </View>
                         </View>
-                    </View>
-                </ImageBackground>
+                    </ImageBackground>
+                </ScrollView>
             </KeyboardAvoidingView>
         </SafeAreaView>
 
@@ -170,4 +188,8 @@ const styles = StyleSheet.create({
         opacity: 0.7,
         paddingVertical: 8
     },
+
+    cleanButton: {
+        paddingVertical: 5,
+    }
 });
