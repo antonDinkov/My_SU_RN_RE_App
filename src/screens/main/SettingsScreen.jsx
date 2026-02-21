@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { View, Text, StyleSheet, Switch, ImageBackground, TouchableOpacity } from 'react-native';
 import { useAuth } from '../../context/auth/useAuth';
+import { useTheme } from '../../context/theme/useTheme';
 
 export default function SettingsScreen() {
     const [notifications, setNotifications] = useState(true);
-    const [darkMode, setDarkMode] = useState(false);
     const { logout } = useAuth();
+    const {isDark, toggleTheme} = useTheme();
 
     const logoutHandler = async () => {
         try {
@@ -21,6 +22,7 @@ export default function SettingsScreen() {
             source={{ uri: 'https://images.unsplash.com/photo-1508921912186-1d1a45ebb3c1' }}
             style={styles.background}
         >
+            
             <View style={styles.overlay}>
                 <Text style={styles.title}>Settings</Text>
                 <View style={styles.setting}>
@@ -29,7 +31,7 @@ export default function SettingsScreen() {
                 </View>
                 <View style={styles.setting}>
                     <Text style={styles.label}>Dark Mode</Text>
-                    <Switch value={darkMode} onValueChange={setDarkMode} />
+                    <Switch value={isDark} onValueChange={toggleTheme} />
                 </View>
                 <View style={styles.setting}>
                     <Text style={styles.label}>Language</Text>

@@ -6,6 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useEffect } from "react";
 import { StatusBar } from "expo-status-bar";
 import { DataProvider } from "./context/main/DataProvider";
+import { DarkThemeProvider, ThemeProvider } from "./context/theme/DarkThemeProvider";
 
 
 export default function App() {
@@ -13,12 +14,15 @@ export default function App() {
         AsyncStorage.clear();
     }, []);
     return (
+
         <AuthProvider>
             <DataProvider>
-                <NavigationContainer>
-                    <StatusBar style="light" backgroundColor="#000" />
-                    <AppNavigator />
-                </NavigationContainer>
+                <DarkThemeProvider>
+                    <NavigationContainer>
+                        <StatusBar style="light" backgroundColor="#000" />
+                        <AppNavigator />
+                    </NavigationContainer>
+                </DarkThemeProvider>
             </DataProvider>
         </AuthProvider>
     );
