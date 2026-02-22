@@ -15,7 +15,6 @@ export default function HomeScreen({ navigation }) {
     const [searchResults, setSearchResults] = useState([]);
     const [refreshing, setRefreshing] = useState(false);
 
-    const nav = useNavigation();
     const loadCountries = async () => {
         try {
             const countries = await getFeaturedCountries();
@@ -50,8 +49,8 @@ export default function HomeScreen({ navigation }) {
         setSearchResults([]);
     }
 
-    const detailsHandler = () => {
-        navigation.getParent().navigate('DetailsModal');
+    const detailsHandler = (item) => {
+        navigation.navigate('DetailsModal', { item });
     }
 
 
@@ -71,9 +70,7 @@ export default function HomeScreen({ navigation }) {
                                 keyExtractor={(item) => item._id}
                                 horizontal
                                 showsHorizontalScrollIndicator={false}
-                                renderItem={({ item }) => <DestinationCard key={item._id} item={item} onPress={detailsHandler} />}
-                                refreshing={refreshing}
-                                onRefresh={onRefresh}
+                                renderItem={({ item }) => <DestinationCard key={item._id} item={item} onPress={() => detailsHandler(item)} />}
                             />
                             <View style={styles.searchContainer}>
                                 <View style={styles.searchRow}>
@@ -112,9 +109,7 @@ export default function HomeScreen({ navigation }) {
                                     keyExtractor={(item) => item._id}
                                     horizontal
                                     showsHorizontalScrollIndicator={false}
-                                    renderItem={({ item }) => <DestinationCard key={item._id} item={item} onPress={(selected) => console.log(selected)} />}
-                                    refreshing={refreshing}
-                                    onRefresh={onRefresh}
+                                    renderItem={({ item }) => <DestinationCard key={item._id} item={item} onPress={() => detailsHandler(item)} />}
                                 />
                                 <Button onPress={cleanSearchResultsHandler} name="Clean search" style={styles.cleanButton} />
                             </View>
