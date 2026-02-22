@@ -1,12 +1,13 @@
-import { View, Text, StyleSheet, TouchableOpacity, FlatList, ImageBackground, TextInput, KeyboardAvoidingView, Platform, ScrollView, RefreshControl } from 'react-native';
+import { View, Text, StyleSheet, FlatList, ImageBackground, TextInput, KeyboardAvoidingView, Platform, ScrollView, RefreshControl } from 'react-native';
 import { useData } from '../../context/main/useData';
 import { useEffect, useState } from 'react';
 import DestinationCard from '../../components/DestinationCard';
 import { RadioButton } from '../../components/RadioButton';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Button from '../../components/Button';
+import { useNavigation } from '@react-navigation/native';
 
-export default function HomeScreen({ setIsLoggedIn }) {
+export default function HomeScreen({ navigation }) {
     const [featuredCountries, setFeaturedCountries] = useState([]);
     const { getFeaturedCountries, getSearchResults } = useData();
     const [searchQuery, setSearchQuery] = useState('');
@@ -14,6 +15,7 @@ export default function HomeScreen({ setIsLoggedIn }) {
     const [searchResults, setSearchResults] = useState([]);
     const [refreshing, setRefreshing] = useState(false);
 
+    const nav = useNavigation();
     const loadCountries = async () => {
         try {
             const countries = await getFeaturedCountries();
@@ -48,6 +50,10 @@ export default function HomeScreen({ setIsLoggedIn }) {
         setSearchResults([]);
     }
 
+    const detailsHandler = () => {
+        navigation.getParent().navigate('DetailsModal');
+    }
+
 
     return (
         <SafeAreaView style={{ flex: 1 }} edges={['left', 'right']}>
@@ -65,7 +71,7 @@ export default function HomeScreen({ setIsLoggedIn }) {
                                 keyExtractor={(item) => item._id}
                                 horizontal
                                 showsHorizontalScrollIndicator={false}
-                                renderItem={({ item }) => <DestinationCard key={item._id} item={item} onPress={(selected) => console.log(selected)} />}
+                                renderItem={({ item }) => <DestinationCard key={item._id} item={item} onPress={detailsHandler} />}
                                 refreshing={refreshing}
                                 onRefresh={onRefresh}
                             />

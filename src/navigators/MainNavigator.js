@@ -5,6 +5,7 @@ import DestinationsScreen from "../screens/main/DestinationsScreen";
 import ProfileScreen from "../screens/main/ProfileScreen";
 import SettingsScreen from "../screens/main/SettingsScreen";
 import FavoritesScreen from "../screens/main/FavoritesScreen";
+import DetailsScreen from "../screens/main/DetailsScreen";
 
 export default function MainNavigator({ setIsLoggedIn }) {
     const Tabs = createBottomTabNavigator();
