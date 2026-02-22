@@ -26,3 +26,21 @@ export const addToFavorites = async (userId, itemId, type) => {
         throw err
     }
 }
+
+export const isItFavorite = async (userId, itemId) => {
+    try {
+        const response = await api.get('/favorites', { params: { typeRequest: 'getOne', userId, itemId } });
+        return response.data;
+    } catch (err) {
+        throw err;
+    }
+}
+
+export const getFavorites = async (userId) => {
+    try {
+        const response = await api.get('/favorites', { params: { typeRequest: 'getAll', userId } });
+        return response.data;
+    } catch (err) {
+        throw err;
+    }
+}

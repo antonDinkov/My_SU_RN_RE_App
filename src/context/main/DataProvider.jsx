@@ -9,6 +9,8 @@ export const DataContext = createContext({
     getFeaturedCountries: async () => {},
     getSearchResults: async () => {},
     addToFavorites: async () => {},
+    isItFavorite: async () => {},
+    getFavorites: async () => {},
 })
 
 export function DataProvider({ children }) {
@@ -50,10 +52,36 @@ export function DataProvider({ children }) {
         }
     }
 
+    const isItFavorite = async (userId, itemId) => {
+        try {
+            setIsLoading(true);
+            const data = await dataService.isItFavorite(userId, itemId);
+            return data;
+        } catch (err) {
+            console.log(("No success, try again later. Error: ", err));
+        } finally {
+            setIsLoading(false)
+        }
+    }
+
+    const getFavorites = async (userId) => {
+        try {
+            setIsLoading(true);
+            const data = await dataService.getFavorites(userId);
+            return data;
+        } catch (err) {
+            console.log(("No success, try again later. Error: ", err));
+        } finally {
+            setIsLoading(false)
+        }
+    }
+
     const contextValue = {
         getFeaturedCountries,
         getSearchResults,
         addToFavorites,
+        isItFavorite,
+        getFavorites,
     };
 
     return (

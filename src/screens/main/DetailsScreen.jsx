@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet, ImageBackground, ScrollView, Image, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useAuth } from '../../context/auth/useAuth';
 import { useData } from '../../context/main/useData';
 
@@ -10,6 +10,12 @@ export default function DetailsScreen({ route }) {
     const { item } = route.params;
     const {user} = useAuth();
     const { addToFavorites } = useData();
+
+    useEffect(() => {
+        const initialSet = async () => {
+            
+        }
+    })
 
     
     const favoritesHandler = async (userId, itemId, type) => {
