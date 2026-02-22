@@ -1,5 +1,6 @@
 import { createContext, useState } from "react";
 import { dataService } from "../../api";
+import { addToFavorites } from "../../api/main";
 
 
 
@@ -7,6 +8,7 @@ export const DataContext = createContext({
     isLoading: false,
     getFeaturedCountries: async () => {},
     getSearchResults: async () => {},
+    addToFavorites: async () => {},
 })
 
 export function DataProvider({ children }) {
@@ -36,9 +38,22 @@ export function DataProvider({ children }) {
         }
     }
 
+    const addToFavorites = async (userId, itemId, type) => {
+        try {
+            setIsLoading(true);
+            const data = await dataService.addToFavorites(userId, itemId, type);
+            return data;
+        } catch (err) {
+            console.log(("No success, try again later. Error: ", err));
+        } finally {
+            setIsLoading(false)
+        }
+    }
+
     const contextValue = {
         getFeaturedCountries,
         getSearchResults,
+        addToFavorites,
     };
 
     return (

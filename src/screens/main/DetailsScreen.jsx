@@ -1,16 +1,21 @@
 import { View, Text, StyleSheet, ImageBackground, ScrollView, Image, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import Button from '../../components/Button';
 import { Ionicons } from '@expo/vector-icons';
 import { useState } from 'react';
+import { useAuth } from '../../context/auth/useAuth';
+import { useData } from '../../context/main/useData';
 
 export default function DetailsScreen({ route }) {
     const [favorites, setFavorites] = useState(false);
     const { item } = route.params;
+    const {user} = useAuth();
+    const { addToFavorites } = useData();
 
-    const favoritesHandler = () => {
+    
+    const favoritesHandler = async (userId, itemId, type) => {
         setFavorites(favorites => !favorites);
-    }
+        await addToFavorites(userId, itemId, type);
+    };
 
     return (
         <SafeAreaView style={{ flex: 1 }} edges={['left', 'right']}>
@@ -26,7 +31,7 @@ export default function DetailsScreen({ route }) {
 
                         <View style={styles.detailsContainer}>
                             <Text style={styles.description}>{item.short_description}</Text>
-                            <TouchableOpacity onPress={favoritesHandler} style={styles.star}>
+                            <TouchableOpacity onPress={() => favoritesHandler(user._id, item._id, item.type)} style={styles.star}>
                                 <Ionicons name="star" color={favorites ? "yellow" : "#fff"} size={70} />
                             </TouchableOpacity>
                             <Text style={styles.starText}>Press the star</Text>

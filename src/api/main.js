@@ -17,3 +17,12 @@ export const getSearchResults = async (text, type) => {
         throw err
     }
 }
+
+export const addToFavorites = async (userId, itemId, type) => {
+    try {
+        const response = await api.post('/favorites', { userId, itemId, itemModel: type });
+        return response.data;
+    } catch (err) {
+        throw err
+    }
+}
