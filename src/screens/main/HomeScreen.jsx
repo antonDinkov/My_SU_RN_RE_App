@@ -43,6 +43,7 @@ export default function HomeScreen({ navigation }) {
     const searchHandler = async (name, type) => {
         const results = await getSearchResults(name, type);
         setSearchResults(results);
+        setSearchQuery('');
     }
 
     const cleanSearchResultsHandler = () => {
