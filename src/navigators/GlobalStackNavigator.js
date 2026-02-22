@@ -11,6 +11,7 @@ export default function GlobalStackNavigator() {
                 name="DetailsModal"
                 component={DetailsScreen}
                 options={{
+                    presentation: 'modal',
                     title: '',
                     headerShown: true,
                     headerTransparent: true,
