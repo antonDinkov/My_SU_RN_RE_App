@@ -44,7 +44,7 @@ export default function SettingsScreen() {
                         <Slider minimumValue={0} maximumValue={1} step={0.05} value={darkOpacity} onValueChange={setDarkOpacity} />
                     </>)}
                 </View>
-                <TouchableOpacity style={styles.button} onPress={logoutHandler}>
+                <TouchableOpacity style={[styles.button, {marginTop: isDark ? "54.52%" : "70%",}]} onPress={logoutHandler}>
                     <Text style={styles.buttonText}>Logout</Text>
                 </TouchableOpacity>
             </View>
@@ -62,15 +62,12 @@ const styles = StyleSheet.create({
     button: {
         width: 100,
         height: 100,
-        borderRadius: 50, // половината от width/height
+        borderRadius: 50,
         backgroundColor: '#FF6B6B',
         marginTop: "70%",
         alignItems: 'center',
         justifyContent: 'center',
-
-        alignSelf: 'center', // центрира хоризонтално
-        marginBottom: 30,
-
+        alignSelf: 'center',
         shadowColor: '#FF6B6B',
         shadowOffset: { width: 0, height: 6 },
         shadowOpacity: 0.4,
