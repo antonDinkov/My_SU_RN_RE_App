@@ -19,7 +19,7 @@ export default function FavoritesScreen() {
 
     return (
         <ImageBackground
-            source={{ uri: 'https://images.unsplash.com/photo-1502082553048-f009c37129b9' }}
+            source={{ uri: 'https://images.unsplash.com/photo-1482192505345-5655af888cc4' }}
             style={styles.background}
         >
             <Text style={styles.section}>Favorite Destinations</Text>
@@ -39,7 +39,7 @@ export default function FavoritesScreen() {
                 )}
                 showsHorizontalScrollIndicator={false}
             />
-            
+
             <Text style={styles.section}>Followed Travelers</Text>
             <FlatList
                 data={followedTravelers}
