@@ -16,14 +16,14 @@ export default function App() {
     return (
 
         <AuthProvider>
-            <DataProvider>
-                <DarkThemeProvider>
-                    <NavigationContainer>
+            <DarkThemeProvider>
+                <NavigationContainer>
+                    <DataProvider>
                         <StatusBar style="light" backgroundColor="#000" />
                         <AppNavigator />
-                    </NavigationContainer>
-                </DarkThemeProvider>
-            </DataProvider>
+                    </DataProvider>
+                </NavigationContainer>
+            </DarkThemeProvider>
         </AuthProvider>
     );
 }

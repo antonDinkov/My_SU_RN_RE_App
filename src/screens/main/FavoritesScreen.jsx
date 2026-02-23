@@ -1,8 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity, ImageBackground, ScrollView, RefreshControl } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import AnimatedText from '../../components/AnimatedText';
+import DestinationCard from '../../components/DestinationCard';
+import { useData } from '../../context/main/useData';
+import { useAuth } from '../../context/auth/useAuth';
 
 const favoriteDestinations = [
     { id: '1', name: 'Bali', image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e' },
@@ -18,12 +21,27 @@ const followedTravelers = [
 
 export default function FavoritesScreen() {
     const [refreshing, setRefreshing] = useState(false);
-    const [favorites, setFavorites] = useState([])
-    const navigation = useNavigation();
+    const { getFavorites, detailsHandler, favorites } = useData();
+    const { user } = useAuth();
+
+    useEffect(() => {
+        try {
+            const favoritesLoad = async () => {
+                await getFavorites(user._id);
+                console.log("This is the favorites: ", favorites);
+            }
+            favoritesLoad();
+        } catch (err) {
+            console.log("This the error from the favorites in the front: ", err);
+
+        }
+    }, [])
+
 
     const onRefresh = async () => {
         try {
             setRefreshing(true);
+            await getFavorites(user._id);
         } catch (err) {
             console.log("Error refreshing the screen");
         } finally {
@@ -39,43 +57,10 @@ export default function FavoritesScreen() {
             >
                 <ScrollView contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
                     <AnimatedText text='Favorite Destinations' styless={styles.section} />
-                    {/* <Text style={styles.section}>Favorite Destinations</Text> */}
+                    {favorites.map(item => {
+                        return <DestinationCard key={`${item._id}-${item.slug}`} item={item} onPress={() => detailsHandler(item)} />
+                    })}
                     {!favorites.length && <AnimatedText text="No favorites destinations yet" styless={styles.emptyFavorites} />}
-                    {/* <FlatList
-                        data={favoriteDestinations}
-                        horizontal
-                        keyExtractor={(item) => item.id}
-                        renderItem={({ item }) => (
-                            <TouchableOpacity
-                                onPress={() => navigation.navigate('DestinationDetails', { id: item.id })}
-                            >
-                                <View style={styles.card}>
-                                    <Image source={{ uri: item.image }} style={styles.image} />
-                                    <Text style={styles.cardText}>{item.name}</Text>
-                                </View>
-                            </TouchableOpacity>
-                        )}
-                        showsHorizontalScrollIndicator={false}
-                    /> */}
-
-                    <Text style={styles.section}>Followed Travelers</Text>
-                    {/* <FlatList
-                        data={followedTravelers}
-                        horizontal
-                        keyExtractor={(item) => item.id}
-                        renderItem={({ item }) => (
-                            <TouchableOpacity
-                                onPress={() => navigation.navigate('TravelerProfile', { id: item.id })}
-                            >
-                                <View style={styles.card}>
-                                    <Image source={{ uri: item.avatar }} style={styles.avatar} />
-                                    <Text style={styles.cardText}>{item.name}</Text>
-                                </View>
-                            </TouchableOpacity>
-                        )}
-                        showsHorizontalScrollIndicator={false}
-                    /> */}
-
                 </ScrollView>
             </ImageBackground>
         </SafeAreaView >

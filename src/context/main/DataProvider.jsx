@@ -1,5 +1,6 @@
 import { createContext, useState } from "react";
 import { dataService } from "../../api";
+import { useNavigation } from "@react-navigation/native";
 
 
 
@@ -11,10 +12,14 @@ export const DataContext = createContext({
     isItFavorite: async () => {},
     getFavorites: async () => {},
     removeFromFavorites: async () => {},
+    detailsHandler: () => {},
+    favorites: [],
 })
 
 export function DataProvider({ children }) {
     const [isLoading, setIsLoading] = useState(false);
+    const navigation = useNavigation();
+    const [favorites, setFavorites] = useState([]);
 
     const getFeaturedCountries = async () => {
         try {
@@ -44,6 +49,8 @@ export function DataProvider({ children }) {
         try {
             setIsLoading(true);
             const data = await dataService.addToFavorites(userId, itemId, type);
+            const getFav = await getFavorites(userId);
+            setFavorites(getFav);
             return data;
         } catch (err) {
             console.log(("No success, try again later. Error: ", err));
@@ -68,6 +75,7 @@ export function DataProvider({ children }) {
         try {
             setIsLoading(true);
             const data = await dataService.getFavorites(userId);
+            setFavorites(data);
             return data;
         } catch (err) {
             console.log(("No success, try again later. Error: ", err));
@@ -80,12 +88,18 @@ export function DataProvider({ children }) {
         try {
             setIsLoading(true);
             const data = await dataService.removeFromFavotites(userId, itemId);
+            const getFav = await getFavorites(userId);
+            setFavorites(getFav);
             return data;
         } catch (err) {
             console.log(("No success, try again later. Error: ", err));
         } finally {
             setIsLoading(false)
         }
+    }
+
+    const detailsHandler = (item) => {
+        navigation.navigate('DetailsModal', { item });
     }
 
     const contextValue = {
@@ -95,6 +109,8 @@ export function DataProvider({ children }) {
         isItFavorite,
         getFavorites,
         removeFromFavorites,
+        detailsHandler,
+        favorites,
     };
 
     return (
