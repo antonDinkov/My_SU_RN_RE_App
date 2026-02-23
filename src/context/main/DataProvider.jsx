@@ -1,6 +1,5 @@
 import { createContext, useState } from "react";
 import { dataService } from "../../api";
-import { addToFavorites } from "../../api/main";
 
 
 
@@ -11,6 +10,7 @@ export const DataContext = createContext({
     addToFavorites: async () => {},
     isItFavorite: async () => {},
     getFavorites: async () => {},
+    removeFromFavorites: async () => {},
 })
 
 export function DataProvider({ children }) {
@@ -76,12 +76,25 @@ export function DataProvider({ children }) {
         }
     }
 
+    const removeFromFavorites = async (userId, itemId) => {
+        try {
+            setIsLoading(true);
+            const data = await dataService.removeFromFavotites(userId, itemId);
+            return data;
+        } catch (err) {
+            console.log(("No success, try again later. Error: ", err));
+        } finally {
+            setIsLoading(false)
+        }
+    }
+
     const contextValue = {
         getFeaturedCountries,
         getSearchResults,
         addToFavorites,
         isItFavorite,
         getFavorites,
+        removeFromFavorites,
     };
 
     return (

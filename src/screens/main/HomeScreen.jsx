@@ -6,6 +6,7 @@ import { RadioButton } from '../../components/RadioButton';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Button from '../../components/Button';
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function HomeScreen({ navigation }) {
     const [featuredCountries, setFeaturedCountries] = useState([]);
@@ -14,6 +15,8 @@ export default function HomeScreen({ navigation }) {
     const [searchType, setSearchType] = useState('country');
     const [searchResults, setSearchResults] = useState([]);
     const [refreshing, setRefreshing] = useState(false);
+
+    let something;
 
     const loadCountries = async () => {
         try {
@@ -25,7 +28,13 @@ export default function HomeScreen({ navigation }) {
     }
 
     useEffect(() => {
+        const debugLogic = async () => {
+            const authData = await AsyncStorage.getItem('auth');
+            console.log("Auth after reload:", JSON.parse(authData));
+        }
+
         loadCountries();
+        debugLogic();
     }, []);
 
     const onRefresh = async () => {

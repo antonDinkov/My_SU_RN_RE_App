@@ -5,23 +5,41 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '../../context/auth/useAuth';
 import { useData } from '../../context/main/useData';
 
-export default function DetailsScreen({ route }) {
-    const [favorites, setFavorites] = useState(false);
+export default function DetailsScreen({ route, navigation }) {
+    const [favorite, setFavorite] = useState(false);
     const { item } = route.params;
-    const {user} = useAuth();
-    const { addToFavorites } = useData();
+    const { user } = useAuth();
+    const { addToFavorites, isItFavorite, removeFromFavorites } = useData();
 
+    const userId = user._id;
+    const itemId = item._id;
+    const type = item.type;
     useEffect(() => {
         const initialSet = async () => {
-            
+            const result = await isItFavorite(userId, itemId);
+            setFavorite(result);
         }
-    })
+        initialSet();
+    }, []);
 
-    
-    const favoritesHandler = async (userId, itemId, type) => {
-        setFavorites(favorites => !favorites);
-        await addToFavorites(userId, itemId, type);
+    const favoritesHandler = () => {
+        setFavorite(favorite => !favorite);
     };
+
+    useEffect(() => {
+        const unsubscribe = navigation.addListener('blur', () => {
+            if (favorite) {
+                console.log("It is favorites: ", favorite);
+                
+                addToFavorites(userId, itemId, type);
+            } else {
+                console.log("It is NOT favorites: ", favorite);
+                removeFromFavorites(userId, itemId);
+            }
+        });
+
+        return unsubscribe;
+    }, [favorite, userId, itemId, type]);
 
     return (
         <SafeAreaView style={{ flex: 1 }} edges={['left', 'right']}>
@@ -37,8 +55,8 @@ export default function DetailsScreen({ route }) {
 
                         <View style={styles.detailsContainer}>
                             <Text style={styles.description}>{item.short_description}</Text>
-                            <TouchableOpacity onPress={() => favoritesHandler(user._id, item._id, item.type)} style={styles.star}>
-                                <Ionicons name="star" color={favorites ? "yellow" : "#fff"} size={70} />
+                            <TouchableOpacity onPress={() => favoritesHandler()} style={styles.star}>
+                                <Ionicons name="star" color={favorite ? "yellow" : "#fff"} size={70} />
                             </TouchableOpacity>
                             <Text style={styles.starText}>Press the star</Text>
                             {/* <Button

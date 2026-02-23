@@ -12,6 +12,8 @@ export const login = async (email, password, lat, lng) => {
                 },
             }
         );
+        console.log("This is from th login response: ", response);
+        
         return {
             user: response.data.user,
             token: response.data.token,

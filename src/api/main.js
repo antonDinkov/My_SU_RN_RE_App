@@ -20,9 +20,12 @@ export const getSearchResults = async (text, type) => {
 
 export const addToFavorites = async (userId, itemId, type) => {
     try {
+        console.log("Inside the addToFavorites");
         const response = await api.post('/favorites', { userId, itemId, itemModel: type });
+        console.log("This is the response: ", response.data);
         return response.data;
     } catch (err) {
+        console.log("This is the error: ", err);
         throw err
     }
 }
@@ -40,6 +43,14 @@ export const getFavorites = async (userId) => {
     try {
         const response = await api.get('/favorites', { params: { typeRequest: 'getAll', userId } });
         return response.data;
+    } catch (err) {
+        throw err;
+    }
+}
+
+export const removeFromFavotites = async (userId, itemId) => {
+    try {
+        const response = await api.delete('/favorites', { params: { userId, itemId } })
     } catch (err) {
         throw err;
     }

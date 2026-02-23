@@ -1,6 +1,8 @@
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import { authService } from "../../api/";
 import { usePersistedState } from "../../hooks/usePersistedState.js";
+import { setAuthToken } from "../../api/client.js";
+
 
 export const AuthContext = createContext({
     isLoading: false,
@@ -15,7 +17,7 @@ export const AuthContext = createContext({
 });
 
 export function AuthProvider({ children }) {
-    const [auth, setAuth] = usePersistedState("auth", {
+    const [auth, setAuth, isHydrated] = usePersistedState("auth", {
         token: null,
         user: null,
     });
@@ -23,14 +25,30 @@ export function AuthProvider({ children }) {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
 
+    useEffect(() => {
+        if (auth.token) {
+            setAuthToken(auth.token || null);
+        }
+    }, [auth.token]);
+
+    if (!isHydrated) {
+        return null;
+    }
+
     const login = async (email, password) => {
         try {
             setIsLoading(true);
-            setAuth({ token: null, user: null });
+            
             const data = await authService.login(email, password, 0, 0);
-            const user = data.user;
-            const token = data.token;
+            console.log("Login response:", data);
+
+            const { user, token } = data;
+
             setAuth({ user, token });
+            console.log("Auth set:", { user, token });
+
+            setAuthToken(token);
+
         } catch (err) {
             setError(err.message || 'An error occurred during login');
         } finally {
@@ -40,10 +58,9 @@ export function AuthProvider({ children }) {
     const register = async (firstName, lastName, email, password, repass) => {
         try {
             setIsLoading(true);
-            setAuth({ token: null, user: null });
-            
             const { user, token } = await authService.register(firstName, lastName, email, password, repass, 0, 0);
             setAuth({ user, token });
+            setAuthToken(token);
         } catch (err) {
             setError(err.message || 'An error occurred during registration');
         }
@@ -56,13 +73,14 @@ export function AuthProvider({ children }) {
         try {
             setIsLoading(true);
             const response = await authService.logout();
-            
+
             setAuth({
                 token: null,
                 user: null,
             });
+            setAuthToken(null)
         } catch (err) {
-            console.log("Can not log out! ",err.message);
+            console.log("Can not log out! ", err.message);
         } finally {
             setIsLoading(false);
         }
@@ -70,7 +88,7 @@ export function AuthProvider({ children }) {
 
     const contextValue = {
         isAuthenticated: !!auth.user,
-        isLoading,
+        isLoading: isLoading || !isHydrated,
         error,
         user: auth.user,
         auth,

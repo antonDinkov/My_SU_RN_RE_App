@@ -3,19 +3,22 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export function usePersistedState(key, initialValue) {
     const [state, setState] = useState(initialValue);
+    const [isHydrated, setIsHydrated] = useState(false);
 
     useEffect(() => {
         async function loadState() {
             try {
                 const storedValue = await AsyncStorage.getItem(key);
+                console.log("This is the storedValue from the hook: ", storedValue);
 
-                if (!storedValue) {
-                    return;
+                if (storedValue) {
+                    setState(JSON.parse(storedValue));
                 }
 
-                setState(JSON.parse(storedValue));
             } catch (error) {
                 console.error('Failed to load state', error);
+            } finally {
+                setIsHydrated(true);
             }
         }
 
@@ -25,7 +28,7 @@ export function usePersistedState(key, initialValue) {
     const setPersistedState = async (value) => {
         try {
             const valueToStore = value instanceof Function ? value(state) : value;
-
+            console.log("SETTING AUTH:", valueToStore);
             setState(valueToStore);
             await AsyncStorage.setItem(key, JSON.stringify(valueToStore));
         } catch (error) {
@@ -33,5 +36,5 @@ export function usePersistedState(key, initialValue) {
         }
     };
 
-    return [state, setPersistedState];
+    return [state, setPersistedState, isHydrated];
 }
