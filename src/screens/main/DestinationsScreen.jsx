@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, TextInput, FlatList, ImageBackground } from 'react-native';
+import AnimatedText from '../../components/AnimatedText';
 
 const destinations = [
   { id: '1', name: 'Paris' },
@@ -17,7 +18,8 @@ export default function DestinationsScreen() {
       style={styles.background}
     >
       <View style={styles.overlay}>
-        <Text style={styles.title}>My destinations</Text>
+        <AnimatedText text='My destinations' styless={styles.title} />
+        {/* <Text style={styles.title}>My destinations</Text> */}
         <TextInput style={styles.search} placeholder="Search" placeholderTextColor="#ccc" />
         <FlatList
           data={destinations}
@@ -37,7 +39,7 @@ export default function DestinationsScreen() {
 const styles = StyleSheet.create({
   background: { flex: 1 },
   overlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.4)', padding: 20 },
-  title: { fontSize: 28, color: '#fff', fontWeight: 'bold', marginBottom: 10 },
+  title: { marginTop: 20, marginBottom: 10 },
   search: { backgroundColor: '#fff', borderRadius: 8, padding: 10, marginBottom: 15 },
   card: { backgroundColor: '#fff', padding: 15, borderRadius: 8, margin: 5, flex: 1 },
   cardText: { fontSize: 16, fontWeight: '600' },

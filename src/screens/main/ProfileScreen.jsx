@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image, FlatList, ImageBackground, TouchableOpacity } from 'react-native';
+import AnimatedText from '../../components/AnimatedText';
 
 const bookings = [
   { id: '1', destination: 'Rome' },
@@ -29,7 +30,8 @@ export default function ProfileScreen() {
           source={{ uri: 'https://randomuser.me/api/portraits/men/32.jpg' }}
           style={styles.avatar}
         />
-        <Text style={styles.name}>Anton</Text>
+        <AnimatedText text='Anton' styless={styles.name} />
+        {/* <Text style={styles.name}>Anton</Text> */}
         <Text style={styles.email}>anton@example.com</Text>
 
         {/* Edit button */}
@@ -85,7 +87,7 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   background: { flex: 1 },
   overlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.4)', padding: 20, alignItems: 'center' },
-  avatar: { width: 80, height: 80, borderRadius: 40, marginBottom: 10 },
+  avatar: { width: 80, height: 80, borderRadius: 40, marginBottom: 10, marginTop: 20, },
   name: { fontSize: 22, color: '#fff', fontWeight: 'bold' },
   email: { fontSize: 16, color: '#ccc', marginBottom: 20 },
   editButton: { backgroundColor: '#FF6B6B', padding: 10, borderRadius: 8, marginBottom: 20 },

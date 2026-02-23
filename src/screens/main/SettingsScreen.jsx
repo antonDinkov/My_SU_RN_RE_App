@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Switch, ImageBackground, TouchableOpacity } fro
 import { useAuth } from '../../context/auth/useAuth';
 import { useTheme } from '../../context/theme/useTheme';
 import Slider from '@react-native-community/slider';
+import AnimatedText from '../../components/AnimatedText';
 
 export default function SettingsScreen() {
     const [notifications, setNotifications] = useState(true);
@@ -25,7 +26,8 @@ export default function SettingsScreen() {
         >
 
             <View style={styles.overlay}>
-                <Text style={styles.title}>Settings</Text>
+                <AnimatedText text="Settings" styless={styles.title} />
+                {/* <Text style={styles.title}>Settings</Text> */}
                 <View style={styles.setting}>
                     <Text style={styles.label}>Notifications</Text>
                     <Switch value={notifications} onValueChange={setNotifications} />
@@ -55,7 +57,7 @@ export default function SettingsScreen() {
 const styles = StyleSheet.create({
     background: { flex: 1 },
     overlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.4)', padding: 20 },
-    title: { fontSize: 28, color: '#fff', fontWeight: 'bold', marginBottom: 20 },
+    title: { marginTop: 20, marginBottom: 20 },
     setting: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 15 },
     label: { fontSize: 18, color: '#fff' },
     value: { fontSize: 18, color: '#ccc' },

@@ -6,6 +6,7 @@ import { RadioButton } from '../../components/RadioButton';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Button from '../../components/Button';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import AnimatedText from '../../components/AnimatedText';
 
 export default function HomeScreen({ navigation }) {
     const [featuredCountries, setFeaturedCountries] = useState([]);
@@ -64,7 +65,8 @@ export default function HomeScreen({ navigation }) {
                         style={styles.background}
                     >
                         <View style={styles.overlay}>
-                            <Text style={styles.title}>Welcome to Travel Feever</Text>
+                            <AnimatedText text="Welcome to Travel Feever" />
+                            {/* <Text style={styles.title}>Welcome to Travel Feever</Text> */}
                             <Text style={styles.subtitle}>Popular Destinations</Text>
                             <FlatList
                                 data={featuredCountries}
