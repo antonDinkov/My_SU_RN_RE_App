@@ -3,6 +3,7 @@
   "main": "index.js",
   "version": "1.0.0",
   "scripts": {
+    "startAndroid": "npx expo start -c",
     "start": "expo start",
     "reversePhone": "adb -s dcd9b811 reverse tcp:8081 tcp:8081",
     "reverse": "adb -s dcd9b811 reverse tcp:3004 tcp:3004",
@@ -10,8 +11,8 @@
     "reverseEmulator": "adb -s emulator-5554 reverse tcp:8081 tcp:8081",
     "openEmulator": "adb -s emulator-5554 shell am start -a android.intent.action.VIEW -d \"exp://127.0.0.1:8081\"",
     "reset-project": "node ./scripts/reset-project.js",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
     "web": "expo start --web",
     "lint": "expo lint"
   },
