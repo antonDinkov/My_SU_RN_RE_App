@@ -20,9 +20,7 @@ export const getSearchResults = async (text, type) => {
 
 export const addToFavorites = async (userId, itemId, type) => {
     try {
-        console.log("Inside the addToFavorites");
         const response = await api.post('/favorites', { userId, itemId, itemModel: type });
-        console.log("This is the response: ", response.data);
         return response.data;
     } catch (err) {
         console.log("This is the error: ", err);

@@ -6,7 +6,6 @@ export function usePersistedState(key, initialValue) {
     const [state, setState] = useState(initialValue);
     const [isHydrated, setIsHydrated] = useState(false);
 
-    // Load once
     useEffect(() => {
         async function loadState() {
             try {
@@ -24,7 +23,6 @@ export function usePersistedState(key, initialValue) {
         loadState();
     }, [key]);
 
-    // Persist automatically on change
     useEffect(() => {
         if (isHydrated) {
             AsyncStorage.setItem(key, JSON.stringify(state))

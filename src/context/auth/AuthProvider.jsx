@@ -40,12 +40,9 @@ export function AuthProvider({ children }) {
             setIsLoading(true);
             
             const data = await authService.login(email, password, 0, 0);
-            console.log("Login response:", data);
-
             const { user, token } = data;
 
             setAuth({ user, token });
-            console.log("Auth set:", { user, token });
 
             setAuthToken(token);
 

@@ -28,7 +28,6 @@ export default function FavoritesScreen() {
         try {
             const favoritesLoad = async () => {
                 await getFavorites(user._id);
-                console.log("This is the favorites: ", favorites);
             }
             favoritesLoad();
         } catch (err) {
