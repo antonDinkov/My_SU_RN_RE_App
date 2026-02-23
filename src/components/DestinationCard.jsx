@@ -58,6 +58,7 @@ const styles = StyleSheet.create({
     image: {
         flex: 1,
         justifyContent: 'flex-end',
+        opacity: 0.75,
     },
     imageRadius: {
         borderRadius: 18,

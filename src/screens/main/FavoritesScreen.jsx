@@ -54,7 +54,7 @@ export default function FavoritesScreen() {
                 source={{ uri: 'https://images.unsplash.com/photo-1482192505345-5655af888cc4' }}
                 style={styles.background}
             >
-                <ScrollView contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
+                <ScrollView contentContainerStyle={{ flexGrow: 1, alignItems: 'center' }} showsVerticalScrollIndicator={false} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
                     <AnimatedText text='Favorite Destinations' styless={styles.section} />
                     {favorites.map(item => {
                         return <DestinationCard key={`${item._id}-${item.slug}`} item={item} onPress={() => detailsHandler(item)} />
