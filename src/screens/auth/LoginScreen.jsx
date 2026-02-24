@@ -26,12 +26,12 @@ export default function LoginScreen({ navigation, setIsLoggedIn }) {
             if (password.length < 4) {
                 newErrors.password = 'Password must be at least 4 characters';
             }
-            if (!/[A-Z]/.test(password)) {
+            /* if (!/[A-Z]/.test(password)) {
                 newErrors.password = 'Password must contain at least one uppercase letter';
             }
             if (!/[0-9]/.test(password)) {
                 newErrors.password = 'Password must contain at least one number';
-            }
+            } */
         }
 
         setErrors(newErrors);
@@ -79,7 +79,7 @@ export default function LoginScreen({ navigation, setIsLoggedIn }) {
                                 style={styles.input}
                                 placeholder="Password"
                                 placeholderTextColor="#ccc"
-                                secureTextEntry
+                                secureTextEntry={true}
                                 value={password}
                                 onChangeText={(text) => {
                                     setPassword(text);
@@ -125,6 +125,7 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         padding: 12,
         marginVertical: 8,
+        color: "black"
     },
     error: {
         color: 'red',

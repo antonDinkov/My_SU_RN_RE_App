@@ -125,7 +125,7 @@ export default function RegisterScreen({ navigation, setIsLoggedIn }) {
                                 style={styles.input}
                                 placeholder="Password"
                                 placeholderTextColor="#ccc"
-                                secureTextEntry
+                                secureTextEntry={true}
                                 value={password}
                                 onChangeText={(text) => {
                                     setPassword(text);
@@ -138,7 +138,7 @@ export default function RegisterScreen({ navigation, setIsLoggedIn }) {
                                 style={styles.input}
                                 placeholder="Repeat Password"
                                 placeholderTextColor="#ccc"
-                                secureTextEntry
+                                secureTextEntry={true}
                                 value={repeatPassword}
                                 onChangeText={(text) => {
                                     setRepeatPassword(text);
@@ -169,7 +169,7 @@ const styles = StyleSheet.create({
     background: { flex: 1, resizeMode: 'cover' },
     overlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'center', padding: 20 },
     title: { fontSize: 28, fontWeight: 'bold', color: '#fff', marginBottom: 20, textAlign: 'center' },
-    input: { backgroundColor: '#fff', borderRadius: 8, padding: 12, marginVertical: 8 },
+    input: { backgroundColor: '#fff', borderRadius: 8, padding: 12, marginVertical: 8, color: "black" },
     error: {
         color: 'red',
         fontSize: 12,
