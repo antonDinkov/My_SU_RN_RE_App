@@ -1,4 +1,4 @@
-import { createStackNavigator, TransitionSpecs, CardStyleInterpolators } from "@react-navigation/stack";
+import { createStackNavigator, CardStyleInterpolators } from "@react-navigation/stack";
 import MainNavigator from "./MainNavigator";
 import DetailsScreen from "../screens/main/DetailsScreen";
 

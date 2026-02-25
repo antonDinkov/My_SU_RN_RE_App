@@ -4,20 +4,19 @@ import LoginScreen from "../screens/auth/LoginScreen";
 import RegisterScreen from "../screens/auth/RegisterScreen";
 import StartScreen from "../screens/auth/StartScreen";
 
-export default function AuthNavigator({ setIsLoggedIn }) {
+export default function AuthNavigator() {
     const Stack = createNativeStackNavigator();
     return (
         <Stack.Navigator screenOptions={{ headerShown: true }}>
             <Stack.Screen name="Welcome" component={StartScreen} options={{ headerTransparent: true, headerTitle: '', headerTintColor: '#fff' }} />
             <Stack.Screen name="Auth" component={AuthScreen} options={{ headerTransparent: true, headerTitle: '', headerTintColor: '#fff' }} />
             <Stack.Screen name="Login" options={{
-                headerStyle: { backgroundColor: '#000' },   // цвят на header
-                headerTintColor: '#fff',                    // стрелка и текст
+                headerStyle: { backgroundColor: '#000' },
+                headerTintColor: '#fff',
                 headerTitleStyle: { color: '#fff' },
             }}>{(props) => (
                 <LoginScreen
                     {...props}
-                    setIsLoggedIn={setIsLoggedIn}
                 />
             )}</Stack.Screen>
             <Stack.Screen name="Register" options={{
@@ -28,7 +27,6 @@ export default function AuthNavigator({ setIsLoggedIn }) {
                 {(props) => (
                     <RegisterScreen
                         {...props}
-                        setIsLoggedIn={setIsLoggedIn}
                     />
                 )}
             </Stack.Screen>

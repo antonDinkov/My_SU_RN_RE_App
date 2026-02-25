@@ -5,12 +5,11 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { validate } from '../utils/authValidation';
 import ServerError from '../../components/ServerError';
 
-export default function LoginScreen({ navigation, setIsLoggedIn }) {
+export default function LoginScreen({ navigation }) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [errors, setErrors] = useState({});
-    const { login, isLoading, error, clearError, isAuthenticated } = useAuth();
-    const [serverError, setServerError] = useState();
+    const { login, isLoading, error, clearError } = useAuth();
 
     const loginHandler = async () => {
         clearError();
