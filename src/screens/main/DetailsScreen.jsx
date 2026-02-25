@@ -94,7 +94,7 @@ export default function DetailsScreen({ route, navigation }) {
                             </TouchableOpacity>
 
                             <Text style={styles.starText}>
-                                Press the star
+                                Press the star and add {item.name} to Favorites
                             </Text>
                         </View>
                     </View>
@@ -146,7 +146,8 @@ const styles = StyleSheet.create({
     },
     starText: {
         alignSelf: 'center',
-        color: "yellow"
+        color: "yellow",
+        textAlign: "center"
     },
 });
 
