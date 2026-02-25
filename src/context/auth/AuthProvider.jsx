@@ -38,7 +38,7 @@ export function AuthProvider({ children }) {
     const login = async (email, password) => {
         try {
             setIsLoading(true);
-            
+
             const data = await authService.login(email, password, 0, 0);
             const { user, token } = data;
 
@@ -70,19 +70,21 @@ export function AuthProvider({ children }) {
     const logout = async () => {
         try {
             setIsLoading(true);
-            const response = await authService.logout();
-
+            try {
+                await authService.logout();
+            } catch (err) {
+                console.log("Server logout failed (offline or server down)");
+            }
+        } finally {
             setAuth({
                 token: null,
                 user: null,
             });
-            setAuthToken(null)
-        } catch (err) {
-            console.log("Can not log out! ", err.message);
-        } finally {
+            setAuthToken(null);
+            setError(null);
             setIsLoading(false);
         }
-    }
+    };
 
     const contextValue = {
         isAuthenticated: !!auth.user,

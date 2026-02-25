@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { View, Text, StyleSheet, Switch, ImageBackground, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Switch, ImageBackground, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { useAuth } from '../../context/auth/useAuth';
 import { useTheme } from '../../context/theme/useTheme';
 import Slider from '@react-native-community/slider';
@@ -7,7 +7,7 @@ import AnimatedText from '../../components/AnimatedText';
 
 export default function SettingsScreen() {
     const [notifications, setNotifications] = useState(true);
-    const { logout } = useAuth();
+    const { logout, isLoading } = useAuth();
     const { isDark, toggleTheme, darkOpacity, setDarkOpacity } = useTheme();
 
     const logoutHandler = async () => {
@@ -16,6 +16,8 @@ export default function SettingsScreen() {
         } catch (err) {
             console.error('Logout error:', err.message);
             alert(err.message);
+        } finally {
+
         }
     };
 
@@ -46,8 +48,13 @@ export default function SettingsScreen() {
                         <Slider minimumValue={0} maximumValue={1} step={0.05} value={darkOpacity} onValueChange={setDarkOpacity} />
                     </>)}
                 </View>
-                <TouchableOpacity style={[styles.button, {marginTop: isDark ? "54.52%" : "70%",}]} onPress={logoutHandler}>
-                    <Text style={styles.buttonText}>Logout</Text>
+                <TouchableOpacity style={[styles.button, { marginTop: isDark ? "54.52%" : "70%", }]} onPress={logoutHandler}>
+                    {isLoading ? (
+                        <ActivityIndicator color="#fff" />)
+                        : (
+                            <Text style={styles.buttonText}>Logout</Text>
+                        )}
+                    {/* <Text style={styles.buttonText}>Logout</Text> */}
                 </TouchableOpacity>
             </View>
         </ImageBackground>
@@ -83,7 +90,7 @@ const styles = StyleSheet.create({
 
     sliderText: {
         color: '#fff',
-        marginBottom:10,
+        marginBottom: 10,
         alignSelf: 'center'
     },
 
