@@ -4,7 +4,7 @@ export default function ButtonWithActivity({ isLoading, name, onpress, styleButt
     return (
         <TouchableOpacity style={styleButton} onPress={onpress}>
             {isLoading ? (
-                <ActivityIndicator color="#fff" size="large" />)
+                <ActivityIndicator color="#fff" />)
                 : (
                     <Text style={styleText}>{name}</Text>
                 )}

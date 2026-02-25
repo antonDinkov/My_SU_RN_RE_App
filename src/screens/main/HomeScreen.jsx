@@ -6,6 +6,7 @@ import { RadioButton } from '../../components/RadioButton';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Button from '../../components/Button';
 import AnimatedText from '../../components/AnimatedText';
+import ButtonWithActivity from '../../components/ButtonWithActivity';
 
 export default function HomeScreen({ navigation }) {
     const [featuredCountries, setFeaturedCountries] = useState([]);
@@ -83,7 +84,8 @@ export default function HomeScreen({ navigation }) {
                                         onChangeText={setSearchQuery}
                                         style={styles.searchInput}
                                     />
-                                    <Button onPress={() => searchHandler(searchQuery, searchType)} name="Search" style={styles.button} />
+                                    <ButtonWithActivity isLoading={isLoading} name="Search" onpress={() => searchHandler(searchQuery, searchType)} styleButton={styles.button} styleText={styles.buttonText} />
+                                    {/* <Button onPress={() => searchHandler(searchQuery, searchType)} name="Search" style={styles.button} /> */}
                                 </View>
 
                                 <View style={styles.radioGroup}>
@@ -187,8 +189,18 @@ const styles = StyleSheet.create({
         backgroundColor: "lightgreen",
         width: 80,
         opacity: 0.7,
-        paddingVertical: 8
+        paddingVertical: 8,
+        paddingHorizontal: 10,
+        borderRadius: 30,
+        marginVertical: 10,
     },
+
+    buttonText: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: '600',
+    alignSelf: "center"
+  },
 
     cleanButton: {
         paddingVertical: 5,

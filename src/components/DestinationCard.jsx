@@ -1,44 +1,54 @@
+import { useState } from 'react';
 import {
     View,
     Text,
     ImageBackground,
     StyleSheet,
-    TouchableOpacity
+    TouchableOpacity,
+    ActivityIndicator
 } from 'react-native';
 
 const DestinationCard = ({ item, onPress }) => {
+    const [loading, setLoading] = useState(false);
     return (
         <TouchableOpacity
             style={styles.card}
             activeOpacity={0.9}
             onPress={() => onPress && onPress(item)}
         >
-            <ImageBackground
-                source={{ uri: item.image_url }}
-                style={styles.image}
-                imageStyle={styles.imageRadius}
-            >
-                <View style={styles.overlay} />
+            <View style={styles.imageWrapper}>
+                {loading && (
+                    <ActivityIndicator style={StyleSheet.absoluteFill} size="large" color="#fff" />
+                )}
+                <ImageBackground
+                    source={{ uri: item.image_url }}
+                    style={styles.image}
+                    imageStyle={styles.imageRadius}
+                    onLoadStart={() => setLoading(true)}
+                    onLoadEnd={() => setLoading(false)}
+                >
+                    <View style={styles.overlay} />
 
-                <View style={styles.content}>
-                    <View style={styles.header}>
-                        <Text style={styles.name}>{item.name}</Text>
+                    <View style={styles.content}>
+                        <View style={styles.header}>
+                            <Text style={styles.name}>{item.name}</Text>
 
-                        {item.code && (
-                            <View style={styles.codeContainer}>
-                                <Text style={styles.code}>{item.code}</Text>
-                            </View>
-                        )}
+                            {item.code && (
+                                <View style={styles.codeContainer}>
+                                    <Text style={styles.code}>{item.code}</Text>
+                                </View>
+                            )}
+                        </View>
+
+                        <Text numberOfLines={2} style={styles.description}>
+                            {item.short_description}
+                        </Text>
+
+                        {item.featured_rank ? (<Text style={styles.rank}>⭐ #{String(item.featured_rank)}</Text>) : null}
+
                     </View>
-
-                    <Text numberOfLines={2} style={styles.description}>
-                        {item.short_description}
-                    </Text>
-
-                    {item.featured_rank ? ( <Text style={styles.rank}>⭐ #{String(item.featured_rank)}</Text> ) : null}
-
-                </View>
-            </ImageBackground>
+                </ImageBackground>
+            </View>
         </TouchableOpacity>
     );
 };
@@ -60,6 +70,7 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-end',
         opacity: 0.75,
     },
+    imageWrapper: { flex: 1, },
     imageRadius: {
         borderRadius: 18,
     },
