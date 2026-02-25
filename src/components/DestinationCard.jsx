@@ -10,6 +10,18 @@ import {
 
 const DestinationCard = ({ item, onPress }) => {
     const [loading, setLoading] = useState(false);
+    const [hasError, setHasError] = useState(false);
+
+    if (hasError) {
+        return (
+            <View style={[styles.card, styles.errorCard]}>
+                <Text style={styles.errorText}>
+                    Error Loading {item.name} Information!
+                </Text>
+            </View>
+        );
+    }
+
     return (
         <TouchableOpacity
             style={styles.card}
@@ -18,14 +30,20 @@ const DestinationCard = ({ item, onPress }) => {
         >
             <View style={styles.imageWrapper}>
                 {loading && (
-                    <ActivityIndicator style={StyleSheet.absoluteFill} size="large" color="#fff" />
+                    <View style={styles.loader}>
+                        <ActivityIndicator size="large" color="#fff" />
+                    </View>
                 )}
                 <ImageBackground
-                    source={{ uri: item.image_url }}
+                    source={{ uri: item.image_url || undefined }}
                     style={styles.image}
                     imageStyle={styles.imageRadius}
                     onLoadStart={() => setLoading(true)}
                     onLoadEnd={() => setLoading(false)}
+                    onError={(е) => {
+                        setLoading(false);
+                        setHasError(true);
+                    }}
                 >
                     <View style={styles.overlay} />
 
@@ -114,5 +132,23 @@ const styles = StyleSheet.create({
         fontSize: 12,
         fontWeight: '600',
         color: '#ffd700',
+    },
+    loader: {
+        ...StyleSheet.absoluteFillObject,
+        justifyContent: 'center',
+        alignItems: 'center',
+        zIndex: 10,
+    },
+    errorCard: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#222',
+    },
+    errorText: {
+        color: '#fff',
+        textAlign: 'center',
+        paddingHorizontal: 16,
+        fontSize: 14,
+        fontWeight: '600',
     },
 });
