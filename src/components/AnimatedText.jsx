@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { View, Text, Animated, StyleSheet } from 'react-native';
+import { View, Animated, StyleSheet } from 'react-native';
 
 export default function AnimatedText({ text, styless }) {
     const scaleAnim = useRef(new Animated.Value(1)).current;

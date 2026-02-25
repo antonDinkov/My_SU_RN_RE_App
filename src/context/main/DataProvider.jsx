@@ -6,6 +6,9 @@ import { useNavigation } from "@react-navigation/native";
 
 export const DataContext = createContext({
     isLoading: false,
+    error: false,
+    errorSearch: false,
+    favorites: [],
     getFeaturedCountries: async () => {},
     getSearchResults: async () => {},
     addToFavorites: async () => {},
@@ -13,13 +16,16 @@ export const DataContext = createContext({
     getFavorites: async () => {},
     removeFromFavorites: async () => {},
     detailsHandler: () => {},
-    favorites: [],
+    clearError: () => {},
+    clearErrorSearch: () => {},
 })
 
 export function DataProvider({ children }) {
     const [isLoading, setIsLoading] = useState(false);
     const navigation = useNavigation();
     const [favorites, setFavorites] = useState([]);
+    const [error, setError] = useState(null);
+    const [errorSearch, setErrorSearch] = useState(null);
 
     const getFeaturedCountries = async () => {
         try {
@@ -27,7 +33,8 @@ export function DataProvider({ children }) {
             const data = await dataService.getFeateredCountries();
             return data;
         } catch (err) {
-            console.log("Error loading data: ", err);
+            setError(err.response?.data?.message || "Server error 500");
+            throw err;
         } finally {
             setIsLoading(false)
         }
@@ -39,7 +46,8 @@ export function DataProvider({ children }) {
             const data = await dataService.getSearchResults(text, type);
             return data;
         } catch (err) {
-            console.log("Error loading data: ", err);
+            setErrorSearch(err.response?.data?.message || "Server error 500");
+            throw err;
         } finally {
             setIsLoading(false)
         }
@@ -110,8 +118,12 @@ export function DataProvider({ children }) {
         getFavorites,
         removeFromFavorites,
         detailsHandler,
+        clearError: () => setError(null),
+        clearErrorSearch: () => setErrorSearch(null),
         favorites,
         isLoading,
+        error,
+        errorSearch,
     };
 
     return (

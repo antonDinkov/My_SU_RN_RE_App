@@ -7,16 +7,20 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import Button from '../../components/Button';
 import AnimatedText from '../../components/AnimatedText';
 import ButtonWithActivity from '../../components/ButtonWithActivity';
+import { useAuth } from '../../context/auth/useAuth';
+import ServerError from '../../components/ServerError'
 
 export default function HomeScreen({ navigation }) {
     const [featuredCountries, setFeaturedCountries] = useState([]);
-    const { getFeaturedCountries, getSearchResults, isLoading } = useData();
+    const { getFeaturedCountries, getSearchResults, isLoading, error, clearError, errorSearch, clearErrorSearch } = useData();
     const [searchQuery, setSearchQuery] = useState('');
     const [searchType, setSearchType] = useState('country');
     const [searchResults, setSearchResults] = useState([]);
     const [refreshing, setRefreshing] = useState(false);
+    const {user} = useAuth();
 
     const loadCountries = async () => {
+        clearError();
         try {
             const countries = await getFeaturedCountries();
             setFeaturedCountries(countries);
@@ -42,9 +46,15 @@ export default function HomeScreen({ navigation }) {
     };
 
     const searchHandler = async (name, type) => {
-        const results = await getSearchResults(name, type);
-        setSearchResults(results);
-        setSearchQuery('');
+        clearErrorSearch();
+        try {
+            const results = await getSearchResults(name, type);
+            setSearchResults(results);
+            setSearchQuery('');
+        } catch (err) {
+            setSearchResults([]);
+            console.log("Error quiering the search: ", err);
+        }
     }
 
     const cleanSearchResultsHandler = () => {
@@ -65,9 +75,9 @@ export default function HomeScreen({ navigation }) {
                         style={styles.background}
                     >
                         <View style={styles.overlay}>
-                            <AnimatedText text="Welcome to Travel Feever" />
-                            {/* <Text style={styles.title}>Welcome to Travel Feever</Text> */}
+                            <AnimatedText text={`Welcome to Travel Feever, ${user.firstName}`} />
                             <Text style={styles.subtitle}>Popular Destinations</Text>
+                            <ServerError message={error} onClose={() => clearError()} />
                             <FlatList
                                 data={featuredCountries}
                                 keyExtractor={(item) => item._id}
@@ -108,6 +118,7 @@ export default function HomeScreen({ navigation }) {
                                         onSelect={setSearchType}
                                     />
                                 </View>
+                                <ServerError message={errorSearch} onClose={() => clearErrorSearch()} />
                                 <FlatList
                                     data={searchResults}
                                     keyExtractor={(item) => item._id}
