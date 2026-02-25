@@ -111,6 +111,7 @@ export function DataProvider({ children }) {
         removeFromFavorites,
         detailsHandler,
         favorites,
+        isLoading,
     };
 
     return (

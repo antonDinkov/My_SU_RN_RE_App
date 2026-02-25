@@ -47,7 +47,8 @@ export function AuthProvider({ children }) {
             setAuthToken(token);
 
         } catch (err) {
-            setError(err.message || 'An error occurred during login');
+            setError(err.response?.data?.errors?.[0] || "Server error 500");
+            throw err;
         } finally {
             setIsLoading(false);
         }
@@ -59,7 +60,7 @@ export function AuthProvider({ children }) {
             setAuth({ user, token });
             setAuthToken(token);
         } catch (err) {
-            setError(err.message || 'An error occurred during registration');
+            setError(err.response?.data?.errors?.[0] || "Server error 500");
         }
         finally {
             setIsLoading(false);

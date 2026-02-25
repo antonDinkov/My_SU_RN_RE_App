@@ -5,12 +5,11 @@ import DestinationCard from '../../components/DestinationCard';
 import { RadioButton } from '../../components/RadioButton';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Button from '../../components/Button';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import AnimatedText from '../../components/AnimatedText';
 
 export default function HomeScreen({ navigation }) {
     const [featuredCountries, setFeaturedCountries] = useState([]);
-    const { getFeaturedCountries, getSearchResults } = useData();
+    const { getFeaturedCountries, getSearchResults, isLoading } = useData();
     const [searchQuery, setSearchQuery] = useState('');
     const [searchType, setSearchType] = useState('country');
     const [searchResults, setSearchResults] = useState([]);

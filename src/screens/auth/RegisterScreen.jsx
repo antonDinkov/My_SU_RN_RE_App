@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ImageBackground, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
 import { useAuth } from '../../context/auth/useAuth';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { validate } from '../utils/authValidation';
+import ServerError from '../../components/ServerError';
 
 export default function RegisterScreen({ navigation, setIsLoggedIn }) {
     const [firstName, setFirstName] = useState('');
@@ -10,67 +12,26 @@ export default function RegisterScreen({ navigation, setIsLoggedIn }) {
     const [password, setPassword] = useState('');
     const [repeatPassword, setRepeatPassword] = useState('');
     const [errors, setErrors] = useState({});
-    const { register, clearError } = useAuth();
+    const { register, error, clearError } = useAuth();
 
-    const validate = () => {
-        const newErrors = {};
 
-        if (!firstName.trim()) {
-            newErrors.firstName = 'First name is required';
-        } else if (firstName.trim().length < 4) {
-            newErrors.firstName = 'First name must be at least 4 characters';
-        }
+    const registerHandler = async () => {
+        clearError();
 
-        if (!lastName.trim()) {
-            newErrors.lastName = 'Last name is required';
-        } else if (lastName.trim().length < 4) {
-            newErrors.lastName = 'Last name must be at least 4 characters';
-        }
+        const isValid = validate.register(setErrors, {
+            firstName,
+            lastName,
+            email,
+            password,
+            repeatPassword
+        });
 
-        if (!email.trim()) {
-            newErrors.email = 'Email is required';
-        } else if (email.trim().length < 10) {
-            newErrors.email = 'Email must be at least 10 characters';
-        } else if (!/\S+@\S+\.\S+/.test(email)) {
-            newErrors.email = 'Please enter a valid email';
-        }
+        console.log(isValid);
+        if (!isValid) return;
+        
 
-        if (!password) {
-            newErrors.password = 'Password is required';
-        } else {
-            if (password.length < 4) {
-                newErrors.password = 'Password must be at least 4 characters';
-            }
-            if (!/[A-Z]/.test(password)) {
-                newErrors.password = 'Password must contain at least one uppercase letter';
-            }
-            if (!/[0-9]/.test(password)) {
-                newErrors.password = 'Password must contain at least one number';
-            }
-        }
-
-        if (!repeatPassword) {
-            newErrors.repeatPassword = 'Please repeat your password';
-        } else if (repeatPassword !== password) {
-            newErrors.repeatPassword = 'Passwords do not match';
-        }
-
-        setErrors(newErrors);
-        return Object.keys(newErrors).length === 0;
+        await register(firstName, lastName, email, password, repeatPassword);
     };
-
-
-    const registerHandler = async (firstName, lastName, email, password, repeatPassword) => {
-        try {
-            clearError();
-            if (!validate()) return;
-
-            await register(firstName, lastName, email, password, repeatPassword);
-        } catch (err) {
-            console.log('REGISTER FAILED', err);
-        }
-    };
-
     return (
         <SafeAreaView style={{ flex: 1 }} edges={['left', 'right', 'bottom']}>
             <KeyboardAvoidingView
@@ -84,6 +45,7 @@ export default function RegisterScreen({ navigation, setIsLoggedIn }) {
                         style={styles.background}
                     >
                         <View style={styles.overlay}>
+                            <ServerError message={error} onClose={() => clearError()} />
                             {errors.firstName && <Text style={styles.error}>{errors.firstName}</Text>}
                             <TextInput
                                 style={styles.input}
@@ -92,7 +54,7 @@ export default function RegisterScreen({ navigation, setIsLoggedIn }) {
                                 value={firstName}
                                 onChangeText={(text) => {
                                     setFirstName(text);
-                                    validate()
+                                    validate.firstName(setErrors, text)
                                 }}
                             />
 
@@ -104,7 +66,7 @@ export default function RegisterScreen({ navigation, setIsLoggedIn }) {
                                 value={lastName}
                                 onChangeText={(text) => {
                                     setLastName(text);
-                                    validate()
+                                    validate.lastName(setErrors, text)
                                 }}
                             />
 
@@ -116,7 +78,7 @@ export default function RegisterScreen({ navigation, setIsLoggedIn }) {
                                 value={email}
                                 onChangeText={(text) => {
                                     setEmail(text);
-                                    validate()
+                                    validate.email(setErrors, text)
                                 }}
                             />
 
@@ -129,7 +91,7 @@ export default function RegisterScreen({ navigation, setIsLoggedIn }) {
                                 value={password}
                                 onChangeText={(text) => {
                                     setPassword(text);
-                                    validate()
+                                    validate.password(setErrors, text)
                                 }}
                             />
 
@@ -142,7 +104,7 @@ export default function RegisterScreen({ navigation, setIsLoggedIn }) {
                                 value={repeatPassword}
                                 onChangeText={(text) => {
                                     setRepeatPassword(text);
-                                    validate()
+                                    validate.repeatPassword(setErrors, password, text)
                                 }}
                             />
 
@@ -180,56 +142,3 @@ const styles = StyleSheet.create({
     buttonText: { color: '#fff', fontSize: 16, fontWeight: '600' },
     link: { color: '#fff', marginTop: 20, textAlign: 'center', textDecorationLine: 'underline' },
 });
-
-
-
-
-
-
-{/* <View style={styles.overlay}>
-                        <Text style={styles.title}>Register</Text>
-                        <TextInput
-                            style={styles.input}
-                            placeholder="First Name"
-                            placeholderTextColor="#ccc"
-                            value={firstName}
-                            onChangeText={setFirstName}
-                        />
-                        <TextInput
-                            style={styles.input}
-                            placeholder="Last Name"
-                            placeholderTextColor="#ccc"
-                            value={lastName}
-                            onChangeText={setLastName}
-                        />
-                        <TextInput
-                            style={styles.input}
-                            placeholder="Email"
-                            placeholderTextColor="#ccc"
-                            value={email}
-                            onChangeText={setEmail}
-                        />
-                        <TextInput
-                            style={styles.input}
-                            placeholder="Password"
-                            placeholderTextColor="#ccc"
-                            secureTextEntry
-                            value={password}
-                            onChangeText={setPassword}
-                        />
-                        <TextInput
-                            style={styles.input}
-                            placeholder="Repeat Password"
-                            placeholderTextColor="#ccc"
-                            secureTextEntry
-                            value={repeatPassword}
-                            onChangeText={setRepeatPassword}
-                        />
-                        <TouchableOpacity style={styles.button} onPress={() => registerHandler(firstName, lastName, email, password, repeatPassword)}>
-                            <Text style={styles.buttonText}>Register</Text>
-                        </TouchableOpacity>
-
-                        <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-                            <Text style={styles.link}>Already have an account?!</Text>
-                        </TouchableOpacity>
-                    </View> */}
