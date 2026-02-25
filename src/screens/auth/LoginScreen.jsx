@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ImageBackground, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ImageBackground, KeyboardAvoidingView, Platform, ScrollView, ActivityIndicator } from 'react-native';
 import { useAuth } from '../../context/auth/useAuth';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { validate } from '../utils/authValidation';
 import ServerError from '../../components/ServerError';
+import ButtonWithActivity from '../../components/ButtonWithActivity';
 
 export default function LoginScreen({ navigation }) {
     const [email, setEmail] = useState('');
@@ -30,6 +31,7 @@ export default function LoginScreen({ navigation }) {
 
     return (
         <SafeAreaView style={{ flex: 1 }} edges={['left', 'right', 'bottom']}>
+            {/* <ScreenLoader visible={isLoading} /> */}
             <KeyboardAvoidingView
                 style={{ flex: 1 }}
                 behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -67,9 +69,14 @@ export default function LoginScreen({ navigation }) {
                                 }}
                             />
 
-                            <TouchableOpacity style={styles.button} onPress={loginHandler}>
-                                <Text style={styles.buttonText}>Login</Text>
-                            </TouchableOpacity>
+                                <ButtonWithActivity isLoading={isLoading} name="Login" onpress={loginHandler} styleButton={styles.button} styleText={styles.buttonText} />
+                            {/* <TouchableOpacity style={styles.button} onPress={loginHandler}>
+                                {isLoading ? (
+                                    <ActivityIndicator color="#fff" size="large" />)
+                                    : (
+                                        <Text style={styles.buttonText}>Login</Text>
+                                    )}
+                            </TouchableOpacity> */}
 
                             <TouchableOpacity onPress={() => navigation.navigate('Register')}>
                                 <Text style={styles.link}>Not registered yet?!</Text>

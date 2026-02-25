@@ -4,6 +4,7 @@ import { useAuth } from '../../context/auth/useAuth';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { validate } from '../utils/authValidation';
 import ServerError from '../../components/ServerError';
+import ButtonWithActivity from '../../components/ButtonWithActivity';
 
 export default function RegisterScreen({ navigation }) {
     const [firstName, setFirstName] = useState('');
@@ -12,7 +13,7 @@ export default function RegisterScreen({ navigation }) {
     const [password, setPassword] = useState('');
     const [repeatPassword, setRepeatPassword] = useState('');
     const [errors, setErrors] = useState({});
-    const { register, error, clearError } = useAuth();
+    const { register, error, clearError, isLoading } = useAuth();
 
 
     const registerHandler = async () => {
@@ -108,12 +109,13 @@ export default function RegisterScreen({ navigation }) {
                                 }}
                             />
 
-                            <TouchableOpacity
+                                <ButtonWithActivity isLoading={isLoading} name="Register" onpress={registerHandler} styleButton={styles.button} styleText={styles.buttonText} />
+                            {/* <TouchableOpacity
                                 style={styles.button}
                                 onPress={() => registerHandler(firstName, lastName, email, password, repeatPassword)}
                             >
                                 <Text style={styles.buttonText}>Register</Text>
-                            </TouchableOpacity>
+                            </TouchableOpacity> */}
 
                             <TouchableOpacity onPress={() => navigation.navigate('Login')}>
                                 <Text style={styles.link}>Already have an account?!</Text>
