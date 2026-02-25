@@ -26,7 +26,7 @@ const DestinationCard = ({ item, onPress }) => {
         <TouchableOpacity
             style={styles.card}
             activeOpacity={0.9}
-            onPress={() => onPress(item)}
+            onPress={() => onPress && onPress(item)}
         >
             <View style={styles.imageWrapper}>
                 {loading && (
