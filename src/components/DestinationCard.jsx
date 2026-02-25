@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import {
     View,
     Text,
@@ -26,7 +26,7 @@ const DestinationCard = ({ item, onPress }) => {
         <TouchableOpacity
             style={styles.card}
             activeOpacity={0.9}
-            onPress={() => onPress && onPress(item)}
+            onPress={() => onPress(item)}
         >
             <View style={styles.imageWrapper}>
                 {loading && (
@@ -71,7 +71,7 @@ const DestinationCard = ({ item, onPress }) => {
     );
 };
 
-export default DestinationCard;
+export default React.memo(DestinationCard);
 
 const styles = StyleSheet.create({
     card: {

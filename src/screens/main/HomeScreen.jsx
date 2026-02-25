@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet, FlatList, ImageBackground, TextInput, KeyboardAvoidingView, Platform, ScrollView, RefreshControl } from 'react-native';
 import { useData } from '../../context/main/useData';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import DestinationCard from '../../components/DestinationCard';
 import { RadioButton } from '../../components/RadioButton';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -17,7 +17,7 @@ export default function HomeScreen({ navigation }) {
     const [searchType, setSearchType] = useState('country');
     const [searchResults, setSearchResults] = useState([]);
     const [refreshing, setRefreshing] = useState(false);
-    const {user} = useAuth();
+    const { user } = useAuth();
 
     const loadCountries = async () => {
         clearError();
@@ -32,6 +32,23 @@ export default function HomeScreen({ navigation }) {
     useEffect(() => {
         loadCountries();
     }, []);
+
+    const detailsHandler = useCallback(
+        (item) => {
+            navigation.navigate('DetailsModal', { item });
+        },
+        [navigation]
+    );
+
+    const renderFeaturedItem = useCallback(
+        ({ item }) => (
+            <DestinationCard
+                item={item}
+                onPress={detailsHandler}
+            />
+        ),
+        [detailsHandler]
+    );
 
     const onRefresh = async () => {
         try {
@@ -61,10 +78,6 @@ export default function HomeScreen({ navigation }) {
         setSearchResults([]);
     }
 
-    const detailsHandler = (item) => {
-        navigation.navigate('DetailsModal', { item });
-    }
-
 
     return (
         <SafeAreaView style={{ flex: 1 }} edges={['left', 'right']}>
@@ -83,7 +96,7 @@ export default function HomeScreen({ navigation }) {
                                 keyExtractor={(item) => item._id}
                                 horizontal
                                 showsHorizontalScrollIndicator={false}
-                                renderItem={({ item }) => <DestinationCard key={item._id} item={item} onPress={() => detailsHandler(item)} />}
+                                renderItem={renderFeaturedItem}
                             />
                             <View style={styles.searchContainer}>
                                 <View style={styles.searchRow}>
@@ -124,7 +137,7 @@ export default function HomeScreen({ navigation }) {
                                     keyExtractor={(item) => item._id}
                                     horizontal
                                     showsHorizontalScrollIndicator={false}
-                                    renderItem={({ item }) => <DestinationCard key={item._id} item={item} onPress={() => detailsHandler(item)} />}
+                                    renderItem={renderFeaturedItem}
                                 />
                                 <Button onPress={cleanSearchResultsHandler} name="Clean search" style={styles.cleanButton} />
                             </View>
@@ -133,7 +146,6 @@ export default function HomeScreen({ navigation }) {
                 </ScrollView>
             </KeyboardAvoidingView>
         </SafeAreaView>
-
     );
 }
 
@@ -207,11 +219,11 @@ const styles = StyleSheet.create({
     },
 
     buttonText: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: '600',
-    alignSelf: "center"
-  },
+        color: '#fff',
+        fontSize: 18,
+        fontWeight: '600',
+        alignSelf: "center"
+    },
 
     cleanButton: {
         paddingVertical: 5,
