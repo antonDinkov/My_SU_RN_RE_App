@@ -9,6 +9,7 @@ export const DataContext = createContext({
     error: false,
     errorSearch: false,
     favorites: [],
+    myTrips: [],
     getFeaturedCountries: async () => {},
     getSearchResults: async () => {},
     addToFavorites: async () => {},
@@ -26,6 +27,7 @@ export function DataProvider({ children }) {
     const [favorites, setFavorites] = useState([]);
     const [error, setError] = useState(null);
     const [errorSearch, setErrorSearch] = useState(null);
+    const [myTrips, setMyTrips] = useState([]);
 
     const getFeaturedCountries = async () => {
         try {
@@ -121,6 +123,7 @@ export function DataProvider({ children }) {
         clearError: () => setError(null),
         clearErrorSearch: () => setErrorSearch(null),
         favorites,
+        myTrips,
         isLoading,
         error,
         errorSearch,

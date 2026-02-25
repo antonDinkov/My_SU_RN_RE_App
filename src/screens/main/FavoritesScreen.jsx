@@ -7,17 +7,6 @@ import DestinationCard from '../../components/DestinationCard';
 import { useData } from '../../context/main/useData';
 import { useAuth } from '../../context/auth/useAuth';
 
-const favoriteDestinations = [
-    { id: '1', name: 'Bali', image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e' },
-    { id: '2', name: 'New York', image: 'https://images.unsplash.com/photo-1549924231-f129b911e442' },
-    { id: '3', name: 'Tokyo', image: 'https://images.unsplash.com/photo-1549693578-d683be217e58' },
-];
-
-const followedTravelers = [
-    { id: '1', name: 'Maria', avatar: 'https://randomuser.me/api/portraits/women/44.jpg' },
-    { id: '2', name: 'John', avatar: 'https://randomuser.me/api/portraits/men/46.jpg' },
-    { id: '3', name: 'Sofia', avatar: 'https://randomuser.me/api/portraits/women/65.jpg' },
-];
 
 export default function FavoritesScreen() {
     const [refreshing, setRefreshing] = useState(false);

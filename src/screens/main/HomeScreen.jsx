@@ -108,9 +108,7 @@ export default function HomeScreen({ navigation }) {
                                         style={styles.searchInput}
                                     />
                                     <ButtonWithActivity isLoading={isLoading} name="Search" onpress={() => searchHandler(searchQuery, searchType)} styleButton={styles.button} styleText={styles.buttonText} />
-                                    {/* <Button onPress={() => searchHandler(searchQuery, searchType)} name="Search" style={styles.button} /> */}
                                 </View>
-
                                 <View style={styles.radioGroup}>
                                     <RadioButton
                                         label="Country"
