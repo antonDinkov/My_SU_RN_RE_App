@@ -4,6 +4,7 @@
   "version": "1.0.0",
   "scripts": {
     "startAndroid": "npx expo start -c",
+    "rebuild": "npx expo run:android",
     "start": "expo start",
     "reversePhone": "adb -s dcd9b811 reverse tcp:8081 tcp:8081",
     "reverse": "adb -s dcd9b811 reverse tcp:3004 tcp:3004",
@@ -31,6 +32,7 @@
     "expo-font": "~14.0.11",
     "expo-haptics": "~15.0.8",
     "expo-image": "~3.0.11",
+    "expo-image-picker": "~17.0.10",
     "expo-linking": "~8.0.11",
     "expo-splash-screen": "~31.0.13",
     "expo-status-bar": "~3.0.9",

@@ -5,6 +5,7 @@ import Button from "../../components/Button";
 import ButtonWithActivity from "../../components/ButtonWithActivity";
 import { RadioButton } from "../../components/RadioButton";
 import { useState } from "react";
+import ImagePicker from "../../components/ImagePicker";
 
 
 export default function CreateTripScreen() {
@@ -58,6 +59,7 @@ export default function CreateTripScreen() {
 
                         <View style={styles.buttonsWrapper}>
                             <View>
+                                
                                 <Button name="Upload Image" onPress={() => console.log("Upload image pressed")} style={styles.button} />
                             </View>
                             <View>
