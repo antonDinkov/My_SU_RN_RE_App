@@ -2,9 +2,16 @@ import { ImageBackground, ScrollView, StyleSheet, Text, TextInput, View } from "
 import { SafeAreaView } from "react-native-safe-area-context";
 import AnimatedText from "../../components/AnimatedText";
 import Button from "../../components/Button";
+import ButtonWithActivity from "../../components/ButtonWithActivity";
+import { RadioButton } from "../../components/RadioButton";
+import { useState } from "react";
 
 
 export default function CreateTripScreen() {
+    const [type, setType] = useState("country");
+    const [name, setName] = useState('');
+    const [code, setCode] = useState('');
+    const [shortDescription, setShortDescription] = useState('');
     return (
         <SafeAreaView style={{ flex: 1 }} edges={['left', 'right']}>
             <ImageBackground
@@ -20,39 +27,50 @@ export default function CreateTripScreen() {
 
                         <TextInput
                             placeholder="Destination name"
+                            placeholderTextColor="#666"
                             style={styles.input}
+                            value={name}
+                            onChangeText={setName}
                         />
+
+                        <View style={styles.radioBtns}>    {/* label, value, selected, onSelect */}
+                            <RadioButton label="Country" value="country" selected={type} onSelect={setType} />
+                            <RadioButton label="City" value="city" selected={type} onSelect={setType} />
+                            <RadioButton label="Place" value="place" selected={type} onSelect={setType} />
+                        </View>
 
                         <TextInput
                             placeholder="Code (optional)"
+                            placeholderTextColor="#666"
                             style={styles.input}
+                            value={code}
+                            onChangeText={setCode}
                         />
 
                         <TextInput
                             placeholder="Short description"
+                            placeholderTextColor="#666"
                             multiline
                             style={[styles.input, { height: 80 }]}
+                            value={shortDescription}
+                            onChangeText={setShortDescription}
                         />
 
-                        <TextInput
-                            placeholder="Featured rank (optional)"
-                            keyboardType="numeric"
-                            style={styles.input}
-                        />
-
-                        <Button name="📁 Upload Image" />
-                        <Button name="📷 Take Picture" />
-                        <Button name="📍 Get Current Location" />
-
-                        <Text style={styles.coordinates}>
-                            📍 00.0000 , 00.0000
-                        </Text>
-
-                        <Button
-                            name="Create Destination"
-                            style={styles.createButton}
-                        />
-
+                        <View style={styles.buttonsWrapper}>
+                            <View>
+                                <Button name="Upload Image" onPress={() => console.log("Upload image pressed")} style={styles.button} />
+                            </View>
+                            <View>
+                                <Button name="Take Picture" onPress={() => console.log("Take picture pressed")} style={styles.button} />
+                            </View>
+                            <View>
+                                <Text style={styles.coordinates}>
+                                    00.0000 , 00.0000
+                                </Text>
+                                <Button name="Get Location" onPress={() => console.log("Get location pressed")} style={styles.button} />
+                            </View>
+                            <ButtonWithActivity isLoading={false} name="Create" onpress={() => console.log("Create button pressed")} styleButton={styles.createButton} styleText={styles.buttonText} />
+                        </View>
                     </ScrollView>
                 </View>
             </ImageBackground>
@@ -69,23 +87,49 @@ const styles = StyleSheet.create({
         padding: 20,
     },
     title: {
-        marginTop: 30,
-        marginBottom: 20,
+        marginTop: 60,
+        marginBottom: 30,
     },
     input: {
         backgroundColor: '#fff',
         borderRadius: 10,
         padding: 12,
         marginBottom: 15,
-        opacity: 0.6
+        opacity: 0.6,
+    },
+    radioBtns: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        marginBottom: 15,
+    },
+    buttonsWrapper: {
+        alignItems: "center"
     },
     coordinates: {
         color: '#fff',
         marginVertical: 10,
     },
+    button: {
+        opacity: 0.7,
+        backgroundColor: 'transparent',
+        borderColor: "black",
+        borderWidth: 2,
+    },
     createButton: {
         backgroundColor: 'orange',
         marginTop: 20,
+        opacity: 0.4,
+        width: 200,
+        paddingVertical: 15,
+        paddingHorizontal: 10,
+        borderRadius: 30,
+        marginVertical: 10,
+    },
+    buttonText: {
+        color: '#fff',
+        fontSize: 18,
+        fontWeight: '600',
+        alignSelf: "center"
     },
 });
 
