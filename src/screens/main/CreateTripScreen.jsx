@@ -8,6 +8,7 @@ import { useState } from "react";
 import ImagePicker from "../../components/ImagePicker";
 import TakePicture from "../../components/TakePicture";
 import { useData } from "../../context/main/useData";
+import LocationCheck from "../../components/LocationCheck";
 
 export default function CreateTripScreen() {
     const [type, setType] = useState("country");
@@ -83,9 +84,10 @@ export default function CreateTripScreen() {
                                 {/* <Button name="Take Picture" onPress={() => console.log("Take picture pressed")} style={styles.button} /> */}
                             </View>
                             <View>
-                                <Text style={styles.coordinates}>
+                                {/* <Text style={styles.coordinates}>
                                     00.0000 , 00.0000
-                                </Text>
+                                </Text> */}
+                                <LocationCheck />
                                 <Button name="Get Location" onPress={() => console.log("Get location pressed")} style={styles.button} />
                             </View>
                             <ButtonWithActivity isLoading={isLoading} name="Create" onpress={() => console.log("Create button pressed")} styleButton={styles.createButton} styleText={styles.buttonText} />
