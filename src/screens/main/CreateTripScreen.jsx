@@ -7,7 +7,6 @@ import { RadioButton } from "../../components/RadioButton";
 import { useState } from "react";
 import ImagePicker from "../../components/ImagePicker";
 
-
 export default function CreateTripScreen() {
     const [type, setType] = useState("country");
     const [name, setName] = useState('');
@@ -59,8 +58,8 @@ export default function CreateTripScreen() {
 
                         <View style={styles.buttonsWrapper}>
                             <View>
-                                
-                                <Button name="Upload Image" onPress={() => console.log("Upload image pressed")} style={styles.button} />
+                                <ImagePicker />
+                                {/* <Button name="Upload Image" onPress={() => console.log("Upload image pressed")} style={styles.button} /> */}
                             </View>
                             <View>
                                 <Button name="Take Picture" onPress={() => console.log("Take picture pressed")} style={styles.button} />
