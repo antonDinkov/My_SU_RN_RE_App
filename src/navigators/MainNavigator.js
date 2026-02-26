@@ -5,6 +5,7 @@ import ProfileScreen from "../screens/main/ProfileScreen";
 import SettingsScreen from "../screens/main/SettingsScreen";
 import FavoritesScreen from "../screens/main/FavoritesScreen";
 import MyTripsScreen from "../screens/main/MyTripsScreen";
+import MyTripsNavigator from "./MyTripsNavigator";
 
 export default function MainNavigator({ setIsLoggedIn }) {
     const Tabs = createBottomTabNavigator();
@@ -18,7 +19,7 @@ export default function MainNavigator({ setIsLoggedIn }) {
 
                     if (route.name === "Home") {
                         iconName = focused ? "home" : "home-outline";
-                    } else if (route.name === "MyTrips") {
+                    } else if (route.name === "MyTripsNav") {
                         iconName = focused ? "earth" : "earth-outline";
                     } else if (route.name === "Profile") {
                         iconName = focused ? "person" : "person-outline";
@@ -43,7 +44,7 @@ export default function MainNavigator({ setIsLoggedIn }) {
                 )}
             </Tabs.Screen>
             <Tabs.Screen name="Favorites" component={FavoritesScreen} />
-            <Tabs.Screen name="MyTrips" component={MyTripsScreen} />
+            <Tabs.Screen name="MyTripsNav" component={MyTripsNavigator} options={{title: "My Trips"}} />
             <Tabs.Screen name="Profile" component={ProfileScreen} />
             <Tabs.Screen name="Settings" component={SettingsScreen} />
         </Tabs.Navigator>

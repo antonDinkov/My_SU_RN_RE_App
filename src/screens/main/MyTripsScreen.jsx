@@ -15,7 +15,7 @@ const destinations = [
     { id: '6', name: 'Barcelona' },
 ];
 
-export default function MyTripsScreen() {
+export default function MyTripsScreen({navigation}) {
     const [refreshing, setRefreshing] = useState(false);
     const {myTrips} = useData();
 
@@ -36,7 +36,7 @@ export default function MyTripsScreen() {
             >
 
                 <ScrollView contentContainerStyle={{ flexGrow: 1, alignItems: 'center' }} showsVerticalScrollIndicator={false} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
-                    <AnimatedText text='My destinations' styless={styles.title} />
+                    <AnimatedText text='My Trips' styless={styles.title} />
                     <FlatList
                         data={myTrips}
                         horizontal
@@ -45,7 +45,7 @@ export default function MyTripsScreen() {
                             <DestinationCard item={item} />
                         )}
                     />
-                    <Button name="Create" onPress={() => console.log("Button Pressed")} style={styles.button} />
+                    <Button name="Create" onPress={() => navigation.navigate('CreateTrip')} style={styles.button} />
                     {!myTrips.length && <AnimatedText text="CREATE YOUR FIRST TRAVEL MEMORY" styless={styles.emptyFavorites} />}
                 </ScrollView>
             </ImageBackground>
