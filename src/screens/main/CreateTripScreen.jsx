@@ -7,6 +7,7 @@ import { RadioButton } from "../../components/RadioButton";
 import { useState } from "react";
 import ImagePicker from "../../components/ImagePicker";
 import TakePicture from "../../components/TakePicture";
+import { useData } from "../../context/main/useData";
 
 export default function CreateTripScreen() {
     const [type, setType] = useState("country");
@@ -14,6 +15,12 @@ export default function CreateTripScreen() {
     const [code, setCode] = useState('');
     const [description, setDescription] = useState('');
     const [image, setImage] = useState(null);
+    const {isLoading} = useData();
+
+    const deletePictureHandler = async () => {
+        setImage(null);
+    }
+
     return (
         <SafeAreaView style={{ flex: 1 }} edges={['left', 'right']}>
             <ImageBackground
@@ -60,10 +67,13 @@ export default function CreateTripScreen() {
 
                         <View style={styles.buttonsWrapper}>
                             {image && (
-                                <Image
-                                    source={{ uri: image }}
-                                    style={{ width: 200, height: 200, borderRadius: 12, marginBottom: 15 }}
-                                />
+                                <>
+                                    <Image
+                                        source={{ uri: image }}
+                                        style={{ width: 200, height: 200, borderRadius: 12, marginBottom: 15 }}
+                                    />
+                                    <ButtonWithActivity isLoading={isLoading} name="Delete" onpress={deletePictureHandler} styleButton={styles.deleteButton} styleText={styles.deleteText} />
+                                </>
                             )}
                             <View>
                                 <ImagePicker setImage={setImage} />
@@ -78,7 +88,7 @@ export default function CreateTripScreen() {
                                 </Text>
                                 <Button name="Get Location" onPress={() => console.log("Get location pressed")} style={styles.button} />
                             </View>
-                            <ButtonWithActivity isLoading={false} name="Create" onpress={() => console.log("Create button pressed")} styleButton={styles.createButton} styleText={styles.buttonText} />
+                            <ButtonWithActivity isLoading={isLoading} name="Create" onpress={() => console.log("Create button pressed")} styleButton={styles.createButton} styleText={styles.buttonText} />
                         </View>
                     </ScrollView>
                 </View>
@@ -140,6 +150,15 @@ const styles = StyleSheet.create({
         fontWeight: '600',
         alignSelf: "center"
     },
+    deleteButton: {
+        width: 70,
+        borderWidth: 2,
+        borderRadius: 10
+    },
+    deleteText: {
+        color: "red",
+        alignSelf: 'center'
+    }
 });
 
 
