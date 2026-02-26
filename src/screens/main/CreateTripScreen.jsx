@@ -1,4 +1,4 @@
-import { ImageBackground, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import { Image, ImageBackground, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import AnimatedText from "../../components/AnimatedText";
 import Button from "../../components/Button";
@@ -6,12 +6,14 @@ import ButtonWithActivity from "../../components/ButtonWithActivity";
 import { RadioButton } from "../../components/RadioButton";
 import { useState } from "react";
 import ImagePicker from "../../components/ImagePicker";
+import TakePicture from "../../components/TakePicture";
 
 export default function CreateTripScreen() {
     const [type, setType] = useState("country");
     const [name, setName] = useState('');
     const [code, setCode] = useState('');
     const [description, setDescription] = useState('');
+    const [image, setImage] = useState(null);
     return (
         <SafeAreaView style={{ flex: 1 }} edges={['left', 'right']}>
             <ImageBackground
@@ -57,12 +59,18 @@ export default function CreateTripScreen() {
                         />
 
                         <View style={styles.buttonsWrapper}>
+                            {image && (
+                                <Image
+                                    source={{ uri: image }}
+                                    style={{ width: 200, height: 200, borderRadius: 12, marginBottom: 15 }}
+                                />
+                            )}
                             <View>
-                                <ImagePicker />
-                                {/* <Button name="Upload Image" onPress={() => console.log("Upload image pressed")} style={styles.button} /> */}
+                                <ImagePicker setImage={setImage} />
                             </View>
                             <View>
-                                <Button name="Take Picture" onPress={() => console.log("Take picture pressed")} style={styles.button} />
+                                <TakePicture setImage={setImage} />
+                                {/* <Button name="Take Picture" onPress={() => console.log("Take picture pressed")} style={styles.button} /> */}
                             </View>
                             <View>
                                 <Text style={styles.coordinates}>

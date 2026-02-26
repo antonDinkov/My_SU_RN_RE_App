@@ -3,17 +3,17 @@ import { Alert, Image, View, StyleSheet } from 'react-native';
 import * as ImgPicker from 'expo-image-picker';
 import Button from './Button';
 
-export default function ImagePicker({setImage}) {
+export default function TakePicture({setImage}) {
 
   const pickImage = async () => {
-    const permissionResult = await ImgPicker.requestMediaLibraryPermissionsAsync();
+    const permissionResult = await ImgPicker.requestCameraPermissionsAsync();
 
     if (!permissionResult.granted) {
-      Alert.alert('Permission required', 'Permission to access the camera is required.');
+      Alert.alert('Permission required', 'Permission to access the media library is required.');
       return;
     }
 
-    let result = await ImgPicker.launchImageLibraryAsync({
+    let result = await ImgPicker.launchCameraAsync({
       mediaTypes: ['images'],
       aspect: [4, 3],
       quality: 1,
@@ -26,7 +26,7 @@ export default function ImagePicker({setImage}) {
 
   return (
     <View style={styles.container}>
-      <Button name="Upload Image" onPress={pickImage} style={styles.button} />
+      <Button name="Take a Picture" onPress={pickImage} style={styles.button} />
     </View>
   );
 }
