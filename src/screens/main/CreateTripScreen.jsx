@@ -11,7 +11,7 @@ export default function CreateTripScreen() {
     const [type, setType] = useState("country");
     const [name, setName] = useState('');
     const [code, setCode] = useState('');
-    const [shortDescription, setShortDescription] = useState('');
+    const [description, setDescription] = useState('');
     return (
         <SafeAreaView style={{ flex: 1 }} edges={['left', 'right']}>
             <ImageBackground
@@ -33,7 +33,7 @@ export default function CreateTripScreen() {
                             onChangeText={setName}
                         />
 
-                        <View style={styles.radioBtns}>    {/* label, value, selected, onSelect */}
+                        <View style={styles.radioBtns}>
                             <RadioButton label="Country" value="country" selected={type} onSelect={setType} />
                             <RadioButton label="City" value="city" selected={type} onSelect={setType} />
                             <RadioButton label="Place" value="place" selected={type} onSelect={setType} />
@@ -52,8 +52,8 @@ export default function CreateTripScreen() {
                             placeholderTextColor="#666"
                             multiline
                             style={[styles.input, { height: 80 }]}
-                            value={shortDescription}
-                            onChangeText={setShortDescription}
+                            value={description}
+                            onChangeText={setDescription}
                         />
 
                         <View style={styles.buttonsWrapper}>
