@@ -1,4 +1,4 @@
-import { Image, ImageBackground, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import { Image, ImageBackground, ScrollView, StyleSheet, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import AnimatedText from "../../components/AnimatedText";
 import ButtonWithActivity from "../../components/ButtonWithActivity";
@@ -9,30 +9,47 @@ import TakePicture from "../../components/TakePicture";
 import { useData } from "../../context/main/useData";
 import LocationCheck from "../../components/LocationCheck";
 
-export default function CreateTripScreen() {
-    const [type, setType] = useState("country");
-    const [name, setName] = useState('');
-    const [code, setCode] = useState('');
-    const [description, setDescription] = useState('');
-    const [image, setImage] = useState(null);
-    const {isLoading} = useData();
+export default function EditTripScreen({ route }) {
+    const { trip } = route.params; // 👈 получаваме trip
 
-    const deletePictureHandler = async () => {
+    const [type, setType] = useState(trip.type);
+    const [name, setName] = useState(trip.name);
+    const [code, setCode] = useState(trip.code || '');
+    const [description, setDescription] = useState(trip.short_description);
+    const [image, setImage] = useState(trip.image_url);
+
+    const { isLoading } = useData();
+
+    const deletePictureHandler = () => {
         setImage(null);
-    }
+    };
+
+    const updateHandler = () => {
+        const updatedTrip = {
+            ...trip,
+            type,
+            name,
+            code,
+            short_description: description,
+            image_url: image,
+        };
+
+        console.log("Updated trip:", updatedTrip);
+        // 👉 Тук извикваш update функцията ти от context/API
+    };
 
     return (
         <SafeAreaView style={{ flex: 1 }} edges={['left', 'right']}>
             <ImageBackground
                 source={{
-                    uri: 'https://images.unsplash.com/photo-1472214103451-9374bd1c798e?auto=format&fit=crop&fm=jpg&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8YmVhdXRpZnVsJTIwbGFuZHNjYXBlfGVufDB8fDB8fHww&ixlib=rb-4.1.0&q=60&w=3000',
+                    uri: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=3000&q=60',
                 }}
                 style={styles.background}
             >
                 <View style={styles.overlay}>
                     <ScrollView showsVerticalScrollIndicator={false}>
 
-                        <AnimatedText text="Create Destination" styless={styles.title} />
+                        <AnimatedText text="Edit Destination" styless={styles.title} />
 
                         <TextInput
                             placeholder="Destination name"
@@ -66,33 +83,42 @@ export default function CreateTripScreen() {
                         />
 
                         <View style={styles.buttonsWrapper}>
+
                             {image && (
                                 <>
                                     <Image
                                         source={{ uri: image }}
                                         style={{ width: 200, height: 200, borderRadius: 12, marginBottom: 15 }}
                                     />
-                                    <ButtonWithActivity isLoading={isLoading} name="Delete" onpress={deletePictureHandler} styleButton={styles.deleteButton} styleText={styles.deleteText} />
+                                    <ButtonWithActivity
+                                        isLoading={isLoading}
+                                        name="Delete"
+                                        onpress={deletePictureHandler}
+                                        styleButton={styles.deleteButton}
+                                        styleText={styles.deleteText}
+                                    />
                                 </>
                             )}
-                            <View>
-                                <ImagePicker setImage={setImage} />
-                            </View>
-                            <View>
-                                <TakePicture setImage={setImage} />
-                            </View>
-                            <View>
-                                <LocationCheck />
-                            </View>
-                            <ButtonWithActivity isLoading={isLoading} name="Create" onpress={() => console.log("Create button pressed")} styleButton={styles.createButton} styleText={styles.buttonText} />
+
+                            <ImagePicker setImage={setImage} />
+                            <TakePicture setImage={setImage} />
+                            <LocationCheck />
+
+                            <ButtonWithActivity
+                                isLoading={isLoading}
+                                name="Save Changes"
+                                onpress={updateHandler}
+                                styleButton={styles.createButton}
+                                styleText={styles.buttonText}
+                            />
                         </View>
+
                     </ScrollView>
                 </View>
             </ImageBackground>
         </SafeAreaView>
     );
 }
-
 
 const styles = StyleSheet.create({
     background: { flex: 1 },
@@ -119,16 +145,6 @@ const styles = StyleSheet.create({
     },
     buttonsWrapper: {
         alignItems: "center"
-    },
-    coordinates: {
-        color: '#fff',
-        marginVertical: 10,
-    },
-    button: {
-        opacity: 0.7,
-        backgroundColor: 'transparent',
-        borderColor: "black",
-        borderWidth: 2,
     },
     createButton: {
         backgroundColor: 'orange',

@@ -10,7 +10,7 @@ import {
 import ButtonWithActivity from './ButtonWithActivity';
 import Button from './Button';
 
-const DestinationCard = ({ item, onPress, isMyTrips=false, isLoading }) => {
+const DestinationCard = ({ item, onPress, isMyTrips, isLoading, onEdit, onDelete }) => {
     const [loading, setLoading] = useState(false);
     const [hasError, setHasError] = useState(false);
 
@@ -66,8 +66,8 @@ const DestinationCard = ({ item, onPress, isMyTrips=false, isLoading }) => {
 
                         {item.featured_rank ? (<Text style={styles.rank}>⭐ #{String(item.featured_rank)}</Text>) : null}
                         {isMyTrips && <View style={styles.buttons}>
-                            <ButtonWithActivity isLoading={isLoading} name="Delete" onpress={() => console.log("Delete button pressed")} styleButton={styles.deleteButton} styleText={styles.buttonText} />
-                            <Button name="Edit" onPress={()=>console.log("Edit button pressed")} style={styles.edit} />
+                            <ButtonWithActivity isLoading={isLoading} name="Delete" onpress={onDelete} styleButton={styles.deleteButton} styleText={styles.buttonText} />
+                            <Button name="Edit" onPress={onEdit} style={styles.edit} />
                         </View>}
 
                     </View>

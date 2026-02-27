@@ -20,6 +20,15 @@ export default function MyTripsScreen({navigation}) {
             setRefreshing(false);
         }
     };
+
+    const onEdit = (trip) => {
+        console.log("EDIT button pressed");
+        navigation.navigate('EditTrip', { trip: trip });
+    }
+
+    const onDelete = async () => {
+        console.log("DELETE button pressed");
+    }
     return (
         <SafeAreaView style={{ flex: 1 }} edges={['left', 'right']}>
             <ImageBackground
@@ -34,7 +43,7 @@ export default function MyTripsScreen({navigation}) {
                         horizontal
                         keyExtractor={(item) => item.id}
                         renderItem={({ item }) => (
-                            <DestinationCard item={item} />
+                            <DestinationCard item={item} isMyTrips={true} onEdit={() => onEdit(item)} onDelete={onDelete} />
                         )}
                     />
                     <Button name="Create" onPress={() => navigation.navigate('CreateTrip')} style={styles.button} />
