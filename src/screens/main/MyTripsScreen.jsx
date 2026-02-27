@@ -1,15 +1,27 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { StyleSheet, FlatList, ImageBackground, ScrollView, RefreshControl } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import AnimatedText from '../../components/AnimatedText';
 import DestinationCard from '../../components/DestinationCard';
-import { useData } from '../../context/main/useData';
 import Button from '../../components/Button';
+import { useMyTrips } from '../../context/myTrips/useMyTrips';
 
 
-export default function MyTripsScreen({navigation}) {
+export default function MyTripsScreen({ navigation }) {
     const [refreshing, setRefreshing] = useState(false);
-    const {myTrips} = useData();
+    const { myTrips, getMyTrips, clearError } = useMyTrips();
+
+    useEffect(() => {
+        clearError();
+        const gettingTheTrips = async () => {
+            try {
+                const response = await getMyTrips()
+            } catch (err) {
+                console.log("Error is catched in the MyTripsScreen");
+            }
+        }
+        gettingTheTrips();
+    }, []);
 
     const onRefresh = async () => {
         try {
@@ -41,12 +53,11 @@ export default function MyTripsScreen({navigation}) {
                     <FlatList
                         data={myTrips}
                         horizontal
-                        keyExtractor={(item) => item.id}
+                        keyExtractor={(item) => item._id}
                         renderItem={({ item }) => (
                             <DestinationCard item={item} isMyTrips={true} onEdit={() => onEdit(item)} onDelete={onDelete} />
                         )}
                     />
-                    <Button name="Edit" onPress={() => navigation.navigate('EditTrip')} style={styles.button} />
                     <Button name="Create" onPress={() => navigation.navigate('CreateTrip')} style={styles.button} />
                     {!myTrips.length && <AnimatedText text="CREATE YOUR FIRST TRAVEL MEMORY" styless={styles.emptyFavorites} />}
                 </ScrollView>

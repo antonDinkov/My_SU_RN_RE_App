@@ -7,9 +7,7 @@ import * as Location from 'expo-location';
 import ButtonWithActivity from './ButtonWithActivity';
 import formatAddress from '../screens/utils/formatAddress';
 
-export default function LocationCheck() {
-    const [location, setLocation] = useState(null);
-    const [address, setAddress] = useState(null);
+export default function LocationCheck({setLocation, address, setAddress}) {
     const [errorMsg, setErrorMsg] = useState(null);
     const [getting, setGetting] = useState(false);
 
@@ -39,7 +37,8 @@ export default function LocationCheck() {
             latitude: loc.coords.latitude,
             longitude: loc.coords.longitude,
         });
-
+        console.log(reverse);
+        
         if (reverse.length > 0) {
             const formatted = formatAddress(reverse[0]);
             setAddress(formatted);

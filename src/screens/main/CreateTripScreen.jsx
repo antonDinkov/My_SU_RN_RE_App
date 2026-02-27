@@ -6,20 +6,30 @@ import { RadioButton } from "../../components/RadioButton";
 import { useState } from "react";
 import ImagePicker from "../../components/ImagePicker";
 import TakePicture from "../../components/TakePicture";
-import { useData } from "../../context/main/useData";
 import LocationCheck from "../../components/LocationCheck";
+import { useMyTrips } from "../../context/myTrips/useMyTrips";
 
 export default function CreateTripScreen() {
     const [type, setType] = useState("country");
     const [name, setName] = useState('');
-    const [code, setCode] = useState('');
     const [description, setDescription] = useState('');
     const [image, setImage] = useState(null);
-    const {isLoading} = useData();
+    const { isLoading, createTrip, clearError } = useMyTrips();
+    const [location, setLocation] = useState(null);
+    const [address, setAddress] = useState(null);
 
     const deletePictureHandler = async () => {
         setImage(null);
-    }
+    };
+
+    const createHandler = async () => {
+        clearError();
+        try {
+            const response = await createTrip({type, name, short_description: description, location_name: address, location, image})
+        } catch (err) {
+            console.log("Create error form the create screen catched");
+        }
+    };
 
     return (
         <SafeAreaView style={{ flex: 1 }} edges={['left', 'right']}>
@@ -49,14 +59,6 @@ export default function CreateTripScreen() {
                         </View>
 
                         <TextInput
-                            placeholder="Code (optional)"
-                            placeholderTextColor="#666"
-                            style={styles.input}
-                            value={code}
-                            onChangeText={setCode}
-                        />
-
-                        <TextInput
                             placeholder="Short description"
                             placeholderTextColor="#666"
                             multiline
@@ -82,9 +84,9 @@ export default function CreateTripScreen() {
                                 <TakePicture setImage={setImage} />
                             </View>
                             <View>
-                                <LocationCheck />
+                                <LocationCheck setLocation={setLocation} address={address} setAddress={setAddress} />
                             </View>
-                            <ButtonWithActivity isLoading={isLoading} name="Create" onpress={() => console.log("Create button pressed")} styleButton={styles.createButton} styleText={styles.buttonText} />
+                            <ButtonWithActivity isLoading={isLoading} name="Create" onpress={createHandler} styleButton={styles.createButton} styleText={styles.buttonText} />
                         </View>
                     </ScrollView>
                 </View>

@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { TripsContext } from "./MyTripsProvider";
 
-export function useData() {
+export function useMyTrips() {
     const context = useContext(TripsContext);
 
     return context;

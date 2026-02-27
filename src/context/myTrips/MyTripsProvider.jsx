@@ -1,24 +1,16 @@
 import { createContext, useState } from "react";
-import { dataService } from "../../api";
 import { useNavigation } from "@react-navigation/native";
-
+import { tripService } from "../../api";
+import { getMyTrips } from "../../api/myTrips";
 
 
 export const TripsContext = createContext({
     isLoading: false,
-    error: false,
-    errorSearch: false,
-    favorites: [],
+    error: null,
     myTrips: [],
-    getFeaturedCountries: async () => {},
-    getSearchResults: async () => {},
-    addToFavorites: async () => {},
-    isItFavorite: async () => {},
-    getFavorites: async () => {},
-    removeFromFavorites: async () => {},
-    detailsHandler: () => {},
     clearError: () => {},
-    clearErrorSearch: () => {},
+    createTrip: async () => {},
+    getMyTrips: async () => {},
 })
 
 export function MyTripsProvider({ children }) {
@@ -27,20 +19,44 @@ export function MyTripsProvider({ children }) {
     const [error, setError] = useState(null);
     const [myTrips, setMyTrips] = useState([]);
 
-    const createTrip = async () => {
+    const createTrip = async (tripInfo) => {
         try {
-            
-        } catch (error) {
-            
+            setIsLoading(true);
+            const trip = await tripService.createTrip(tripInfo);
+            setMyTrips((oldstate) => [...oldstate, trip]);
+            navigation.navigate('MyTrips');
+            return trip;
+        } catch (err) {
+            setError(err.response?.data?.message || "Server error 500");
+            throw err;
         } finally {
-            
+            setIsLoading(false)
         }
     }
+
+    const getMyTrips = async () => {
+        try {
+            setIsLoading(true);
+            const trips = await tripService.getMyTrips();
+            setMyTrips(trips);
+            return trips;
+        } catch (err) {
+            setError(err.response?.data?.message || "Server error 500");
+            throw err;
+        } finally {
+            setIsLoading(false)
+        }
+    }
+
+
 
     const contextValue = {
         isLoading,
         error,
-        myTrips
+        myTrips,
+        clearError: () => setError(null),
+        createTrip,
+        getMyTrips,
     };
 
     return (
