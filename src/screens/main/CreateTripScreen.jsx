@@ -27,7 +27,7 @@ export default function CreateTripScreen() {
         try {
             const response = await createTrip({type, name, short_description: description, location_name: address, location, image})
         } catch (err) {
-            console.log("Create error form the create screen catched");
+            console.log("Create error form the create screen catched: ", err.response?.data?.message);
         }
     };
 

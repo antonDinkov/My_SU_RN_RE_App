@@ -5,11 +5,12 @@ import AnimatedText from '../../components/AnimatedText';
 import DestinationCard from '../../components/DestinationCard';
 import Button from '../../components/Button';
 import { useMyTrips } from '../../context/myTrips/useMyTrips';
+import ServerError from '../../components/ServerError';
 
 
 export default function MyTripsScreen({ navigation }) {
     const [refreshing, setRefreshing] = useState(false);
-    const { myTrips, getMyTrips, clearError } = useMyTrips();
+    const { myTrips, getMyTrips, clearError, deleteTrip, isLoading, deletedMsg, clearDeletedMsg } = useMyTrips();
 
     useEffect(() => {
         clearError();
@@ -38,8 +39,18 @@ export default function MyTripsScreen({ navigation }) {
         navigation.navigate('EditTrip', { trip: trip });
     }
 
-    const onDelete = async () => {
+    const onDelete = async (tripId) => {
         console.log("DELETE button pressed");
+        clearError();
+        try {
+            const response = await deleteTrip(tripId)
+        } catch (err) {
+            console.log("Error catched from the my trip screen: ", err);
+        }
+    }
+
+    const onPress = (item) => {
+        navigation.navigate('Picture', {imageUrl: item.image_url})
     }
     return (
         <SafeAreaView style={{ flex: 1 }} edges={['left', 'right']}>
@@ -55,9 +66,10 @@ export default function MyTripsScreen({ navigation }) {
                         horizontal
                         keyExtractor={(item) => item._id}
                         renderItem={({ item }) => (
-                            <DestinationCard item={item} isMyTrips={true} onEdit={() => onEdit(item)} onDelete={onDelete} />
+                            <DestinationCard item={item} isMyTrips={true} onPress={() => onPress(item)} onEdit={() => onEdit(item)} onDelete={() => onDelete(item._id)} isLoading={isLoading} />
                         )}
                     />
+                    <ServerError message={deletedMsg} onClose={() => clearDeletedMsg()} />
                     <Button name="Create" onPress={() => navigation.navigate('CreateTrip')} style={styles.button} />
                     {!myTrips.length && <AnimatedText text="CREATE YOUR FIRST TRAVEL MEMORY" styless={styles.emptyFavorites} />}
                 </ScrollView>

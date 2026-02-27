@@ -21,13 +21,10 @@ export const createTrip = async (tripInfo) => {
                 'Content-Type': 'multipart/form-data'
             }
         });
-
-        console.log(response.data);
-        
+        console.log("Iside the service after the response", response);
 
         return response.data;
     } catch (err) {
-        console.log("Thih is the error from the trips service catched", err.response.data);
         throw err;
     }
 };
@@ -35,14 +32,23 @@ export const createTrip = async (tripInfo) => {
 export const getMyTrips = async () => {
     try {
         const response = await api.get('/mytrips');
-
-        console.log("This is my trips response:", response.data);
-
         return response.data;
-
     } catch (err) {
         console.log(
             "This is the getMyTrips error:",
+            err.response?.data
+        );
+        throw err;
+    }
+};
+
+export const deleteTrip = async (tripId) => {
+    try {
+        const response = await api.delete(`/mytrips/${tripId}`);
+        return response.data;
+    } catch (err) {
+        console.log(
+            "This is the deleteTrip error:",
             err.response?.data
         );
         throw err;

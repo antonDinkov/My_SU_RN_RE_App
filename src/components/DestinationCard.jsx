@@ -11,6 +11,7 @@ import ButtonWithActivity from './ButtonWithActivity';
 import Button from './Button';
 
 const DestinationCard = ({ item, onPress, isMyTrips, isLoading, onEdit, onDelete }) => {
+    
     const [loading, setLoading] = useState(false);
     const [hasError, setHasError] = useState(false);
 
@@ -28,7 +29,7 @@ const DestinationCard = ({ item, onPress, isMyTrips, isLoading, onEdit, onDelete
         <TouchableOpacity
             style={styles.card}
             activeOpacity={0.9}
-            onPress={() => onPress && onPress(item)}
+            onPress={() => onPress(item)}
         >
             <View style={styles.imageWrapper}>
                 {loading && (
@@ -65,9 +66,12 @@ const DestinationCard = ({ item, onPress, isMyTrips, isLoading, onEdit, onDelete
                         </Text>
 
                         {item.featured_rank ? (<Text style={styles.rank}>⭐ #{String(item.featured_rank)}</Text>) : null}
-                        {isMyTrips && <View style={styles.buttons}>
-                            <ButtonWithActivity isLoading={isLoading} name="Delete" onpress={onDelete} styleButton={styles.deleteButton} styleText={styles.buttonText} />
-                            <Button name="Edit" onPress={onEdit} style={styles.edit} />
+                        {isMyTrips && <View>
+                            <Text style={[styles.description, {}]}>{"\u{1F4CD}"} {item.location_name}</Text>
+                            <View style={styles.buttons}>
+                                <ButtonWithActivity isLoading={isLoading} name="Delete" onpress={onDelete} styleButton={styles.deleteButton} styleText={styles.buttonText} />
+                                <Button name="Edit" onPress={onEdit} style={styles.edit} />
+                            </View>
                         </View>}
 
                     </View>
@@ -164,7 +168,7 @@ const styles = StyleSheet.create({
     },
     deleteButton: {
         backgroundColor: 'transparent',
-        marginTop: 20,
+        marginTop: 0,
         opacity: 0.7,
         width: 80,
         height: 30,
@@ -179,7 +183,7 @@ const styles = StyleSheet.create({
         fontWeight: '600',
         alignSelf: "center",
     },
-    edit:{
+    edit: {
         width: 80,
         backgroundColor: 'transparent',
         borderWidth: 2,

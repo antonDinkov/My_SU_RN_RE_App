@@ -1,16 +1,17 @@
 import { createContext, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { tripService } from "../../api";
-import { getMyTrips } from "../../api/myTrips";
-
 
 export const TripsContext = createContext({
     isLoading: false,
     error: null,
     myTrips: [],
+    deletedMsg: '',
     clearError: () => {},
+    clearDeletedMsg: () => {},
     createTrip: async () => {},
     getMyTrips: async () => {},
+    deleteTrip: async () => {},
 })
 
 export function MyTripsProvider({ children }) {
@@ -18,15 +19,24 @@ export function MyTripsProvider({ children }) {
     const navigation = useNavigation();
     const [error, setError] = useState(null);
     const [myTrips, setMyTrips] = useState([]);
+    const [deletedMsg, setDeletedMsg] = useState('');
 
     const createTrip = async (tripInfo) => {
         try {
             setIsLoading(true);
+            console.log("This is before the response");
+            
             const trip = await tripService.createTrip(tripInfo);
+            console.log("This is inside the provider the response", trip);
+            
             setMyTrips((oldstate) => [...oldstate, trip]);
+            console.log("This is inside the provider the state", myTrips);
+            
             navigation.navigate('MyTrips');
             return trip;
         } catch (err) {
+            console.log(err.response.data);
+            
             setError(err.response?.data?.message || "Server error 500");
             throw err;
         } finally {
@@ -48,15 +58,35 @@ export function MyTripsProvider({ children }) {
         }
     }
 
+    const deleteTrip = async (tripId) => {
+        try {
+            setIsLoading(true);
+            const deleteResponse = await tripService.deleteTrip(tripId);
+            setDeletedMsg(deleteResponse.message);
+            setMyTrips(prev => prev.filter(trip => trip._id !== tripId));
+            console.log(deleteResponse.message);
+            
+            return deleteResponse.message;
+        } catch (err) {
+            setError(err.response?.data?.message || "Server error 500");
+            throw err;
+        } finally {
+            setIsLoading(false);
+        }
+    }
+
 
 
     const contextValue = {
         isLoading,
         error,
         myTrips,
+        deletedMsg,
         clearError: () => setError(null),
         createTrip,
         getMyTrips,
+        deleteTrip,
+        clearDeletedMsg: () => setDeletedMsg(''),
     };
 
     return (

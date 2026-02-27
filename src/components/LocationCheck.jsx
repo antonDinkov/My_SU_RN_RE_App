@@ -7,49 +7,58 @@ import * as Location from 'expo-location';
 import ButtonWithActivity from './ButtonWithActivity';
 import formatAddress from '../screens/utils/formatAddress';
 
-export default function LocationCheck({setLocation, address, setAddress}) {
+export default function LocationCheck({ setLocation, address, setAddress }) {
     const [errorMsg, setErrorMsg] = useState(null);
     const [getting, setGetting] = useState(false);
 
     const marker = "\u{1F4CD}";
 
     async function getCurrentLocation() {
-        setGetting(true);
-        if (Platform.OS === 'android' && !Device.isDevice) {
-            setErrorMsg(
-                'Oops, this will not work on Snack in an Android Emulator. Try it on your device!'
-            );
+        try {
+            setGetting(true);
+            setErrorMsg(null);
+
+            if (Platform.OS === 'android' && !Device.isDevice) {
+                setErrorMsg('Try it on your physical device');
+                return;
+            }
+
+            const { status } = await Location.getForegroundPermissionsAsync();
+
+            if (status !== 'granted') {
+                const { status: newStatus } =
+                    await Location.requestForegroundPermissionsAsync();
+
+                if (newStatus !== 'granted') {
+                    setErrorMsg('Permission denied');
+                    return;
+                }
+            }
+
+            let loc = await Location.getLastKnownPositionAsync();
+
+            if (!loc) {
+                loc = await Location.getCurrentPositionAsync({
+                    accuracy: Location.Accuracy.Balanced,
+                });
+            }
+
+            setLocation(loc.coords);
+
+            const reverse = await Location.reverseGeocodeAsync(loc.coords);
+
+            if (reverse.length > 0) {
+                setAddress(formatAddress(reverse[0]));
+            } else {
+                setErrorMsg('Address not found');
+            }
+
+        } catch (err) {
+            console.log(err);
+            setErrorMsg('Location error');
+        } finally {
             setGetting(false);
-            return;
         }
-        let { status } = await Location.requestForegroundPermissionsAsync();
-        if (status !== 'granted') {
-            setErrorMsg('Permission to access location was denied');
-            setGetting(false);
-            return;
-        }
-
-        let loc = await Location.getCurrentPositionAsync({});
-
-        setLocation(loc.coords);
-
-        const reverse = await Location.reverseGeocodeAsync({
-            latitude: loc.coords.latitude,
-            longitude: loc.coords.longitude,
-        });
-        console.log(reverse);
-        
-        if (reverse.length > 0) {
-            const formatted = formatAddress(reverse[0]);
-            setAddress(formatted);
-            setGetting(false);
-            return;
-        } else {
-            setErrorMsg('Something went wrong');
-            setGetting(false);
-        }
-
-        setGetting(false);
     }
 
 
