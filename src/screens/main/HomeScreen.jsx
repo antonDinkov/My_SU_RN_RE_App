@@ -225,5 +225,6 @@ const styles = StyleSheet.create({
 
     cleanButton: {
         paddingVertical: 5,
+        opacity: 0.6,
     }
 });

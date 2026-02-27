@@ -1,7 +1,6 @@
 import { Image, ImageBackground, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import AnimatedText from "../../components/AnimatedText";
-import Button from "../../components/Button";
 import ButtonWithActivity from "../../components/ButtonWithActivity";
 import { RadioButton } from "../../components/RadioButton";
 import { useState } from "react";
@@ -88,7 +87,7 @@ export default function CreateTripScreen() {
                                     00.0000 , 00.0000
                                 </Text> */}
                                 <LocationCheck />
-                                <Button name="Get Location" onPress={() => console.log("Get location pressed")} style={styles.button} />
+                                {/* <Button name="Get Location" onPress={() => console.log("Get location pressed")} style={styles.button} /> */}
                             </View>
                             <ButtonWithActivity isLoading={isLoading} name="Create" onpress={() => console.log("Create button pressed")} styleButton={styles.createButton} styleText={styles.buttonText} />
                         </View>
