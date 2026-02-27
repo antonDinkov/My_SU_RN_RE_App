@@ -6,14 +6,6 @@ import DestinationCard from '../../components/DestinationCard';
 import { useData } from '../../context/main/useData';
 import Button from '../../components/Button';
 
-const destinations = [
-    { id: '1', name: 'Paris' },
-    { id: '2', name: 'Tokyo' },
-    { id: '3', name: 'New York' },
-    { id: '4', name: 'Rome' },
-    { id: '5', name: 'London' },
-    { id: '6', name: 'Barcelona' },
-];
 
 export default function MyTripsScreen({navigation}) {
     const [refreshing, setRefreshing] = useState(false);

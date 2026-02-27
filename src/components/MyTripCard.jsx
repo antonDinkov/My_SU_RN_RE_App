@@ -7,10 +7,8 @@ import {
     TouchableOpacity,
     ActivityIndicator
 } from 'react-native';
-import ButtonWithActivity from './ButtonWithActivity';
-import Button from './Button';
 
-const DestinationCard = ({ item, onPress, isMyTrips=true, isLoading }) => {
+const DestinationCard = ({ item, onPress }) => {
     const [loading, setLoading] = useState(false);
     const [hasError, setHasError] = useState(false);
 
@@ -42,7 +40,7 @@ const DestinationCard = ({ item, onPress, isMyTrips=true, isLoading }) => {
                     imageStyle={styles.imageRadius}
                     onLoadStart={() => setLoading(true)}
                     onLoadEnd={() => setLoading(false)}
-                    onError={() => {
+                    onError={(е) => {
                         setLoading(false);
                         setHasError(true);
                     }}
@@ -65,10 +63,6 @@ const DestinationCard = ({ item, onPress, isMyTrips=true, isLoading }) => {
                         </Text>
 
                         {item.featured_rank ? (<Text style={styles.rank}>⭐ #{String(item.featured_rank)}</Text>) : null}
-                        {isMyTrips && <View style={styles.buttons}>
-                            <ButtonWithActivity isLoading={isLoading} name="Delete" onpress={() => console.log("Delete button pressed")} styleButton={styles.deleteButton} styleText={styles.buttonText} />
-                            <Button name="Edit" onPress={()=>console.log("Edit button pressed")} style={styles.edit} />
-                        </View>}
 
                     </View>
                 </ImageBackground>
@@ -156,37 +150,5 @@ const styles = StyleSheet.create({
         paddingHorizontal: 16,
         fontSize: 14,
         fontWeight: '600',
-    },
-    buttons: {
-        flexDirection: 'row',
-        justifyContent: 'space-evenly',
-        alignItems: 'baseline'
-    },
-    deleteButton: {
-        backgroundColor: 'transparent',
-        marginTop: 20,
-        opacity: 0.7,
-        width: 80,
-        height: 30,
-        borderWidth: 2,
-        paddingVertical: 0,
-        paddingHorizontal: 0,
-        borderRadius: 30,
-    },
-    buttonText: {
-        color: '#fff',
-        fontSize: 18,
-        fontWeight: '600',
-        alignSelf: "center",
-    },
-    edit:{
-        width: 80,
-        backgroundColor: 'transparent',
-        borderWidth: 2,
-        opacity: 0.7,
-        paddingVertical: 0,
-        paddingHorizontal: 0,
-        height: 30,
-        marginVertical: 0
     },
 });
