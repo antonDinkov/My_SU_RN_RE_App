@@ -10,7 +10,7 @@ import {
 import ButtonWithActivity from './ButtonWithActivity';
 import Button from './Button';
 
-const DestinationCard = ({ item, onPress, isMyTrips=true, isLoading }) => {
+const DestinationCard = ({ item, onPress, isMyTrips=false, isLoading }) => {
     const [loading, setLoading] = useState(false);
     const [hasError, setHasError] = useState(false);
 
