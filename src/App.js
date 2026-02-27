@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import { StatusBar } from "expo-status-bar";
 import { DataProvider } from "./context/main/DataProvider";
 import { DarkThemeProvider } from "./context/theme/DarkThemeProvider";
+import { MyTripsProvider } from "./context/myTrips/MyTripsProvider";
 
 
 export default function App() {
@@ -18,8 +19,10 @@ export default function App() {
             <DarkThemeProvider>
                 <NavigationContainer>
                     <DataProvider>
-                        <StatusBar style="light" backgroundColor="#000" />
-                        <AppNavigator />
+                        <MyTripsProvider>
+                            <StatusBar style="light" backgroundColor="#000" />
+                            <AppNavigator />
+                        </MyTripsProvider>
                     </DataProvider>
                 </NavigationContainer>
             </DarkThemeProvider>
