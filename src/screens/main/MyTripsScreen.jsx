@@ -46,6 +46,7 @@ export default function MyTripsScreen({navigation}) {
                             <DestinationCard item={item} isMyTrips={true} onEdit={() => onEdit(item)} onDelete={onDelete} />
                         )}
                     />
+                    <Button name="Edit" onPress={() => navigation.navigate('EditTrip')} style={styles.button} />
                     <Button name="Create" onPress={() => navigation.navigate('CreateTrip')} style={styles.button} />
                     {!myTrips.length && <AnimatedText text="CREATE YOUR FIRST TRAVEL MEMORY" styless={styles.emptyFavorites} />}
                 </ScrollView>

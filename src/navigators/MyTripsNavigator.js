@@ -15,7 +15,12 @@ export default function MyTripsNavigator() {
                 headerTitle: '',
                 headerTintColor: "#fff",
             }} />
-            <Stack.Screen name="EditTrip" component={EditTripScreen} />
+            <Stack.Screen name="EditTrip" component={EditTripScreen} options={{
+                headerShown: true,
+                headerTransparent: true,
+                headerTitle: '',
+                headerTintColor: "#fff",
+            }} />
         </Stack.Navigator>
     )
 }

@@ -10,7 +10,30 @@ import { useData } from "../../context/main/useData";
 import LocationCheck from "../../components/LocationCheck";
 
 export default function EditTripScreen({ route }) {
-    const { trip } = route.params; // 👈 получаваме trip
+    /* const { trip } = route.params; // 👈 получаваме trip */
+    const trip = {
+  _id: "65f1a2b3c4d5e6f789012345",
+
+  type: "city",
+
+  name: "Paris Getaway",
+
+  code: "PAR",
+
+  short_description: "A romantic escape to the city of lights with amazing food, art, and history.",
+
+  image_url: "https://images.unsplash.com/photo-1502602898657-3e91760cbb34",
+
+  location_name: "Paris, France",
+
+  location: {
+    type: "Point",
+    coordinates: [2.3522, 48.8566] // [longitude, latitude]
+  },
+
+  createdAt: "2024-01-15T10:30:00.000Z",
+  updatedAt: "2024-01-16T12:00:00.000Z"
+};
 
     const [type, setType] = useState(trip.type);
     const [name, setName] = useState(trip.name);
@@ -42,14 +65,14 @@ export default function EditTripScreen({ route }) {
         <SafeAreaView style={{ flex: 1 }} edges={['left', 'right']}>
             <ImageBackground
                 source={{
-                    uri: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=3000&q=60',
+                    uri: 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=3000&q=60',
                 }}
                 style={styles.background}
             >
                 <View style={styles.overlay}>
                     <ScrollView showsVerticalScrollIndicator={false}>
 
-                        <AnimatedText text="Edit Destination" styless={styles.title} />
+                        <AnimatedText text={trip.name} styless={styles.title} />
 
                         <TextInput
                             placeholder="Destination name"
