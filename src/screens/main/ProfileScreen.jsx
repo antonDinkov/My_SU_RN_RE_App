@@ -1,100 +1,72 @@
-import React from 'react';
-import { View, Text, StyleSheet, Image, FlatList, ImageBackground, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Image, ImageBackground, TouchableOpacity } from 'react-native';
 import AnimatedText from '../../components/AnimatedText';
+import { useAuth } from '../../context/auth/useAuth';
 
-const bookings = [
-  { id: '1', destination: 'Rome' },
-  { id: '2', destination: 'Tokyo' },
-  { id: '3', destination: 'New York' },
-];
 
-const followers = [
-  { id: '1', name: 'Maria', avatar: 'https://randomuser.me/api/portraits/women/44.jpg' },
-  { id: '2', name: 'John', avatar: 'https://randomuser.me/api/portraits/men/46.jpg' },
-];
+export default function ProfileScreen({ navigation }) {
+    const { user } = useAuth();
+    const iso = user?.loginHistory?.[0]?.date;
 
-const following = [
-  { id: '1', name: 'Sofia', avatar: 'https://randomuser.me/api/portraits/women/65.jpg' },
-  { id: '2', name: 'Alex', avatar: 'https://randomuser.me/api/portraits/men/33.jpg' },
-  { id: '3', name: 'Chris', avatar: 'https://randomuser.me/api/portraits/men/77.jpg' },
-];
+    let formattedDate = "It is your first login session";
 
-export default function ProfileScreen() {
-  return (
-    <ImageBackground
-      source={{ uri: 'https://images.unsplash.com/photo-1503264116251-35a269479413' }}
-      style={styles.background}
-    >
-      <View style={styles.overlay}>
-        <Image
-          source={{ uri: 'https://randomuser.me/api/portraits/men/32.jpg' }}
-          style={styles.avatar}
-        />
-        <AnimatedText text='Anton' styless={styles.name} />
-        {/* <Text style={styles.name}>Anton</Text> */}
-        <Text style={styles.email}>anton@example.com</Text>
+    if (iso) {
+        const date = new Date(iso);
 
-        {/* Edit button */}
-        <TouchableOpacity style={styles.editButton}>
-          <Text style={styles.editButtonText}>Edit Profile</Text>
-        </TouchableOpacity>
+        formattedDate = date.toLocaleString(undefined, {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+        });
+    }
+    const handleEdit = () => {
+        navigation.navigate('Edit');
+    }
+    return (
+        <ImageBackground
+            source={{ uri: 'https://images.unsplash.com/photo-1503264116251-35a269479413' }}
+            style={styles.background}
+        >
+            <View style={styles.overlay}>
+                <View style={styles.boxSeparator}>
+                    <Image
+                        source={{ uri: user.picture? user.picture : 'https://randomuser.me/api/portraits/men/32.jpg' }}
+                        style={styles.avatar}
+                    />
+                    <AnimatedText text={user.firstName} styless={styles.name} />
+                    <AnimatedText text={user.lastName} styless={styles.name} />
 
-        <Text style={styles.section}>My Bookings</Text>
-        <FlatList
-          data={bookings}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <View style={styles.card}>
-              <Text style={styles.cardText}>{item.destination}</Text>
+                    <Text style={styles.email}>{user.email}</Text>
+
+                    <TouchableOpacity style={styles.editButton} onPress={handleEdit}>
+                        <Text style={styles.editButtonText}>Edit Profile</Text>
+                    </TouchableOpacity>
+                </View>
+
+                <View style={styles.sessionBox}>
+                    <Text style={styles.email}>Last login session:</Text>
+                    <Text style={[styles.email, { fontStyle: "italic" }]}>{formattedDate}</Text>
+                </View>
+
             </View>
-          )}
-        />
-
-        {/* Followers */}
-        <Text style={styles.section}>Followers ({followers.length})</Text>
-        <FlatList
-          data={followers}
-          horizontal
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <View style={styles.followCard}>
-              <Image source={{ uri: item.avatar }} style={styles.followAvatar} />
-              <Text style={styles.cardText}>{item.name}</Text>
-            </View>
-          )}
-          showsHorizontalScrollIndicator={false}
-        />
-
-        {/* Following */}
-        <Text style={styles.section}>Following ({following.length})</Text>
-        <FlatList
-          data={following}
-          horizontal
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <View style={styles.followCard}>
-              <Image source={{ uri: item.avatar }} style={styles.followAvatar} />
-              <Text style={styles.cardText}>{item.name}</Text>
-            </View>
-          )}
-          showsHorizontalScrollIndicator={false}
-        />
-      </View>
-    </ImageBackground>
-  );
+        </ImageBackground>
+    );
 }
 
 const styles = StyleSheet.create({
-  background: { flex: 1 },
-  overlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.4)', padding: 20, alignItems: 'center' },
-  avatar: { width: 80, height: 80, borderRadius: 40, marginBottom: 10, marginTop: 20, },
-  name: { fontSize: 22, color: '#fff', fontWeight: 'bold' },
-  email: { fontSize: 16, color: '#ccc', marginBottom: 20 },
-  editButton: { backgroundColor: '#FF6B6B', padding: 10, borderRadius: 8, marginBottom: 20 },
-  editButtonText: { color: '#fff', fontSize: 16, fontWeight: '600' },
-  section: { fontSize: 18, color: '#fff', fontWeight: '600', marginVertical: 10 },
-  card: { backgroundColor: '#fff', padding: 15, borderRadius: 8, marginVertical: 5, width: '100%' },
-  cardText: { fontSize: 16, fontWeight: '600' },
-  followCard: { alignItems: 'center', marginRight: 15 },
-  followAvatar: { width: 60, height: 60, borderRadius: 30 },
+    background: { flex: 1 },
+    overlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.4)', padding: 20, alignItems: 'center', justifyContent: 'space-between' },
+    avatar: { width: 80, height: 80, borderRadius: 40, marginBottom: 10, marginTop: 20, },
+    name: { fontSize: 22, color: '#fff', fontWeight: 'bold' },
+    email: { fontSize: 16, color: '#ccc', marginBottom: 20 },
+    editButton: { backgroundColor: '#FF6B6B', padding: 10, borderRadius: 8, marginTop: 40 },
+    editButtonText: { color: '#fff', fontSize: 16, fontWeight: '600' },
+    boxSeparator: {
+
+    },
+    sessionBox: {
+        alignItems: 'center',
+        marginVertical: 30,
+    }
 });

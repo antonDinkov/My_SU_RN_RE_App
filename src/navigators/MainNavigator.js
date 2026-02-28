@@ -1,11 +1,10 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
 import HomeScreen from "../screens/main/HomeScreen";
-import ProfileScreen from "../screens/main/ProfileScreen";
 import SettingsScreen from "../screens/main/SettingsScreen";
 import FavoritesScreen from "../screens/main/FavoritesScreen";
-import MyTripsScreen from "../screens/main/MyTripsScreen";
 import MyTripsNavigator from "./MyTripsNavigator";
+import ProfileNavigator from "./ProfileNavigator";
 
 export default function MainNavigator({ setIsLoggedIn }) {
     const Tabs = createBottomTabNavigator();
@@ -21,7 +20,7 @@ export default function MainNavigator({ setIsLoggedIn }) {
                         iconName = focused ? "home" : "home-outline";
                     } else if (route.name === "MyTripsNav") {
                         iconName = focused ? "earth" : "earth-outline";
-                    } else if (route.name === "Profile") {
+                    } else if (route.name === "ProfileNav") {
                         iconName = focused ? "person" : "person-outline";
                     } else if (route.name === "Settings") {
                         iconName = focused ? "settings" : "settings-outline";
@@ -45,7 +44,7 @@ export default function MainNavigator({ setIsLoggedIn }) {
             </Tabs.Screen>
             <Tabs.Screen name="Favorites" component={FavoritesScreen} />
             <Tabs.Screen name="MyTripsNav" component={MyTripsNavigator} options={{title: "My Trips"}} />
-            <Tabs.Screen name="Profile" component={ProfileScreen} />
+            <Tabs.Screen name="ProfileNav" component={ProfileNavigator} />
             <Tabs.Screen name="Settings" component={SettingsScreen} />
         </Tabs.Navigator>
     );
