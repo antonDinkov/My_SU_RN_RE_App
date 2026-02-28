@@ -9,6 +9,7 @@ import TakePicture from "../../components/TakePicture";
 import LocationCheck from "../../components/LocationCheck";
 import { useMyTrips } from "../../context/myTrips/useMyTrips";
 import * as Location from 'expo-location';
+import { validateTrip } from "../utils/validateTrips";
 
 export default function EditTripScreen({ route }) {
     const { trip } = route.params;
@@ -19,60 +20,71 @@ export default function EditTripScreen({ route }) {
     const [location, setLocation] = useState(trip.location);
     const [location_name, setLocation_name] = useState(trip.location_name);
     const { isLoading, updateTrip } = useMyTrips();
+    const [errors, setErrors] = useState({});
 
 
     const deletePictureHandler = () => {
         setImage(null);
+        validateTrip.image(setErrors, null);
     };
 
     const updateHandler = async () => {
-    try {
-        const updatedTrip = {};
+        try {
+            const isValid = validateTrip.editTrip(setErrors, {
+                type,
+                name,
+                short_description: description,
+                image
+            });
 
-        updatedTrip.type = type;
-        updatedTrip.name = name;
-        updatedTrip.short_description = description;
-        updatedTrip.location_name = location_name;
+            if (!isValid) return;
 
-        if (location?.latitude && location?.longitude) {
-            updatedTrip.location = {
-                type: "Point",
-                coordinates: [location.longitude, location.latitude],
-            };
-        }
+            const updatedTrip = {};
 
-        else if (!location && location_name) {
-            const result = await Location.geocodeAsync(location_name);
+            updatedTrip.type = type;
+            updatedTrip.name = name;
+            updatedTrip.short_description = description;
+            updatedTrip.location_name = location_name;
 
-            if (result.length > 0) {
+            if (location?.latitude && location?.longitude) {
                 updatedTrip.location = {
                     type: "Point",
-                    coordinates: [result[0].longitude, result[0].latitude],
+                    coordinates: [location.longitude, location.latitude],
                 };
             }
-        }
 
-        else if (!location_name) {
-            updatedTrip.location = null;
-        }
+            else if (!location && location_name) {
+                const result = await Location.geocodeAsync(location_name);
 
-        console.log("This is the image in the front: ", image);
-        console.log("This is the image type: ", typeof image);
-        
-        /* if (image && typeof image !== "string") {
-            console.log("Inside image if"); */
-            
+                if (result.length > 0) {
+                    updatedTrip.location = {
+                        type: "Point",
+                        coordinates: [result[0].longitude, result[0].latitude],
+                    };
+                }
+            }
+
+            else if (!location_name) {
+                updatedTrip.location = null;
+            }
+
+            console.log("This is the image in the front: ", image);
+            console.log("This is the image type: ", typeof image);
+
+            /* if (image && typeof image !== "string") {
+                console.log("Inside image if"); */
+
             updatedTrip.image = image;
-        //}
+            //}
 
-        console.log("Updated trip:", updatedTrip);
+            console.log("Updated trip:", updatedTrip);
 
-        await updateTrip(trip._id, updatedTrip);
+            await updateTrip(trip._id, updatedTrip);
 
-    } catch (err) {
-        console.log("Error from edit trip screen: ", err);
-    }
-};
+        } catch (err) {
+            console.log("Error from edit trip screen: ", err);
+        }
+    };
 
     return (
         <SafeAreaView style={{ flex: 1 }} edges={['left', 'right']}>
@@ -87,12 +99,16 @@ export default function EditTripScreen({ route }) {
 
                         <AnimatedText text={trip.name} styless={styles.title} />
 
+                        {errors.name && <Text style={styles.error}>{errors.name}</Text>}
                         <TextInput
                             placeholder="Destination name"
                             placeholderTextColor="#666"
                             style={styles.input}
                             value={name}
-                            onChangeText={setName}
+                            onChangeText={(text) => {
+                                setName(text);
+                                validateTrip.name(setErrors, text);
+                            }}
                         />
 
                         <View style={styles.radioBtns}>
@@ -110,13 +126,19 @@ export default function EditTripScreen({ route }) {
                             onChangeText={setLocation_name}
                         />
 
+                        {errors.short_description && (
+                            <Text style={styles.error}>{errors.short_description}</Text>
+                        )}
                         <TextInput
                             placeholder="Short description"
                             placeholderTextColor="#666"
                             multiline
                             style={[styles.input, { height: 80 }]}
                             value={description}
-                            onChangeText={setDescription}
+                            onChangeText={(text) => {
+                                setDescription(text);
+                                validateTrip.shortDescription(setErrors, text);
+                            }}
                         />
 
                         <View style={styles.buttonsWrapper}>
@@ -136,12 +158,19 @@ export default function EditTripScreen({ route }) {
                                     />
                                 </>
                             )}
-
-                            <ImagePicker setImage={setImage} />
-                            <TakePicture setImage={setImage} />
+                            {errors.image && <Text style={styles.error}>{errors.image}</Text>}
+                            <ImagePicker setImage={(img) => {
+                                setImage(img);
+                                validateTrip.image(setErrors, img);
+                            }} />
+                            <TakePicture setImage={(img) => {
+                                setImage(img);
+                                validateTrip.image(setErrors, img);
+                            }}
+                            />
                             <LocationCheck setLocation={setLocation} address={location_name} setAddress={setLocation_name} />
 
-                            {isLoading && <Text style={{color: 'red',}}>WAIT! It might take a while( usualy 1 min)</Text>}
+                            {isLoading && <Text style={{ color: 'red', }}>WAIT! It might take a while( usualy 1 min)</Text>}
                             <ButtonWithActivity
                                 isLoading={isLoading}
                                 name="Save"
@@ -208,5 +237,11 @@ const styles = StyleSheet.create({
     deleteText: {
         color: "red",
         alignSelf: 'center'
-    }
+    },
+    error: {
+        color: 'red',
+        fontSize: 12,
+        marginBottom: 4,
+        marginLeft: 4,
+    },
 });

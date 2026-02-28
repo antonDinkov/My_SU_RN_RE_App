@@ -9,6 +9,7 @@ import TakePicture from "../../components/TakePicture";
 import LocationCheck from "../../components/LocationCheck";
 import { useMyTrips } from "../../context/myTrips/useMyTrips";
 import ServerError from "../../components/ServerError";
+import { validateTrip } from "../utils/validateTrips";
 
 export default function CreateTripScreen() {
     const [type, setType] = useState("country");
@@ -18,6 +19,7 @@ export default function CreateTripScreen() {
     const { isLoading, createTrip, clearError, error } = useMyTrips();
     const [location, setLocation] = useState(null);
     const [address, setAddress] = useState(null);
+    const [errors, setErrors] = useState({});
 
     const deletePictureHandler = async () => {
         setImage(null);
@@ -25,10 +27,27 @@ export default function CreateTripScreen() {
 
     const createHandler = async () => {
         clearError();
+
+        const isValid = validateTrip.createTrip(setErrors, {
+            type,
+            name,
+            short_description: description,
+            image
+        });
+
+        if (!isValid) return;
+
         try {
-            const response = await createTrip({type, name, short_description: description, location_name: address, location, image})
+            await createTrip({
+                type,
+                name,
+                short_description: description,
+                location_name: address,
+                location,
+                image
+            });
         } catch (err) {
-            console.log("Create error form the create screen catched: ", err.message);
+            console.log("Create error:", err.message);
         }
     };
 
@@ -45,12 +64,17 @@ export default function CreateTripScreen() {
 
                         <AnimatedText text="Create Destination" styless={styles.title} />
 
+                        {errors.name && <Text style={styles.error}>{errors.name}</Text>}
                         <TextInput
                             placeholder="Destination name"
                             placeholderTextColor="#666"
                             style={styles.input}
                             value={name}
-                            onChangeText={setName}
+                            onChangeText={(text) => {
+                                setName(text);
+                                validateTrip.name(setErrors, text);
+                            }
+                            }
                         />
 
                         <View style={styles.radioBtns}>
@@ -59,13 +83,18 @@ export default function CreateTripScreen() {
                             <RadioButton label="Place" value="place" selected={type} onSelect={setType} />
                         </View>
 
+                        {errors.short_description && <Text style={styles.error}>{errors.short_description}</Text>}
                         <TextInput
                             placeholder="Short description"
                             placeholderTextColor="#666"
                             multiline
                             style={[styles.input, { height: 80 }]}
                             value={description}
-                            onChangeText={setDescription}
+                            onChangeText={(text) => {
+                                setDescription(text);
+                                validateTrip.shortDescription(setErrors, text);
+                            }
+                            }
                         />
 
                         <View style={styles.buttonsWrapper}>
@@ -78,16 +107,24 @@ export default function CreateTripScreen() {
                                     <ButtonWithActivity isLoading={isLoading} name="Delete" onpress={deletePictureHandler} styleButton={styles.deleteButton} styleText={styles.deleteText} />
                                 </>
                             )}
+                            {errors.image && <Text style={styles.error}>{errors.image}</Text>}
                             <View>
-                                <ImagePicker setImage={setImage} />
+                                <ImagePicker setImage={(img) => {
+                                    setImage(img);
+                                    validateTrip.image(setErrors, img);
+                                }
+                                } />
                             </View>
                             <View>
-                                <TakePicture setImage={setImage} />
+                                <TakePicture setImage={(img) => {
+                                    setImage(img);
+                                    validateTrip.image(setErrors, img);
+                                }} />
                             </View>
                             <View>
                                 <LocationCheck setLocation={setLocation} address={address} setAddress={setAddress} />
                             </View>
-                            {isLoading && <Text style={{color: 'red',}}>WAIT! It might take a while( usualy 1 min)</Text>}
+                            {isLoading && <Text style={{ color: 'red', }}>WAIT! It might take a while( usualy 1 min)</Text>}
                             <ServerError message={error} onClose={clearError} />
                             <ButtonWithActivity isLoading={isLoading} name="Create" onpress={createHandler} styleButton={styles.createButton} styleText={styles.buttonText} />
                         </View>
@@ -159,5 +196,11 @@ const styles = StyleSheet.create({
     deleteText: {
         color: "red",
         alignSelf: 'center'
-    }
+    },
+    error: {
+        color: 'red',
+        fontSize: 12,
+        marginBottom: 4,
+        marginLeft: 4,
+    },
 });
