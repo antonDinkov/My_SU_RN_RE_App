@@ -15,13 +15,12 @@ export const createTrip = async (tripInfo) => {
             type: "image/jpeg",
             name: "trip.jpg"
         });
-
+        
         const response = await api.post('/mytrips/create', formData, {
             headers: {
                 'Content-Type': 'multipart/form-data'
             }
         });
-        console.log("Iside the service after the response", response);
 
         return response.data;
     } catch (err) {

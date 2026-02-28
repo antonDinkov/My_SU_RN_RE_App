@@ -8,13 +8,14 @@ import ImagePicker from "../../components/ImagePicker";
 import TakePicture from "../../components/TakePicture";
 import LocationCheck from "../../components/LocationCheck";
 import { useMyTrips } from "../../context/myTrips/useMyTrips";
+import ServerError from "../../components/ServerError";
 
 export default function CreateTripScreen() {
     const [type, setType] = useState("country");
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
     const [image, setImage] = useState(null);
-    const { isLoading, createTrip, clearError } = useMyTrips();
+    const { isLoading, createTrip, clearError, error } = useMyTrips();
     const [location, setLocation] = useState(null);
     const [address, setAddress] = useState(null);
 
@@ -27,7 +28,7 @@ export default function CreateTripScreen() {
         try {
             const response = await createTrip({type, name, short_description: description, location_name: address, location, image})
         } catch (err) {
-            console.log("Create error form the create screen catched: ", err.response?.data?.message);
+            console.log("Create error form the create screen catched: ", err.message);
         }
     };
 
@@ -86,6 +87,8 @@ export default function CreateTripScreen() {
                             <View>
                                 <LocationCheck setLocation={setLocation} address={address} setAddress={setAddress} />
                             </View>
+                            {isLoading && <Text style={{color: 'red',}}>WAIT! It might take a while( usualy 1 min)</Text>}
+                            <ServerError message={error} onClose={clearError} />
                             <ButtonWithActivity isLoading={isLoading} name="Create" onpress={createHandler} styleButton={styles.createButton} styleText={styles.buttonText} />
                         </View>
                     </ScrollView>
