@@ -1,4 +1,4 @@
-import { Image, ImageBackground, ScrollView, StyleSheet, TextInput, View } from "react-native";
+import { Image, ImageBackground, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import AnimatedText from "../../components/AnimatedText";
 import ButtonWithActivity from "../../components/ButtonWithActivity";
@@ -6,60 +6,73 @@ import { RadioButton } from "../../components/RadioButton";
 import { useState } from "react";
 import ImagePicker from "../../components/ImagePicker";
 import TakePicture from "../../components/TakePicture";
-import { useData } from "../../context/main/useData";
 import LocationCheck from "../../components/LocationCheck";
+import { useMyTrips } from "../../context/myTrips/useMyTrips";
+import * as Location from 'expo-location';
 
 export default function EditTripScreen({ route }) {
-    /* const { trip } = route.params; // 👈 получаваме trip */
-    const trip = {
-  _id: "65f1a2b3c4d5e6f789012345",
-
-  type: "city",
-
-  name: "Paris Getaway",
-
-  code: "PAR",
-
-  short_description: "A romantic escape to the city of lights with amazing food, art, and history.",
-
-  image_url: "https://images.unsplash.com/photo-1502602898657-3e91760cbb34",
-
-  location_name: "Paris, France",
-
-  location: {
-    type: "Point",
-    coordinates: [2.3522, 48.8566] // [longitude, latitude]
-  },
-
-  createdAt: "2024-01-15T10:30:00.000Z",
-  updatedAt: "2024-01-16T12:00:00.000Z"
-};
-
+    const { trip } = route.params;
     const [type, setType] = useState(trip.type);
     const [name, setName] = useState(trip.name);
-    const [code, setCode] = useState(trip.code || '');
-    const [description, setDescription] = useState(trip.short_description);
     const [image, setImage] = useState(trip.image_url);
+    const [description, setDescription] = useState(trip.short_description);
+    const [location, setLocation] = useState(trip.location);
+    const [location_name, setLocation_name] = useState(trip.location_name);
+    const { isLoading, updateTrip } = useMyTrips();
 
-    const { isLoading } = useData();
 
     const deletePictureHandler = () => {
         setImage(null);
     };
 
-    const updateHandler = () => {
-        const updatedTrip = {
-            ...trip,
-            type,
-            name,
-            code,
-            short_description: description,
-            image_url: image,
-        };
+    const updateHandler = async () => {
+    try {
+        const updatedTrip = {};
+
+        updatedTrip.type = type;
+        updatedTrip.name = name;
+        updatedTrip.short_description = description;
+        updatedTrip.location_name = location_name;
+
+        if (location?.latitude && location?.longitude) {
+            updatedTrip.location = {
+                type: "Point",
+                coordinates: [location.longitude, location.latitude],
+            };
+        }
+
+        else if (!location && location_name) {
+            const result = await Location.geocodeAsync(location_name);
+
+            if (result.length > 0) {
+                updatedTrip.location = {
+                    type: "Point",
+                    coordinates: [result[0].longitude, result[0].latitude],
+                };
+            }
+        }
+
+        else if (!location_name) {
+            updatedTrip.location = null;
+        }
+
+        console.log("This is the image in the front: ", image);
+        console.log("This is the image type: ", typeof image);
+        
+        /* if (image && typeof image !== "string") {
+            console.log("Inside image if"); */
+            
+            updatedTrip.image = image;
+        //}
 
         console.log("Updated trip:", updatedTrip);
-        // 👉 Тук извикваш update функцията ти от context/API
-    };
+
+        await updateTrip(trip._id, updatedTrip);
+
+    } catch (err) {
+        console.log("Error from edit trip screen: ", err);
+    }
+};
 
     return (
         <SafeAreaView style={{ flex: 1 }} edges={['left', 'right']}>
@@ -89,11 +102,12 @@ export default function EditTripScreen({ route }) {
                         </View>
 
                         <TextInput
-                            placeholder="Code (optional)"
+                            placeholder="Address"
                             placeholderTextColor="#666"
+                            multiline
                             style={styles.input}
-                            value={code}
-                            onChangeText={setCode}
+                            value={location_name}
+                            onChangeText={setLocation_name}
                         />
 
                         <TextInput
@@ -125,11 +139,12 @@ export default function EditTripScreen({ route }) {
 
                             <ImagePicker setImage={setImage} />
                             <TakePicture setImage={setImage} />
-                            <LocationCheck />
+                            <LocationCheck setLocation={setLocation} address={location_name} setAddress={setLocation_name} />
 
+                            {isLoading && <Text style={{color: 'red',}}>WAIT! It might take a while( usualy 1 min)</Text>}
                             <ButtonWithActivity
                                 isLoading={isLoading}
-                                name="Save Changes"
+                                name="Save"
                                 onpress={updateHandler}
                                 styleButton={styles.createButton}
                                 styleText={styles.buttonText}

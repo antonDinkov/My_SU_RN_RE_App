@@ -43,11 +43,15 @@ export const updateTrip = async (tripId, tripData) => {
         }
 
         if (tripData.image) {
-            formData.append("image", tripData.image);
+            formData.append("image", {
+                uri: tripData.image,
+                type: "image/jpeg",
+                name: "trip.jpg"
+            });
         }
 
         const response = await api.put(
-            `/mytrips/${tripId}`,
+            `/mytrips/edit/${tripId}`,
             formData,
             {
                 headers: {

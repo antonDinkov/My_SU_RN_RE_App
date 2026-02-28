@@ -6,12 +6,19 @@ import * as Device from 'expo-device';
 import * as Location from 'expo-location';
 import ButtonWithActivity from './ButtonWithActivity';
 import formatAddress from '../screens/utils/formatAddress';
+import Button from './Button';
 
 export default function LocationCheck({ setLocation, address, setAddress }) {
     const [errorMsg, setErrorMsg] = useState(null);
     const [getting, setGetting] = useState(false);
 
     const marker = "\u{1F4CD}";
+
+    const deleteAddressHandler = () => {
+        setAddress('');
+        setLocation(null);
+        setErrorMsg(null);
+    }
 
     async function getCurrentLocation() {
         try {
@@ -71,7 +78,12 @@ export default function LocationCheck({ setLocation, address, setAddress }) {
 
     return (
         <View style={styles.container}>
-            {address && <Text style={styles.paragraph}>{marker} {text}</Text>}
+            {address &&
+                <View>
+                    <Text style={styles.paragraph}>{marker} {text}</Text>
+                    <Button  name="Remove" onPress={deleteAddressHandler} style={styles.deleteButton} styleText={styles.deleteBottomText} />
+                </View>
+            }
             <ButtonWithActivity
                 isLoading={getting}
                 name="Get Location"
@@ -110,5 +122,18 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: '600',
         alignSelf: "center"
+    },
+    deleteButton: {
+        width: 80,
+        borderWidth: 2,
+        borderRadius: 30,
+        backgroundColor: "transparent",
+        alignSelf: 'center',
+        paddingTop: 0,
+        paddingBottom: 0,
+    },
+    deleteBottomText: {
+        fontSize: 10,
+        opacity: 0.7,
     },
 });
