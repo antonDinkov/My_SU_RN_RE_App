@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { View, Text, StyleSheet, Switch, ImageBackground, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { useAuth } from '../../context/auth/useAuth';
 import { useTheme } from '../../context/theme/useTheme';
@@ -6,7 +5,6 @@ import Slider from '@react-native-community/slider';
 import AnimatedText from '../../components/AnimatedText';
 
 export default function SettingsScreen() {
-    const [notifications, setNotifications] = useState(true);
     const { logout, isLoading } = useAuth();
     const { isDark, toggleTheme, darkOpacity, setDarkOpacity } = useTheme();
 
@@ -29,11 +27,7 @@ export default function SettingsScreen() {
 
             <View style={styles.overlay}>
                 <AnimatedText text="Settings" styless={styles.title} />
-                {/* <Text style={styles.title}>Settings</Text> */}
-                <View style={styles.setting}>
-                    <Text style={styles.label}>Notifications</Text>
-                    <Switch value={notifications} onValueChange={setNotifications} />
-                </View>
+                
                 <View style={styles.setting}>
                     <Text style={styles.label}>Dark Mode</Text>
                     <Switch value={isDark} onValueChange={toggleTheme} />

@@ -14,6 +14,7 @@ export const AuthContext = createContext({
     register: async (email, password, name) => { },
     clearError: () => { },
     logout: async () => { },
+    updateProfile: async () => { },
 });
 
 export function AuthProvider({ children }) {
@@ -86,6 +87,28 @@ export function AuthProvider({ children }) {
         }
     };
 
+    const updateProfile = async (profileData) => {
+        try {
+            setIsLoading(true);
+
+            const updatedUser = await authService.updateProfile(profileData);
+
+            // 🔥 обновяваме persisted state
+            setAuth(prev => ({
+                ...prev,
+                user: updatedUser
+            }));
+
+            return updatedUser;
+
+        } catch (err) {
+            setError(err.response?.data?.message || "Update failed");
+            throw err;
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     const contextValue = {
         isAuthenticated: !!auth.user,
         isLoading: isLoading || !isHydrated,
@@ -96,6 +119,7 @@ export function AuthProvider({ children }) {
         login,
         register,
         logout,
+        updateProfile,
     };
 
     return (

@@ -13,17 +13,33 @@ import ButtonWithActivity from '../../components/ButtonWithActivity';
 import ImagePicker from '../../components/ImagePicker';
 
 export default function EditProfileScreen({ navigation }) {
-    const { user } = useAuth()
-    const [firstName, setFirstName] = useState(user.firstName);
-    const [lastName, setLastName] = useState(user.lastName);
-    const [email, setEmail] = useState(user.email);
-    const [picture, setPicture] = useState(user.picture);
-    const [isLoading, setIsLoading] = useState(false);
+    const { user, updateProfile, isLoading } = useAuth()
+    const [firstName, setFirstName] = useState(user?.firstName || '');
+    const [lastName, setLastName] = useState(user?.lastName || '');
+    const [email, setEmail] = useState(user?.email || '');
+    const [picture, setPicture] = useState(user?.picture || null);
 
 
     const deletePictureHandler = () => {
         setPicture(null);
     };
+
+    const handleSave = async () => {
+    try {
+        await updateProfile({
+            firstName,
+            lastName,
+            email,
+            image: picture && picture !== user?.picture ? picture : null,
+            removePicture: picture === null
+        });
+
+        navigation.goBack();
+
+    } catch (err) {
+        console.log(err);
+    }
+};
 
     return (
         <ImageBackground
@@ -40,7 +56,7 @@ export default function EditProfileScreen({ navigation }) {
                             style={{ width: 200, height: 200, borderRadius: 12, marginBottom: 15 }}
                         />
                         <ButtonWithActivity
-                            isLoading={isLoading}
+                            isLoading={false}
                             name="Delete"
                             onPress={deletePictureHandler}
                             styleButton={styles.deleteButton}
@@ -50,7 +66,6 @@ export default function EditProfileScreen({ navigation }) {
                 )}
                 <ImagePicker setImage={(img) => {
                     setPicture(img);
-                    validateTrip.image(setErrors, img);
                 }} />
                 <TextInput
                     style={styles.input}
@@ -79,9 +94,10 @@ export default function EditProfileScreen({ navigation }) {
 
                 <TouchableOpacity
                     style={styles.saveButton}
-                    onPress={() => navigation.goBack()}
+                    onPress={handleSave}
+                    disabled={isLoading}
                 >
-                    <Text style={styles.saveButtonText}>Save Changes</Text>
+                    <Text style={styles.saveButtonText}>{isLoading ? "Saving..." : "Save Changes"}</Text>
                 </TouchableOpacity>
 
             </View>

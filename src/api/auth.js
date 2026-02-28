@@ -66,3 +66,55 @@ export const logout = async () => {
         throw err;
     }
 };
+
+
+export const updateProfile = async (profileData) => {
+    try {
+        const formData = new FormData();
+
+        if (profileData.firstName) {
+            formData.append("firstName", profileData.firstName);
+        }
+
+        if (profileData.lastName) {
+            formData.append("lastName", profileData.lastName);
+        }
+
+        if (profileData.email) {
+            formData.append("email", profileData.email);
+        }
+
+        // ако искаме да махнем снимката
+        if (profileData.removePicture) {
+            formData.append("removePicture" ?? false);
+        }
+
+        // ако има нова снимка
+        if (profileData.image) {
+            formData.append("image", {
+                uri: profileData.image,
+                type: "image/jpeg",
+                name: "profile.jpg"
+            });
+        }
+
+        const response = await api.put(
+            `/profile/edit`,
+            formData,
+            {
+                headers: {
+                    "Content-Type": "multipart/form-data"
+                }
+            }
+        );
+
+        return response.data;
+
+    } catch (err) {
+        console.log(
+            "This is the updateProfile error:",
+            err.response?.data
+        );
+        throw err;
+    }
+};
