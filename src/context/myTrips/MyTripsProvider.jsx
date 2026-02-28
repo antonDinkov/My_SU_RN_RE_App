@@ -7,11 +7,12 @@ export const TripsContext = createContext({
     error: null,
     myTrips: [],
     deletedMsg: '',
-    clearError: () => {},
-    clearDeletedMsg: () => {},
-    createTrip: async () => {},
-    getMyTrips: async () => {},
-    deleteTrip: async () => {},
+    clearError: () => { },
+    clearDeletedMsg: () => { },
+    createTrip: async () => { },
+    getMyTrips: async () => { },
+    deleteTrip: async () => { },
+    updateTrip: async () => { }
 })
 
 export function MyTripsProvider({ children }) {
@@ -25,18 +26,18 @@ export function MyTripsProvider({ children }) {
         try {
             setIsLoading(true);
             console.log("This is before the response");
-            
+
             const trip = await tripService.createTrip(tripInfo);
             console.log("This is inside the provider the response", trip);
-            
+
             setMyTrips((oldstate) => [...oldstate, trip]);
             console.log("This is inside the provider the state", myTrips);
-            
+
             navigation.navigate('MyTrips');
             return trip;
         } catch (err) {
             console.log(err.response.data);
-            
+
             setError(err.response?.data?.message || "Server error 500");
             throw err;
         } finally {
@@ -65,7 +66,7 @@ export function MyTripsProvider({ children }) {
             setDeletedMsg(deleteResponse.message);
             setMyTrips(prev => prev.filter(trip => trip._id !== tripId));
             console.log(deleteResponse.message);
-            
+
             return deleteResponse.message;
         } catch (err) {
             setError(err.response?.data?.message || "Server error 500");
@@ -74,6 +75,25 @@ export function MyTripsProvider({ children }) {
             setIsLoading(false);
         }
     }
+
+    const updateTrip = async (tripId, tripInfo) => {
+        try {
+            setIsLoading(true);
+            const updatedTrip = await tripService.updateTrip(tripId, tripInfo);
+            setMyTrips(prev =>
+                prev.map(trip =>
+                    trip._id === tripId ? updatedTrip : trip
+                )
+            );
+            navigation.navigate('MyTrips');
+            return updatedTrip;
+        } catch (err) {
+            setError(err.response?.data?.message || "Server error 500");
+            throw err;
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
 
 
@@ -87,6 +107,7 @@ export function MyTripsProvider({ children }) {
         getMyTrips,
         deleteTrip,
         clearDeletedMsg: () => setDeletedMsg(''),
+        updateTrip,
     };
 
     return (

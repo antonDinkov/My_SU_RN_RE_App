@@ -29,6 +29,44 @@ export const createTrip = async (tripInfo) => {
     }
 };
 
+export const updateTrip = async (tripId, tripData) => {
+    try {
+        const formData = new FormData();
+
+        formData.append("type", tripData.type);
+        formData.append("name", tripData.name);
+        formData.append("short_description", tripData.short_description);
+        formData.append("location_name", tripData.location_name);
+
+        if (tripData.location) {
+            formData.append("location", JSON.stringify(tripData.location));
+        }
+
+        if (tripData.image) {
+            formData.append("image", tripData.image);
+        }
+
+        const response = await api.put(
+            `/mytrips/${tripId}`,
+            formData,
+            {
+                headers: {
+                    "Content-Type": "multipart/form-data"
+                }
+            }
+        );
+
+        return response.data;
+
+    } catch (err) {
+        console.log(
+            "This is the updateTrip error:",
+            err.response?.data
+        );
+        throw err;
+    }
+};
+
 export const getMyTrips = async () => {
     try {
         const response = await api.get('/mytrips');
