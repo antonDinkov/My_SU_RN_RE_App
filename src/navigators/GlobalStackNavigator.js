@@ -1,6 +1,7 @@
 import { createStackNavigator, CardStyleInterpolators } from "@react-navigation/stack";
 import MainNavigator from "./MainNavigator";
 import DetailsScreen from "../screens/main/DetailsScreen";
+import PictureScreen from "../screens/main/PictureScreen";
 
 export default function GlobalStackNavigator() {
     const Stack = createStackNavigator();
@@ -17,6 +18,23 @@ export default function GlobalStackNavigator() {
                     headerTransparent: true,
                     headerTintColor: '#fff',
                     headerBackTitleVisible: false,
+                    transitionSpec: {
+                        open: { animation: 'timing', config: { duration: 400 } },
+                        close: { animation: 'timing', config: { duration: 400 } },
+                    },
+                    cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
+                }}
+            />
+            <Stack.Screen
+                name="PictureModal"
+                component={PictureScreen}
+                options={{
+                    presentation: 'modal',
+                    title: '',
+                    headerShown: true,
+                    headerTransparent: true,
+                    headerTintColor: '#fff',
+                    headerBackTitleVisible: true,
                     transitionSpec: {
                         open: { animation: 'timing', config: { duration: 400 } },
                         close: { animation: 'timing', config: { duration: 400 } },

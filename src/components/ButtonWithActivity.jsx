@@ -1,8 +1,8 @@
 import { ActivityIndicator, Text, TouchableOpacity } from "react-native";
 
-export default function ButtonWithActivity({ isLoading, name, onpress, styleButton, styleText }) {
+export default function ButtonWithActivity({ isLoading, name, onPress, styleButton, styleText }) {
     return (
-        <TouchableOpacity style={styleButton} onPress={onpress}>
+        <TouchableOpacity style={styleButton} onPress={onPress}>
             {isLoading ? (
                 <ActivityIndicator color="#fff" />)
                 : (

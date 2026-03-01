@@ -87,7 +87,7 @@ export default function LocationCheck({ setLocation, address, setAddress }) {
             <ButtonWithActivity
                 isLoading={getting}
                 name="Get Location"
-                onpress={getCurrentLocation}
+                onPress={getCurrentLocation}
                 styleButton={styles.button}
                 styleText={styles.buttonText}
             />
@@ -100,6 +100,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         padding: 20,
+        paddingTop: 10,
     },
     paragraph: {
         fontSize: 18,
@@ -115,7 +116,7 @@ const styles = StyleSheet.create({
         paddingVertical: 15,
         paddingHorizontal: 10,
         borderRadius: 30,
-        marginVertical: 10,
+        marginVertical: 0,
     },
     buttonText: {
         color: '#fff',

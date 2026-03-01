@@ -7,6 +7,7 @@ import { useState } from "react";
 import ImagePicker from "../../components/ImagePicker";
 import TakePicture from "../../components/TakePicture";
 import LocationCheck from "../../components/LocationCheck";
+import * as Location from 'expo-location';
 import { useMyTrips } from "../../context/myTrips/useMyTrips";
 import ServerError from "../../components/ServerError";
 import { validateTrip } from "../utils/validateTrips";
@@ -37,17 +38,44 @@ export default function CreateTripScreen() {
 
         if (!isValid) return;
 
+        let formattedLocation = null;
+
         try {
-            await createTrip({
+
+            if (location?.latitude && location?.longitude) {
+                formattedLocation = {
+                    type: "Point",
+                    coordinates: [location.longitude, location.latitude],
+                };
+            }
+
+            else if (!location && address) {
+
+                const result = await Location.geocodeAsync(address);
+
+                if (result.length > 0) {
+                    formattedLocation = {
+                        type: "Point",
+                        coordinates: [result[0].longitude, result[0].latitude],
+                    };
+                } else {
+                    formattedLocation = null;
+                }
+            }
+
+            const result = await createTrip({
                 type,
                 name,
                 short_description: description,
                 location_name: address,
-                location,
+                location: formattedLocation,
                 image
             });
+
+            console.log("Created trip:", result);
+
         } catch (err) {
-            console.log("Create error:", err.message);
+            console.log("Create error:", err);
         }
     };
 
@@ -104,7 +132,7 @@ export default function CreateTripScreen() {
                                         source={{ uri: image }}
                                         style={{ width: 200, height: 200, borderRadius: 12, marginBottom: 15 }}
                                     />
-                                    <ButtonWithActivity isLoading={isLoading} name="Delete" onpress={deletePictureHandler} styleButton={styles.deleteButton} styleText={styles.deleteText} />
+                                    <ButtonWithActivity isLoading={false} name="Delete" onPress={deletePictureHandler} styleButton={styles.deleteButton} styleText={styles.deleteText} />
                                 </>
                             )}
                             {errors.image && <Text style={styles.error}>{errors.image}</Text>}
@@ -122,11 +150,21 @@ export default function CreateTripScreen() {
                                 }} />
                             </View>
                             <View>
+                                <TextInput
+                                    placeholder="Enter address manually"
+                                    placeholderTextColor="#666"
+                                    style={[styles.input, {marginBottom: 0}]}
+                                    value={address || ''}
+                                    onChangeText={(text) => {
+                                        setAddress(text);
+                                        setLocation(null); // ако пише ръчно, махаме GPS coords
+                                    }}
+                                />
                                 <LocationCheck setLocation={setLocation} address={address} setAddress={setAddress} />
                             </View>
                             {isLoading && <Text style={{ color: 'red', }}>WAIT! It might take a while( usualy 1 min)</Text>}
                             <ServerError message={error} onClose={clearError} />
-                            <ButtonWithActivity isLoading={isLoading} name="Create" onpress={createHandler} styleButton={styles.createButton} styleText={styles.buttonText} />
+                            <ButtonWithActivity isLoading={isLoading} name="Create" onPress={createHandler} styleButton={styles.createButton} styleText={styles.buttonText} />
                         </View>
                     </ScrollView>
                 </View>

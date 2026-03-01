@@ -30,10 +30,15 @@ export default function ProfileScreen({ navigation }) {
         >
             <View style={styles.overlay}>
                 <View style={styles.boxSeparator}>
-                    <Image
-                        source={{ uri: user.picture? user.picture : 'https://randomuser.me/api/portraits/men/32.jpg' }}
-                        style={styles.avatar}
-                    />
+                    <TouchableOpacity activeOpacity={0.9}
+                    hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
+                    style={styles.avatar}
+                        onPress={() => navigation.navigate('PictureModal', { imageUrl: user.picture ? user.picture : 'https://spng.pngfind.com/pngs/s/16-168087_wikipedia-user-icon-bynightsight-user-image-icon-png.png' })}>
+                        <Image
+                            source={{ uri: user.picture ? user.picture : 'https://spng.pngfind.com/pngs/s/16-168087_wikipedia-user-icon-bynightsight-user-image-icon-png.png' }}
+                            style={StyleSheet.absoluteFillObject}
+                        />
+                    </TouchableOpacity>
                     <AnimatedText text={user.firstName} styless={styles.name} />
                     <AnimatedText text={user.lastName} styless={styles.name} />
 
@@ -57,7 +62,14 @@ export default function ProfileScreen({ navigation }) {
 const styles = StyleSheet.create({
     background: { flex: 1 },
     overlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.4)', padding: 20, alignItems: 'center', justifyContent: 'space-between' },
-    avatar: { width: 80, height: 80, borderRadius: 40, marginBottom: 10, marginTop: 20, },
+    avatar: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    overflow: "hidden",
+    marginBottom: 10, marginTop: 60,
+},
+    
     name: { fontSize: 22, color: '#fff', fontWeight: 'bold' },
     email: { fontSize: 16, color: '#ccc', marginBottom: 20 },
     editButton: { backgroundColor: '#FF6B6B', padding: 10, borderRadius: 8, marginTop: 40 },

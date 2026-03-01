@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet, FlatList, ImageBackground, TextInput, KeyboardAvoidingView, Platform, ScrollView, RefreshControl } from 'react-native';
 import { useData } from '../../context/main/useData';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import DestinationCard from '../../components/DestinationCard';
 import { RadioButton } from '../../components/RadioButton';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -8,7 +8,8 @@ import Button from '../../components/Button';
 import AnimatedText from '../../components/AnimatedText';
 import ButtonWithActivity from '../../components/ButtonWithActivity';
 import { useAuth } from '../../context/auth/useAuth';
-import ServerError from '../../components/ServerError'
+import ServerError from '../../components/ServerError';
+import { useFocusEffect } from '@react-navigation/native';
 
 export default function HomeScreen({ navigation }) {
     const [featuredCountries, setFeaturedCountries] = useState([]);
@@ -19,19 +20,30 @@ export default function HomeScreen({ navigation }) {
     const [refreshing, setRefreshing] = useState(false);
     const { user } = useAuth();
 
-    const loadCountries = async () => {
+    const loadCountries = async (retryCount = 0) => {
         clearError();
+
         try {
             const countries = await getFeaturedCountries();
             setFeaturedCountries(countries);
         } catch (err) {
-            console.log("Error getting the coutries");
-        }
-    }
+            if (retryCount < 6) {
+                console.log(`Retry ${retryCount + 1} in 7 seconds...`);
 
-    useEffect(() => {
-        loadCountries();
-    }, []);
+                setTimeout(() => {
+                    loadCountries(retryCount + 1);
+                }, 7000);
+            } else {
+                console.log("Max retries reached.");
+            }
+        }
+    };
+
+    useFocusEffect(
+        useCallback(() => {
+            loadCountries();
+        }, [])
+    );
 
     const detailsHandler = useCallback(
         (item) => {
@@ -107,7 +119,7 @@ export default function HomeScreen({ navigation }) {
                                         onChangeText={setSearchQuery}
                                         style={styles.searchInput}
                                     />
-                                    <ButtonWithActivity isLoading={isLoading} name="Search" onpress={() => searchHandler(searchQuery, searchType)} styleButton={styles.button} styleText={styles.buttonText} />
+                                    <ButtonWithActivity isLoading={isLoading} name="Search" onPress={() => searchHandler(searchQuery, searchType)} styleButton={styles.button} styleText={styles.buttonText} />
                                 </View>
                                 <View style={styles.radioGroup}>
                                     <RadioButton

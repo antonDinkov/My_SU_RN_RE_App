@@ -10,8 +10,8 @@ export const AuthContext = createContext({
     error: null,
     user: null,
     auth: null,
-    login: async (email, password) => { },
-    register: async (email, password, name) => { },
+    login: async () => { },
+    register: async () => { },
     clearError: () => { },
     logout: async () => { },
     updateProfile: async () => { },
@@ -93,7 +93,6 @@ export function AuthProvider({ children }) {
 
             const updatedUser = await authService.updateProfile(profileData);
 
-            // 🔥 обновяваме persisted state
             setAuth(prev => ({
                 ...prev,
                 user: updatedUser

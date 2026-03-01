@@ -69,7 +69,7 @@ export default function LoginScreen({ navigation }) {
                                 }}
                             />
 
-                            <ButtonWithActivity isLoading={isLoading} name="Login" onpress={loginHandler} styleButton={styles.button} styleText={styles.buttonText} />
+                            <ButtonWithActivity isLoading={isLoading} name="Login" onPress={loginHandler} styleButton={styles.button} styleText={styles.buttonText} />
                             <TouchableOpacity onPress={() => navigation.navigate('Register')}>
                                 <Text style={styles.link}>Not registered yet?!</Text>
                             </TouchableOpacity>

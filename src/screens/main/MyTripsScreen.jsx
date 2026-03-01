@@ -50,7 +50,7 @@ export default function MyTripsScreen({ navigation }) {
     }
 
     const onPress = (item) => {
-        navigation.navigate('Picture', {imageUrl: item.image_url})
+        navigation.navigate('PictureModal', {imageUrl: item.image_url})
     }
     return (
         <SafeAreaView style={{ flex: 1 }} edges={['left', 'right']}>

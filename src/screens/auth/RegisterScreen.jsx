@@ -109,7 +109,7 @@ export default function RegisterScreen({ navigation }) {
                                 }}
                             />
 
-                                <ButtonWithActivity isLoading={isLoading} name="Register" onpress={registerHandler} styleButton={styles.button} styleText={styles.buttonText} />
+                                <ButtonWithActivity isLoading={isLoading} name="Register" onPress={registerHandler} styleButton={styles.button} styleText={styles.buttonText} />
                             {/* <TouchableOpacity
                                 style={styles.button}
                                 onPress={() => registerHandler(firstName, lastName, email, password, repeatPassword)}

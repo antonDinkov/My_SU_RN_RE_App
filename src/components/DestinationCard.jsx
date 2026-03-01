@@ -69,7 +69,7 @@ const DestinationCard = ({ item, onPress, isMyTrips, isLoading, onEdit, onDelete
                         {isMyTrips && <View>
                             <Text style={[styles.description, {}]}>{"\u{1F4CD}"} {item.location_name}</Text>
                             <View style={styles.buttons}>
-                                <ButtonWithActivity isLoading={isLoading} name="Delete" onpress={onDelete} styleButton={styles.deleteButton} styleText={styles.buttonText} />
+                                <ButtonWithActivity isLoading={isLoading} name="Delete" onPress={onDelete} styleButton={styles.deleteButton} styleText={styles.buttonText} />
                                 <Button name="Edit" onPress={onEdit} style={styles.edit} />
                             </View>
                         </View>}

@@ -84,12 +84,10 @@ export const updateProfile = async (profileData) => {
             formData.append("email", profileData.email);
         }
 
-        // ако искаме да махнем снимката
         if (profileData.removePicture) {
-            formData.append("removePicture" ?? false);
+            formData.append("removePicture", true);
         }
 
-        // ако има нова снимка
         if (profileData.image) {
             formData.append("image", {
                 uri: profileData.image,
@@ -113,7 +111,7 @@ export const updateProfile = async (profileData) => {
     } catch (err) {
         console.log(
             "This is the updateProfile error:",
-            err.response?.data
+            err.message
         );
         throw err;
     }

@@ -29,6 +29,7 @@ export default function EditTripScreen({ route }) {
     };
 
     const updateHandler = async () => {
+        console.log("UPDATE BUTTON PRESSED");
         try {
             const isValid = validateTrip.editTrip(setErrors, {
                 type,
@@ -54,13 +55,21 @@ export default function EditTripScreen({ route }) {
             }
 
             else if (!location && location_name) {
-                const result = await Location.geocodeAsync(location_name);
+                try {
+                    const result = await Location.geocodeAsync(location_name);
 
-                if (result.length > 0) {
-                    updatedTrip.location = {
-                        type: "Point",
-                        coordinates: [result[0].longitude, result[0].latitude],
-                    };
+                    if (result.length > 0) {
+                        updatedTrip.location = {
+                            type: "Point",
+                            coordinates: [result[0].longitude, result[0].latitude],
+                        };
+                    } else {
+                        updatedTrip.location = null;
+                    }
+
+                } catch (err) {
+                    console.log("Geocoding failed:", err);
+                    updatedTrip.location = null;
                 }
             }
 
@@ -68,16 +77,7 @@ export default function EditTripScreen({ route }) {
                 updatedTrip.location = null;
             }
 
-            console.log("This is the image in the front: ", image);
-            console.log("This is the image type: ", typeof image);
-
-            /* if (image && typeof image !== "string") {
-                console.log("Inside image if"); */
-
             updatedTrip.image = image;
-            //}
-
-            console.log("Updated trip:", updatedTrip);
 
             await updateTrip(trip._id, updatedTrip);
 
@@ -150,9 +150,9 @@ export default function EditTripScreen({ route }) {
                                         style={{ width: 200, height: 200, borderRadius: 12, marginBottom: 15 }}
                                     />
                                     <ButtonWithActivity
-                                        isLoading={isLoading}
+                                        isLoading={false}
                                         name="Delete"
-                                        onpress={deletePictureHandler}
+                                        onPress={deletePictureHandler}
                                         styleButton={styles.deleteButton}
                                         styleText={styles.deleteText}
                                     />
@@ -174,7 +174,7 @@ export default function EditTripScreen({ route }) {
                             <ButtonWithActivity
                                 isLoading={isLoading}
                                 name="Save"
-                                onpress={updateHandler}
+                                onPress={updateHandler}
                                 styleButton={styles.createButton}
                                 styleText={styles.buttonText}
                             />
