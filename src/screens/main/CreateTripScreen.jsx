@@ -1,4 +1,4 @@
-import { Image, ImageBackground, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import { Image, ImageBackground, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import AnimatedText from "../../components/AnimatedText";
 import ButtonWithActivity from "../../components/ButtonWithActivity";
@@ -88,99 +88,110 @@ export default function CreateTripScreen() {
 
     return (
         <SafeAreaView style={{ flex: 1 }} edges={['left', 'right']}>
-            <ImageBackground
-                source={{
-                    uri: 'https://images.unsplash.com/photo-1472214103451-9374bd1c798e?auto=format&fit=crop&fm=jpg&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8YmVhdXRpZnVsJTIwbGFuZHNjYXBlfGVufDB8fDB8fHww&ixlib=rb-4.1.0&q=60&w=3000',
-                }}
-                style={styles.background}
+            <KeyboardAvoidingView
+                style={{ flex: 1 }}
+                behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+                enabled={Platform.OS === 'ios'}
             >
-                <View style={styles.overlay}>
-                    <ScrollView showsVerticalScrollIndicator={false}>
+                <ImageBackground
+                    source={{
+                        uri: 'https://images.unsplash.com/photo-1472214103451-9374bd1c798e?auto=format&fit=crop&fm=jpg&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8YmVhdXRpZnVsJTIwbGFuZHNjYXBlfGVufDB8fDB8fHww&ixlib=rb-4.1.0&q=60&w=3000',
+                    }}
+                    style={styles.background}
+                >
+                    <View style={styles.overlay}>
+                        <ScrollView
+                            showsVerticalScrollIndicator={false}
+                            keyboardShouldPersistTaps="handled"
+                            contentContainerStyle={{ paddingBottom: 180 }}
+                        >
 
-                        <AnimatedText text="Create Destination" styless={styles.title} />
+                            <AnimatedText text="Create Destination" styless={styles.title} />
 
-                        {errors.name && <Text style={styles.error}>{errors.name}</Text>}
-                        <TextInput
-                            placeholder="Destination name"
-                            placeholderTextColor="#666"
-                            style={styles.input}
-                            value={name}
-                            onChangeText={(text) => {
-                                setName(text);
-                                validateTrip.name(setErrors, text);
-                            }
-                            }
-                        />
+                            {errors.name && <Text style={styles.error}>{errors.name}</Text>}
+                            <TextInput
+                                placeholder="Destination name"
+                                placeholderTextColor="#666"
+                                style={styles.input}
+                                value={name}
+                                onChangeText={(text) => {
+                                    setName(text);
+                                    validateTrip.name(setErrors, text);
+                                }
+                                }
+                            />
 
-                        <View style={styles.radioBtns}>
-                            <RadioButton label="Country" value="country" selected={type} onSelect={setType} />
-                            <RadioButton label="City" value="city" selected={type} onSelect={setType} />
-                            <RadioButton label="Place" value="place" selected={type} onSelect={setType} />
-                        </View>
+                            <View style={styles.radioBtns}>
+                                <RadioButton label="Country" value="country" selected={type} onSelect={setType} />
+                                <RadioButton label="City" value="city" selected={type} onSelect={setType} />
+                                <RadioButton label="Place" value="place" selected={type} onSelect={setType} />
+                            </View>
 
-                        {errors.short_description && <Text style={styles.error}>{errors.short_description}</Text>}
-                        <TextInput
-                            placeholder="Short description"
-                            placeholderTextColor="#666"
-                            multiline
-                            style={[styles.input, { height: 80 }]}
-                            value={description}
-                            onChangeText={(text) => {
-                                setDescription(text);
-                                validateTrip.shortDescription(setErrors, text);
-                            }
-                            }
-                        />
+                            {errors.short_description && <Text style={styles.error}>{errors.short_description}</Text>}
+                            <TextInput
+                                placeholder="Short description"
+                                placeholderTextColor="#666"
+                                multiline
+                                style={[styles.input, { height: 80 }]}
+                                value={description}
+                                onChangeText={(text) => {
+                                    setDescription(text);
+                                    validateTrip.shortDescription(setErrors, text);
+                                }
+                                }
+                            />
 
-                        <View style={styles.buttonsWrapper}>
-                            {image && (
-                                <>
-                                    <Image
-                                        source={{ uri: image }}
-                                        style={{ width: 200, height: 200, borderRadius: 12, marginBottom: 15 }}
+                            <View style={styles.buttonsWrapper}>
+                                {image && (
+                                    <>
+                                        <Image
+                                            source={{ uri: image }}
+                                            style={{ width: 200, height: 200, borderRadius: 12, marginBottom: 15 }}
+                                        />
+                                        <ButtonWithActivity isLoading={false} name="Delete" onPress={deletePictureHandler} styleButton={styles.deleteButton} styleText={styles.deleteText} />
+                                    </>
+                                )}
+                                {errors.image && <Text style={styles.error}>{errors.image}</Text>}
+                                <Text>Up to 10MB</Text>
+                                <View>
+                                    <ImagePicker setImage={(img) => {
+                                        setImage(img);
+                                        validateTrip.image(setErrors, img);
+                                    }
+                                    }
+                                        setErrors={setErrors}
                                     />
-                                    <ButtonWithActivity isLoading={false} name="Delete" onPress={deletePictureHandler} styleButton={styles.deleteButton} styleText={styles.deleteText} />
-                                </>
-                            )}
-                            {errors.image && <Text style={styles.error}>{errors.image}</Text>}
-                            <Text>Up to 10MB</Text>
-                            <View>
-                                <ImagePicker setImage={(img) => {
-                                    setImage(img);
-                                    validateTrip.image(setErrors, img);
-                                }
-                                }
-                                setErrors={setErrors}
-                                />
-                            </View>
-                            <View>
-                                <TakePicture setImage={(img) => {
-                                    setImage(img);
-                                    validateTrip.image(setErrors, img);
-                                }}
-                                setErrors={setErrors}
-                                />
-                            </View>
-                            <View>
-                                <TextInput
-                                    placeholder="Enter address manually"
-                                    placeholderTextColor="#666"
-                                    style={[styles.input, { marginBottom: 0 }]}
-                                    value={address || ''}
-                                    onChangeText={(text) => {
-                                        setAddress(text);
-                                        setLocation(null);
+                                </View>
+                                <View>
+                                    <TakePicture setImage={(img) => {
+                                        setImage(img);
+                                        validateTrip.image(setErrors, img);
                                     }}
-                                />
-                                <LocationCheck setLocation={setLocation} address={address} setAddress={setAddress} />
+                                        setErrors={setErrors}
+                                    />
+                                </View>
+                                <View>
+                                    <TextInput
+                                        placeholder="Enter address manually"
+                                        placeholderTextColor="#666"
+                                        style={[styles.input, { marginBottom: 0 }]}
+                                        value={address || ''}
+                                        onChangeText={(text) => {
+                                            setAddress(text);
+                                            setLocation(null);
+                                        }}
+                                    />
+                                    <LocationCheck setLocation={setLocation} address={address} setAddress={setAddress} />
+                                </View>
+                                {isLoading && <Text style={{ color: 'red', }}>WAIT! It might take a while( usualy 1 min)</Text>}
+                                <ServerError message={error} onClose={clearError} />
+                                <ButtonWithActivity isLoading={isLoading} name="Create" onPress={createHandler} styleButton={styles.createButton} styleText={styles.buttonText} />
                             </View>
-                            {isLoading && <Text style={{ color: 'red', }}>WAIT! It might take a while( usualy 1 min)</Text>}
-                            <ServerError message={error} onClose={clearError} />
-                            <ButtonWithActivity isLoading={isLoading} name="Create" onPress={createHandler} styleButton={styles.createButton} styleText={styles.buttonText} />
-                        </View>
-                    </ScrollView>
-                </View>
-            </ImageBackground>
+                        </ScrollView>
+                    </View>
+                </ImageBackground>
+            </KeyboardAvoidingView>
+
         </SafeAreaView>
     );
 }

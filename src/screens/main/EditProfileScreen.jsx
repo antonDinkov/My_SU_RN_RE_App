@@ -6,11 +6,15 @@ import {
     ImageBackground,
     TextInput,
     TouchableOpacity,
-    Image
+    Image,
+    KeyboardAvoidingView,
+    Platform
 } from 'react-native';
 import { useAuth } from '../../context/auth/useAuth';
 import ButtonWithActivity from '../../components/ButtonWithActivity';
 import ImagePicker from '../../components/ImagePicker';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import AnimatedText from '../../components/AnimatedText';
 
 export default function EditProfileScreen({ navigation }) {
     const { user, updateProfile, isLoading } = useAuth()
@@ -21,21 +25,21 @@ export default function EditProfileScreen({ navigation }) {
     const [dots, setDots] = useState('');
 
     useEffect(() => {
-    let interval;
+        let interval;
 
-    if (isLoading) {
-        interval = setInterval(() => {
-            setDots(prev => {
-                if (prev.length === 3) return '';
-                return prev + '.';
-            });
-        }, 500);
-    } else {
-        setDots('');
-    }
+        if (isLoading) {
+            interval = setInterval(() => {
+                setDots(prev => {
+                    if (prev.length === 3) return '';
+                    return prev + '.';
+                });
+            }, 500);
+        } else {
+            setDots('');
+        }
 
-    return () => clearInterval(interval);
-}, [isLoading]);
+        return () => clearInterval(interval);
+    }, [isLoading]);
 
 
     const deletePictureHandler = () => {
@@ -43,83 +47,92 @@ export default function EditProfileScreen({ navigation }) {
     };
 
     const handleSave = async () => {
-    try {
-        await updateProfile({
-            firstName,
-            lastName,
-            email,
-            image: picture && picture !== user?.picture ? picture : null,
-            removePicture: picture === null
-        });
+        try {
+            await updateProfile({
+                firstName,
+                lastName,
+                email,
+                image: picture && picture !== user?.picture ? picture : null,
+                removePicture: picture === null
+            });
 
-        navigation.goBack();
+            navigation.goBack();
 
-    } catch (err) {
-        console.log(err);
-    }
-};
+        } catch (err) {
+            console.log(err);
+        }
+    };
 
     return (
-        <ImageBackground
-            source={{ uri: 'https://images.unsplash.com/photo-1444723121867-7a241cacace9' }}
-            style={styles.background}
-        >
-            <View style={styles.overlay}>
-                <Text style={styles.title}>Edit Profile</Text>
-
-                {picture && (
-                    <>
-                        <Image
-                            source={{ uri: picture }}
-                            style={{ width: 200, height: 200, borderRadius: 12, marginBottom: 15 }}
-                        />
-                        <ButtonWithActivity
-                            isLoading={false}
-                            name="Delete"
-                            onPress={deletePictureHandler}
-                            styleButton={styles.deleteButton}
-                            styleText={styles.deleteText}
-                        />
-                    </>
-                )}
-                <ImagePicker setImage={(img) => {
-                    setPicture(img);
-                }} />
-                <TextInput
-                    style={styles.input}
-                    placeholder="First Name"
-                    placeholderTextColor="#aaa"
-                    value={firstName}
-                    onChangeText={setFirstName}
-                />
-
-                <TextInput
-                    style={styles.input}
-                    placeholder="Last Name"
-                    placeholderTextColor="#aaa"
-                    value={lastName}
-                    onChangeText={setLastName}
-                />
-
-                <TextInput
-                    style={styles.input}
-                    placeholder="Email"
-                    placeholderTextColor="#aaa"
-                    value={email}
-                    onChangeText={setEmail}
-                    keyboardType="email-address"
-                />
-
-                <TouchableOpacity
-                    style={styles.saveButton}
-                    onPress={handleSave}
-                    disabled={isLoading}
+        <SafeAreaView style={{ flex: 1 }} edges={['left', 'right']}>
+            <KeyboardAvoidingView
+                style={{ flex: 1 }}
+                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+                keyboardVerticalOffset={Platform.OS === 'ios' ? 100 : undefined}
+            >
+                <ImageBackground
+                    source={{ uri: 'https://images.unsplash.com/photo-1444723121867-7a241cacace9' }}
+                    style={styles.background}
                 >
-                    <Text style={styles.saveButtonText}>{isLoading ? `Saving ${dots}` : "Save Changes"}</Text>
-                </TouchableOpacity>
+                    <View style={styles.overlay}>
+                        <AnimatedText text="Edit Profile" styless={styles.title} />
+                        {/* <Text style={styles.title}>Edit Profile</Text> */}
 
-            </View>
-        </ImageBackground>
+                        {picture && (
+                            <>
+                                <Image
+                                    source={{ uri: picture }}
+                                    style={{ width: 200, height: 200, borderRadius: 12, marginBottom: 15 }}
+                                />
+                                <ButtonWithActivity
+                                    isLoading={false}
+                                    name="Delete"
+                                    onPress={deletePictureHandler}
+                                    styleButton={styles.deleteButton}
+                                    styleText={styles.deleteText}
+                                />
+                            </>
+                        )}
+                        <ImagePicker setImage={(img) => {
+                            setPicture(img);
+                        }} />
+                        <TextInput
+                            style={styles.input}
+                            placeholder="First Name"
+                            placeholderTextColor="#aaa"
+                            value={firstName}
+                            onChangeText={setFirstName}
+                        />
+
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Last Name"
+                            placeholderTextColor="#aaa"
+                            value={lastName}
+                            onChangeText={setLastName}
+                        />
+
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Email"
+                            placeholderTextColor="#aaa"
+                            value={email}
+                            onChangeText={setEmail}
+                            keyboardType="email-address"
+                        />
+
+                        <TouchableOpacity
+                            style={styles.saveButton}
+                            onPress={handleSave}
+                            disabled={isLoading}
+                        >
+                            <Text style={styles.saveButtonText}>{isLoading ? `Saving ${dots}` : "Save Changes"}</Text>
+                        </TouchableOpacity>
+
+                    </View>
+                </ImageBackground>
+            </KeyboardAvoidingView>
+        </SafeAreaView>
     );
 }
 
@@ -130,13 +143,14 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(0,0,0,0.4)',
         padding: 20,
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
     },
     title: {
         fontSize: 24,
         color: '#fff',
         fontWeight: 'bold',
-        marginBottom: 30
+        marginBottom: 30,
+        paddingTop: 20,
     },
     input: {
         width: '100%',
