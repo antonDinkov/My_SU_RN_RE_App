@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
     View,
     Text,
@@ -18,6 +18,24 @@ export default function EditProfileScreen({ navigation }) {
     const [lastName, setLastName] = useState(user?.lastName || '');
     const [email, setEmail] = useState(user?.email || '');
     const [picture, setPicture] = useState(user?.picture || null);
+    const [dots, setDots] = useState('');
+
+    useEffect(() => {
+    let interval;
+
+    if (isLoading) {
+        interval = setInterval(() => {
+            setDots(prev => {
+                if (prev.length === 3) return '';
+                return prev + '.';
+            });
+        }, 500);
+    } else {
+        setDots('');
+    }
+
+    return () => clearInterval(interval);
+}, [isLoading]);
 
 
     const deletePictureHandler = () => {
@@ -97,7 +115,7 @@ export default function EditProfileScreen({ navigation }) {
                     onPress={handleSave}
                     disabled={isLoading}
                 >
-                    <Text style={styles.saveButtonText}>{isLoading ? "Saving..." : "Save Changes"}</Text>
+                    <Text style={styles.saveButtonText}>{isLoading ? `Saving ${dots}` : "Save Changes"}</Text>
                 </TouchableOpacity>
 
             </View>

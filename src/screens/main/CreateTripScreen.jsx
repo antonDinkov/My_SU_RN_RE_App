@@ -55,6 +55,13 @@ export default function CreateTripScreen() {
 
             else if (!location && trimmedAddress) {
 
+                const { status } = await Location.requestForegroundPermissionsAsync();
+
+                if (status !== 'granted') {
+                    console.log('Permission denied');
+                    return;
+                }
+
                 const result = await Location.geocodeAsync(trimmedAddress);
 
                 if (result.length > 0) {
@@ -73,8 +80,6 @@ export default function CreateTripScreen() {
                 location: formattedLocation,
                 image
             });
-
-            console.log("Created trip:", result);
 
         } catch (err) {
             console.log("Create error:", err);
@@ -138,18 +143,23 @@ export default function CreateTripScreen() {
                                 </>
                             )}
                             {errors.image && <Text style={styles.error}>{errors.image}</Text>}
+                            <Text>Up to 10MB</Text>
                             <View>
                                 <ImagePicker setImage={(img) => {
                                     setImage(img);
                                     validateTrip.image(setErrors, img);
                                 }
-                                } />
+                                }
+                                setErrors={setErrors}
+                                />
                             </View>
                             <View>
                                 <TakePicture setImage={(img) => {
                                     setImage(img);
                                     validateTrip.image(setErrors, img);
-                                }} />
+                                }}
+                                setErrors={setErrors}
+                                />
                             </View>
                             <View>
                                 <TextInput
