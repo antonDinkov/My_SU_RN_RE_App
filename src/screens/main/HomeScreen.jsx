@@ -45,13 +45,6 @@ export default function HomeScreen({ navigation }) {
         }, [])
     );
 
-    /* const detailsHandler = useCallback(
-        (item) => {
-            navigation.navigate('DetailsModal', { item });
-        },
-        [navigation]
-    ); */
-
     const renderFeaturedItem = useCallback(
         ({ item }) => (
             <DestinationCard
@@ -77,7 +70,7 @@ export default function HomeScreen({ navigation }) {
     const searchHandler = async (name, type) => {
         clearErrorSearch();
         try {
-            const results = await getSearchResults(name, type);
+            const results = await getSearchResults(name.trim(), type);
             setSearchResults(results);
             setSearchQuery('');
         } catch (err) {

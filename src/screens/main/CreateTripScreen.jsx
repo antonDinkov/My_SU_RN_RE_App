@@ -29,10 +29,14 @@ export default function CreateTripScreen() {
     const createHandler = async () => {
         clearError();
 
+        const trimmedName = name.trim();
+        const trimmedDescription = description.trim();
+        const trimmedAddress = address?.trim() || null;
+
         const isValid = validateTrip.createTrip(setErrors, {
             type,
-            name,
-            short_description: description,
+            name: trimmedName,
+            short_description: trimmedDescription,
             image
         });
 
@@ -49,25 +53,23 @@ export default function CreateTripScreen() {
                 };
             }
 
-            else if (!location && address) {
+            else if (!location && trimmedAddress) {
 
-                const result = await Location.geocodeAsync(address);
+                const result = await Location.geocodeAsync(trimmedAddress);
 
                 if (result.length > 0) {
                     formattedLocation = {
                         type: "Point",
                         coordinates: [result[0].longitude, result[0].latitude],
                     };
-                } else {
-                    formattedLocation = null;
                 }
             }
 
             const result = await createTrip({
                 type,
-                name,
-                short_description: description,
-                location_name: address,
+                name: trimmedName,
+                short_description: trimmedDescription,
+                location_name: trimmedAddress,
                 location: formattedLocation,
                 image
             });
@@ -153,11 +155,11 @@ export default function CreateTripScreen() {
                                 <TextInput
                                     placeholder="Enter address manually"
                                     placeholderTextColor="#666"
-                                    style={[styles.input, {marginBottom: 0}]}
+                                    style={[styles.input, { marginBottom: 0 }]}
                                     value={address || ''}
                                     onChangeText={(text) => {
                                         setAddress(text);
-                                        setLocation(null); // ако пише ръчно, махаме GPS coords
+                                        setLocation(null);
                                     }}
                                 />
                                 <LocationCheck setLocation={setLocation} address={address} setAddress={setAddress} />
