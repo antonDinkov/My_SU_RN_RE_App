@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-    baseURL: 'http://localhost:3004', //'http://localhost:3004' 'https://travelfeverbe.onrender.com',
+    baseURL: 'https://travelfeverbe.onrender.com', //'http://localhost:3004' 'https://travelfeverbe.onrender.com',
     timeout: 120000,
 });
 

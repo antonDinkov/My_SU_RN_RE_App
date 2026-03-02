@@ -40,7 +40,6 @@ export default function MyTripsScreen({ navigation }) {
     }
 
     const onDelete = async (tripId) => {
-        console.log("DELETE button pressed");
         clearError();
         try {
             const response = await deleteTrip(tripId)

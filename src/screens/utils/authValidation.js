@@ -33,11 +33,11 @@ const password = (setErrors, password) => {
             if (password.length < 4) {
                 newErrors.password = 'Password must be at least 4 characters';
                 isValid = false;
-            }/*  else if (!/[A-Z]/.test(password)) {
-        newErrors.password = 'Password must contain at least one uppercase letter';
-      } else if (!/[0-9]/.test(password)) {
-        newErrors.password = 'Password must contain at least one number';
-      } */ else {
+            } else if (!/[A-Z]/.test(password)) {
+                newErrors.password = 'Password must contain at least one uppercase letter';
+            } else if (!/[0-9]/.test(password)) {
+                newErrors.password = 'Password must contain at least one number';
+            } else {
                 delete newErrors.password;
                 isValid = true;
             }

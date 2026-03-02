@@ -62,8 +62,6 @@ export function MyTripsProvider({ children }) {
             const deleteResponse = await tripService.deleteTrip(tripId);
             setDeletedMsg(deleteResponse.message);
             setMyTrips(prev => prev.filter(trip => trip._id !== tripId));
-            console.log(deleteResponse.message);
-
             return deleteResponse.message;
         } catch (err) {
             setError(err.response?.data?.message || "Server error 500");
