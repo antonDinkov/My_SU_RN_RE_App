@@ -4,12 +4,38 @@ import { Ionicons } from '@expo/vector-icons';
 import { useEffect, useState, useMemo } from 'react';
 import { useAuth } from '../../context/auth/useAuth';
 import { useData } from '../../context/main/useData';
+import { useRef } from 'react';
 
 export default function DetailsScreen({ route, navigation }) {
 
     const { item } = route.params;
     const { user } = useAuth();
     const { favorites, addToFavorites, removeFromFavorites } = useData();
+    const [localFavorite, setLocalFavorite] = useState(false);
+
+    const favoriteRef = useRef(localFavorite);
+
+    useEffect(() => {
+        favoriteRef.current = localFavorite;
+    }, [localFavorite]);
+
+    useEffect(() => {
+        setLocalFavorite(isFavoriteFromContext);
+    }, [isFavoriteFromContext]);
+
+    useEffect(() => {
+        return () => {
+            const finalValue = favoriteRef.current;
+
+            if (finalValue === isFavoriteFromContext) return;
+
+            if (finalValue) {
+                addToFavorites(userId, itemId, type);
+            } else {
+                removeFromFavorites(userId, itemId);
+            }
+        };
+    }, []);
 
     const userId = user._id;
     const itemId = item._id;
@@ -19,30 +45,9 @@ export default function DetailsScreen({ route, navigation }) {
         return favorites?.some(f => f._id === itemId);
     }, [favorites, itemId]);
 
-    const [localFavorite, setLocalFavorite] = useState(false);
-
-    useEffect(() => {
-        setLocalFavorite(isFavoriteFromContext);
-    }, [isFavoriteFromContext]);
-
     const favoritesHandler = () => {
         setLocalFavorite(prev => !prev);
     };
-
-    useEffect(() => {
-        const unsubscribe = navigation.addListener('blur', async () => {
-            if (localFavorite === isFavoriteFromContext) return;
-
-            if (localFavorite) {
-                await addToFavorites(userId, itemId, type);
-            } else {
-                await removeFromFavorites(userId, itemId);
-            }
-        });
-
-        return unsubscribe;
-
-    }, [navigation, localFavorite, isFavoriteFromContext, userId, itemId, type]);
 
     return (
         <SafeAreaView style={{ flex: 1 }} edges={['left', 'right']}>
@@ -60,10 +65,13 @@ export default function DetailsScreen({ route, navigation }) {
                             resizeMode="cover"
                         />
 
-                        <View style={styles.detailsContainer}>
-                            <Text style={styles.description}>
-                                {item.short_description}
-                            </Text>
+                        <View style={[styles.detailsContainer, { maxHeight: 200 }]}>
+                            <ScrollView>
+                                <Text style={styles.description}>
+                                    {item.short_description}
+                                </Text>
+
+                            </ScrollView>
 
                             <TouchableOpacity
                                 onPress={favoritesHandler}
@@ -94,8 +102,8 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     overlay: {
-        height: 500,
         width: 300,
+        minHeight: 500,
         backgroundColor: 'rgba(0,0,0,0.55)',
         paddingHorizontal: 20,
         paddingTop: 10,

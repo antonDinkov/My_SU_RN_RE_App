@@ -13,7 +13,7 @@ import { useFocusEffect } from '@react-navigation/native';
 
 export default function HomeScreen({ navigation }) {
     const [featuredCountries, setFeaturedCountries] = useState([]);
-    const { getFeaturedCountries, getSearchResults, isLoading, error, clearError, errorSearch, clearErrorSearch } = useData();
+    const { getFeaturedCountries, getSearchResults, isLoading, error, clearError, errorSearch, clearErrorSearch, detailsHandler } = useData();
     const [searchQuery, setSearchQuery] = useState('');
     const [searchType, setSearchType] = useState('country');
     const [searchResults, setSearchResults] = useState([]);
@@ -45,12 +45,12 @@ export default function HomeScreen({ navigation }) {
         }, [])
     );
 
-    const detailsHandler = useCallback(
+    /* const detailsHandler = useCallback(
         (item) => {
             navigation.navigate('DetailsModal', { item });
         },
         [navigation]
-    );
+    ); */
 
     const renderFeaturedItem = useCallback(
         ({ item }) => (

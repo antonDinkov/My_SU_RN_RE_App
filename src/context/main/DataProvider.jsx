@@ -1,6 +1,7 @@
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import { dataService } from "../../api";
 import { useNavigation } from "@react-navigation/native";
+import { useAuth } from "../auth/useAuth";
 
 
 
@@ -9,16 +10,15 @@ export const DataContext = createContext({
     error: false,
     errorSearch: false,
     favorites: [],
-    myTrips: [],
-    getFeaturedCountries: async () => {},
-    getSearchResults: async () => {},
-    addToFavorites: async () => {},
-    isItFavorite: async () => {},
-    getFavorites: async () => {},
-    removeFromFavorites: async () => {},
-    detailsHandler: () => {},
-    clearError: () => {},
-    clearErrorSearch: () => {},
+    getFeaturedCountries: async () => { },
+    getSearchResults: async () => { },
+    addToFavorites: async () => { },
+    isItFavorite: async () => { },
+    getFavorites: async () => { },
+    removeFromFavorites: async () => { },
+    detailsHandler: () => { },
+    clearError: () => { },
+    clearErrorSearch: () => { },
 })
 
 export function DataProvider({ children }) {
@@ -27,7 +27,19 @@ export function DataProvider({ children }) {
     const [favorites, setFavorites] = useState([]);
     const [error, setError] = useState(null);
     const [errorSearch, setErrorSearch] = useState(null);
-    const [myTrips, setMyTrips] = useState([]);
+
+    const { user } = useAuth();
+
+
+    useEffect(() => {
+        if (!user?._id) return;
+
+        const toFavorites = async () => {
+            await getFavorites(user._id);
+        };
+
+        toFavorites();
+    }, [user]);
 
     const getFeaturedCountries = async () => {
         try {
@@ -37,7 +49,7 @@ export function DataProvider({ children }) {
         } catch (err) {
             setError(err.response?.data?.message || "Server error 500");
             console.log(err.response.data.message);
-            
+
             throw err;
         } finally {
             setIsLoading(false)
@@ -125,7 +137,6 @@ export function DataProvider({ children }) {
         clearError: () => setError(null),
         clearErrorSearch: () => setErrorSearch(null),
         favorites,
-        myTrips,
         isLoading,
         error,
         errorSearch,
