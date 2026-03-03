@@ -76,8 +76,7 @@ export default function EditProfileScreen({ navigation }) {
                 >
                     <View style={styles.overlay}>
                         <AnimatedText text="Edit Profile" styless={styles.title} />
-                        {/* <Text style={styles.title}>Edit Profile</Text> */}
-
+                        
                         {picture && (
                             <>
                                 <Image

@@ -6,7 +6,7 @@ import { useAuth } from '../../context/auth/useAuth';
 import { useData } from '../../context/main/useData';
 import { useRef } from 'react';
 
-export default function DetailsScreen({ route, navigation }) {
+export default function DetailsScreen({ route }) {
 
     const { item } = route.params;
     const { user } = useAuth();
