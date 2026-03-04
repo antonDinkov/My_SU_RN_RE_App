@@ -4,6 +4,7 @@
 
 **Application Name:** TravelFever
 **Category:** Travel App
+**OS** Android
 
 ### 🎯 Main Purpose
 
