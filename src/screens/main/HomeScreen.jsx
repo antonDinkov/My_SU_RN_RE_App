@@ -93,7 +93,7 @@ export default function HomeScreen({ navigation }) {
                         style={styles.background}
                     >
                         <View style={styles.overlay}>
-                            <AnimatedText text={`Welcome to Travel Feever, ${user.firstName}`} />
+                            <AnimatedText text={`Welcome to Travel Fever, ${user.firstName}`} />
                             <Text style={styles.subtitle}>Popular Destinations</Text>
                             <ServerError message={error} onClose={() => clearError()} />
                             <FlatList
