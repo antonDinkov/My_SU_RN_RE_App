@@ -71,7 +71,7 @@ npm run rebuild
 ## 📱 Production APK (Fully Working Application)
 
 **Download APK:**
-https://expo.dev/artifacts/eas/jcrwK1tCYPi6aiWKhgLDGY.apk
+https://expo.dev/artifacts/eas/iQVC2sqDSQNncNxB93LXKs.apk
 
 The application is fully functional.
 
